@@ -3,17 +3,23 @@ DEFAULT_TARGET = ircserv
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC_DIR = src
+SRC_DIR = srcs
 OBJ_DIR = .obj
 INCLUDE_DIR = include
+
+
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+
+
 HDR_FILES = $(wildcard $(INCLUDE_DIR)/*.hpp)
+
+
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
 NUM_FILES = $(words $(SRC_FILES))
 CUR_FILE = 0
 
-USAGE		=	@printf "$(CURSIVE)$(CYAN)\t[use $(PURPLE)./$(DEFAULT_TARGET) $(CYAN) to start the program] \n"
+USAGE		=	@printf "$(CURSIVE)$(CYAN)\t[use $(PURPLE)./$(DEFAULT_TARGET) <port> <password> $(CYAN) to start the program] \n"
 GREEN		=	\033[92;5;118m
 HGRN 		=	\033[1;92m
 GRAY		=	\033[33;2;37m
@@ -39,13 +45,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HDR_FILES)
 	@$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 clean:
-	@printf "$(CURSIVE)$(GRAY)- [Removing] $(TARGET) object ... $(RESET)"
+	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) object ... $(RESET)"
 	@rm -rf $(OBJ_DIR)
 	@printf "$(CURSIVE)$(GREEN)\t   done\n$(RESET)"
 
 fclean: clean
-	@printf "$(CURSIVE)$(GRAY)- [Removing] $(TARGET) executable ... $(RESET)"
-	@rm -f $(TARGET)
+	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) executable ... $(RESET)"
+	@rm -f $(DEFAULT_TARGET)
 	@printf "$(CURSIVE)$(GREEN)\t done\n$(RESET)\n"
 
 re : fclean all
