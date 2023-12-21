@@ -4,7 +4,6 @@ bool handleSignal = false;
 
 int main(int ac, char **av){
 
-	(void)msg_const;
 	try{
 		try_args(ac, av);
 		std::signal(SIGINT, handle_signal);
