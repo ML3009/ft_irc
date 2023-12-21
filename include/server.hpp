@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 16:28:27 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/21 16:32:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class server{
 			void 				_display_constructor(std::string msg);
 };
 
-static bool msg_const = false;
 
 #define SERVER_DC "[Default] Constructor called for SERVER CLASS"
 #define SERVER_PC "[Parametric] Constructor called for SERVER CLASS"
