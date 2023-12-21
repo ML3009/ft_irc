@@ -7,7 +7,7 @@ on:
 
 jobs:
   verif:
-      runs-on: ubuntu-22.04 macos-13 #change to mac
+      runs-on: macos-13 #change to mac
       steps:
           - uses : actions/checkout@v2
           - name : Compile ft_irc
