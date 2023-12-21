@@ -4,22 +4,19 @@
 #include <string>
 #include <iomanip>
 #include <cstdlib>
-
-#ifdef __APPLE__
+#include <csignal>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <cerrno>
+#include <cstdio>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <fcntl.h>
-#else
-#include <unistd.h>
-#endif
 
 #include "irc_fct.hpp"
+#include "irc_exception.hpp"
+#include "server.hpp"
 
+static bool msg_const = false;
 
-class NumberArgException : public std::exception {
-	const char *what() const throw(){
-   		return ("\x1b[31m \x1b[3m Usage : ./ircserv <port> <password> \x1b[0m");}
-};
-
-class TypeArgException : public std::exception {
-	const char *what() const throw(){
-    	return ("\x1b[31m \x1b[3m Error: port must be included between 1 and 65535. \x1b[0m");}
-};
+extern bool	handleSignal;

@@ -8,7 +8,7 @@ OBJ_DIR = .obj
 INCLUDE_DIR = include
 
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+SRC_FILES = $(wildcard $(SRC_DIR)/**/*.cpp) srcs/main.cpp
 
 
 HDR_FILES = $(wildcard $(INCLUDE_DIR)/*.hpp)
