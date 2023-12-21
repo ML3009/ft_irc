@@ -12,6 +12,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <vector>
+#include <poll.h>
 
 #include "irc_fct.hpp"
 #include "irc_exception.hpp"

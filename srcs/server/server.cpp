@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 15:06:29 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/21 15:57:00 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,17 @@ void server::init_server(){
 	//Listen for incoming connections
 	!(listen(serverSocket, serverAdress.sin_port) == -1) ? void() : (std::perror("listen"), throw listenException());
 
-	
-	
-	
-	//close(serverSocket);
-	
-	
+	_pollFD.push_back(pollfd());
+	_pollFD.back().fd = serverSocket;
+	_pollFD.back().events = POLLIN;
+	std::cout << "\x1b[32m \x1b[3m" << "Initialisation ended sucessfully" << "\x1b[0m" << std::endl;
 	return;
 }
+
+void server::run_server(){
+	
+}
 /*--------------- Exception ------------- */
+
+
+// faire un .github a la racine et 

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:23:07 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 15:04:23 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/21 15:44:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ class NumberArgException : public std::exception {
 
 class TypeArgException : public std::exception {
 	const char *what() const throw(){
-    	return ("\x1b[31m \x1b[3m Error: port must be included between 1 and 65535. \x1b[0m");}
+    	return ("\x1b[31m \x1b[3m Error: port must be included between 1024 and 65535. \x1b[0m");}
 };
 
 class socketException : public std::exception {
