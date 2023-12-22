@@ -1,6 +1,7 @@
 #include "irc.hpp"
 
 bool handleSignal = false;
+bool msg_const = true;
 
 int main(int ac, char **av){
 

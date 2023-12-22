@@ -19,6 +19,6 @@
 #include "irc_exception.hpp"
 #include "server.hpp"
 
-static bool msg_const = true;
+extern bool msg_const;
 
 extern bool	handleSignal;
