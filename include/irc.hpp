@@ -19,6 +19,5 @@
 #include "irc_exception.hpp"
 #include "server.hpp"
 
-extern bool msg_const;
-
-extern bool	handleSignal;
+extern bool msg_const; // Display constructor message
+extern bool	handleSignal; 

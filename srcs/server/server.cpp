@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 15:57:00 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/22 16:22:02 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,16 @@ void server::init_server(){
 }
 
 void server::run_server(){
-	
+	!(poll(&_pollFD[0], _pollFD.size(), 5000) == -1) ? void() : (std::perror("poll"), throw pollException());
+	/*
+		On doit maintenant verifier qui essai de se connecter :
+			-> Nouvel utilisateur ? L'accepter et l ajouter au vecteur
+			-> Utilisateur connu ? Verifier la liste des utilisateurs pour le trouver
+		pour savoir on doit regarder si le socket envoye == socket server
+			si vrai alors nouvel user 
+			sinon user existant
+
+		Pour commencer, tenter la connection avec client et l'envoie
+	*/
 }
 /*--------------- Exception ------------- */
-
-
-// faire un .github a la racine et 

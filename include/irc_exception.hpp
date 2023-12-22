@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:23:07 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 15:44:21 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/22 12:58:04 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,9 @@ class socketoptException : public std::exception {
 class fcntlException : public std::exception {
 	const char *what() const throw(){
     	return ("\x1b[31m \x1b[3m Error: fcntl failed. \x1b[0m");}
+};
+
+class pollException : public std::exception {
+	const char *what() const throw(){
+    	return ("\x1b[31m \x1b[3m Error: poll failed. \x1b[0m");}
 };
