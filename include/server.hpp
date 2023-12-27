@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2023/12/21 16:32:07 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/25 12:56:32 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ class server{
 // Fonction
 			void init_server(void);
 			void run_server(void);
+			void getNewClient(void);
+			void getClientMessage(void);
+
 // Getter / Setter
 // Exception
 	protected:

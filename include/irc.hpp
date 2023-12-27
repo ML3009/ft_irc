@@ -18,6 +18,10 @@
 #include "irc_fct.hpp"
 #include "irc_exception.hpp"
 #include "server.hpp"
+#include "user.hpp"
 
-extern bool msg_const; // Display constructor message
+
+extern bool CONSTRUCTOR; // Display constructor message
+extern bool DEBUG; // Display debug message
+
 extern bool	handleSignal; 
