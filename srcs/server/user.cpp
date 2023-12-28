@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 16:24:50 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 20:34:51 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ user::user(){
 	_buffer = "";
 	_password = "default";
 	_hostname = "127.0.0.1";
-	CONSTRUCTOR ? _display_constructor(USER_DC) : void ();
+	display_constructor(USER_DC);
 
 }
 
 user::user(const user& rhs){
     
     *this = rhs; 
-	CONSTRUCTOR ? _display_constructor(USER_DC) : void ();
+	display_constructor(USER_DC);
 
 }
 
@@ -45,12 +45,12 @@ user&	user::operator=(const user& rhs){
 		_password = rhs._password;
 		_hostname = rhs._hostname;
 	}
-	CONSTRUCTOR ? _display_constructor(USER_AO) : void ();
+	display_constructor(USER_AO);
 	return *this;
 }
 
 user::~user(){
-	CONSTRUCTOR ? _display_constructor(SERVER_DD) : void ();
+	display_constructor(SERVER_DD);
 
 }
 
@@ -61,10 +61,6 @@ user::~user(){
 
 
 /*--------------- Function -------------- */
-
-void user::_display_constructor(std::string msg){
-    std::cout << "\x1b[33m \x1b[3m" << msg << "\x1b[0m" << std::endl;
-}
 
 
 user *user::getUser(int fd, server &server){

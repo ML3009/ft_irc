@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_exception.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:23:07 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 15:46:43 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 20:25:00 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,9 @@ class acceptException : public std::exception {
 class userException : public std::exception {
 	const char *what() const throw(){
     	return ("\x1b[31m \x1b[3m Error: user not found. \x1b[0m");}
+};
+
+class openException : public std::exception {
+	const char *what() const throw(){
+    	return ("\x1b[31m \x1b[3m Error: open failed. \x1b[0m");}
 };

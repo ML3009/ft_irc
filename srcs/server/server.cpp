@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 16:31:32 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 20:34:28 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ server::server(){
 	_password = "password";
 	_userCount = 0;
 
-	CONSTRUCTOR ? _display_constructor(SERVER_DC) : void ();
+	display_constructor(SERVER_DC);
 }
 
 
@@ -27,14 +27,14 @@ server::server(int port, std::string password){
 	_port = port;
 	_password = password;
 
-	CONSTRUCTOR ? _display_constructor(SERVER_PC) : void ();
+	display_constructor(SERVER_PC);
 
 }
 
 server::server(const server& rhs){
 	
 	*this = rhs; 
-	CONSTRUCTOR ? _display_constructor(SERVER_CC) : void ();
+	display_constructor(SERVER_CC);
 
 }
 
@@ -42,12 +42,12 @@ server&	server::operator=(const server& rhs){
 
 	if (this != &rhs)
 		*this = rhs;
-	CONSTRUCTOR ? _display_constructor(SERVER_AO) : void ();
+	display_constructor(SERVER_AO);
 	return *this;
 }
 
 server::~server(){
-	CONSTRUCTOR ? _display_constructor(SERVER_DD) : void ();
+	display_constructor(SERVER_DD);
 
 }
 
@@ -63,9 +63,7 @@ std::map<int, user> server::getClient(){
 }
 /*--------------- Function -------------- */
 
-void server::_display_constructor(std::string msg){
-    std::cout << "\x1b[33m \x1b[3m" << msg << "\x1b[0m" << std::endl;
-}
+
 
 void server::init_server(){
 	
@@ -83,8 +81,11 @@ void server::init_server(){
 	!((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) ? void() : (std::perror("socket"), throw socketException());
 
 	//Option socket to reuse adress | port
-	!(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) == -1) ? void() : (std::perror("socket option"), throw socketoptException());
-
+	#ifdef SO_REUSEPORT
+	!(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) == -1) ? void() : (std::perror("socket option"), throw socketoptException());
+	#endif
+	!(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) ? void() : (std::perror("socket option"), throw socketoptException());
+	
 	//Option socket to be non bloquant
 	!(fcntl(serverSocket, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 	
@@ -107,7 +108,7 @@ void server::run_server(){
 	debug("run_server", BEGIN);	
 	!(poll(&_pollFD[0], _pollFD.size(), 5000) == -1) ? void() : (std::perror("poll"), throw pollException());
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
-	
+
 
 	// std::map<int, user>::const_iterator it;
 	// for (it = _client.begin(); it != _client.end(); it++)
@@ -137,13 +138,13 @@ void server::getNewClient(){
 
 void server::getClientMessage(){
 	debug("getClientMessage", BEGIN);	
+	user *user = NULL;
 	for (int i = 0; i < _userCount ; i++){
 		std::vector<pollfd>::const_iterator it;
-		user *user = NULL;
 		for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 			(it->revents == POLLIN) ? user->getUser(it->fd, *this) : NULL;
-		(user) ? void() : (std::perror("user"), throw userException());
 	}
+	(user || _userCount == 0) ? void() : (std::perror("user"), throw userException());
 	
 	debug("getClientMessage", END);	
 }

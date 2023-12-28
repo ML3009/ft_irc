@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 12:55:21 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 20:22:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <fstream>
 #include <cstdlib>
 #include <csignal>
 #include <arpa/inet.h>
@@ -33,10 +34,17 @@
 #include "server.hpp"
 #include "user.hpp"
 
-
-extern bool CONSTRUCTOR; // Display constructor message
-extern bool DEBUG; // Display debug message
-extern bool	handleSignal; 
-
+/* ---- DEBUG AND LOGS ---- */
+extern int CONSTRUCTOR; // Display constructor message
+extern int DEBUG; // Display debug message
+extern int LOG;
 #define BEGIN	0
 #define END		1
+#define YES     1
+#define NO      1
+#define LOGFILE 1
+#define STDOUT  0
+
+
+
+extern bool	handleSignal; 
