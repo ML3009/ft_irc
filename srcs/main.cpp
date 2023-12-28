@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2023/12/27 22:15:08 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 16:25:38 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 bool handleSignal	= false;
-bool DEBUG			= false;
+bool DEBUG			= true;
 bool CONSTRUCTOR	= true;
 
 int main(int ac, char **av){

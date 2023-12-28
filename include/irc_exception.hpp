@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_exception.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:23:07 by purple            #+#    #+#             */
-/*   Updated: 2023/12/25 17:03:15 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/28 15:46:43 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,9 @@ class pollException : public std::exception {
 class acceptException : public std::exception {
 	const char *what() const throw(){
     	return ("\x1b[31m \x1b[3m Error: poll failed. \x1b[0m");}
+};
+
+class userException : public std::exception {
+	const char *what() const throw(){
+    	return ("\x1b[31m \x1b[3m Error: user not found. \x1b[0m");}
 };
