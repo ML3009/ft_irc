@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 20:46:31 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/29 21:26:58 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool handleSignal	= false;
 int DEBUG			= YES;
-int CONSTRUCTOR		= YES;
-int	LOG				= LOGFILE;
+int CONSTRUCTOR		= NO;
+int	LOG				= STDOUT;
 
 
 

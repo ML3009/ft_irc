@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 20:32:15 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/30 23:06:23 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ class server{
 			void getClientMessage(void);
 
 // Getter / Setter
-			std::map<int, user> getClient();
+			std::map<int, user> getClientMap() const;
+			int					getUserCount() const;
+			user                getUser(int fd) const;
+
 // Exception
 	protected:
 

@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 20:32:22 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/30 22:39:37 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ class user
 public :
 // Coplien
             user();
+            user(int fd);
             user(const user& rhs);
             user &operator=(const user& rhs);
             ~user();
 
 // Operator
 // Setter / Getter
-            user                *getUser(int fd, server &server);
+            int                 getfd() const;
+            std::string         getUsername() const;
 // Function
 protected :
 
@@ -38,6 +40,7 @@ private :
             std::string         _realname;
             std::string         _buffer;
             std::string         _password;
+            int                 _fd;
 
             
             

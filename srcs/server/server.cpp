@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 20:34:28 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/30 23:17:59 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,23 @@ server::~server(){
 
 /*---------- Getter / Setter ------------ */
 
-std::map<int, user> server::getClient(){
-	return _client;
+std::map<int, user> server::getClientMap() const {return _client;}
+
+int server::getUserCount() const { return _userCount;}
+
+user server::getUser(int fd) const {
+    debug("getUser", BEGIN);
+    
+    std::map<int, user> map = this->getClientMap();
+    std::map<int, user>::const_iterator it;
+    for (it = map.begin(); it != map.end(); it++) {
+        if (it->first == fd) {
+            debug("getUser", END);
+            return it->second;
+        }
+    }
+    debug("getUser", END);
+    return NULL;
 }
 /*--------------- Function -------------- */
 
@@ -106,13 +121,13 @@ void server::init_server(){
 void server::run_server(){
 	
 	debug("run_server", BEGIN);	
-	!(poll(&_pollFD[0], _pollFD.size(), 5000) == -1) ? void() : (std::perror("poll"), throw pollException());
+	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
 
 
 	// std::map<int, user>::const_iterator it;
 	// for (it = _client.begin(); it != _client.end(); it++)
-	// 	std::cout << "fd [" << it->first << "] | " << it->second._name << std::endl; 
+	// 	std::cout << "fd [" << it->first << "] | " << it->second.revents << std::endl; 
 	debug("run_server", END);	
 
 }
@@ -127,7 +142,7 @@ void server::getNewClient(){
 
 	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&address, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
 	
-	user User;
+	user User(fd);
 	_client[fd] = User;
 	_pollFD.push_back(pollfd());
 	_pollFD.back().fd = fd;
@@ -137,14 +152,28 @@ void server::getNewClient(){
 }
 
 void server::getClientMessage(){
-	debug("getClientMessage", BEGIN);	
-	user *user = NULL;
-	for (int i = 0; i < _userCount ; i++){
-		std::vector<pollfd>::const_iterator it;
-		for (it = _pollFD.begin(); it != _pollFD.end(); it++)
-			(it->revents == POLLIN) ? user->getUser(it->fd, *this) : NULL;
+	debug("getClientMessage", BEGIN);
+
+	std::vector<pollfd>::const_iterator it;
+	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
+	{
+		if (it->revents == POLLIN)
+		{
+			user user = getUser(it->fd);
+			//(user == NULL) ? void() : (std::perror("user"), throw userException());
+			char buffer[1024];
+			std::cout << "User : " << user.getUsername() << " base fd : " << it->fd << " user fd : " << user.getfd()<< std::endl;
+			if (recv(user.getfd(), buffer, 1024, 0) <= 0)
+			{
+				std::cout << "DISCONNECTED" << std::endl;
+				exit(0);	
+			}
+			else
+			{
+				std::string buff (buffer);
+				std::cout << "BUFFER : " << buff << buffer;
+			}
+		}
 	}
-	(user || _userCount == 0) ? void() : (std::perror("user"), throw userException());
-	
 	debug("getClientMessage", END);	
 }

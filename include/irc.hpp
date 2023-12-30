@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2023/12/28 20:22:35 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/29 21:22:44 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ extern int LOG;
 #define BEGIN	0
 #define END		1
 #define YES     1
-#define NO      1
+#define NO      -1
 #define LOGFILE 1
 #define STDOUT  0
 
