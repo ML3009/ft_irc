@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:43 by purple            #+#    #+#             */
-/*   Updated: 2023/12/29 21:23:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/01 17:46:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void display_constructor(std::string msg){
         return ;
     std::ofstream logfile("logs.txt", std::ios::out | std::ios::app);
     (logfile.is_open()) ? void() : (std::perror("open"), throw openException());
-    
     if (LOG == STDOUT)
         std::cout << "\x1b[33m \x1b[3m" << msg << "\x1b[0m" << std::endl;
     else

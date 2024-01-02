@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2023/12/30 22:39:12 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/01 17:53:25 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,37 @@ int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
 
 /*--------------- Function -------------- */
+
+void user::parseClientMessage(std::string buffer){
+	debug("parseClientMessage", BEGIN);
+	_buffer += buffer;
+	for (int i = 0; i < (int)std::strlen(_buffer.c_str()); i++) {
+        char currentChar = buffer[i];
+        
+        if (currentChar == '\n') {
+            std::cout << "\\n";
+        } else if (currentChar == '\r') {
+            std::cout << "\\r";
+        } else if (currentChar == '\t') {
+            std::cout << "\\t";
+        } else {
+            std::cout << currentChar;
+        }
+    }
+
+	if (completeCommand(_buffer) == COMPLETE)
+	{
+		std::vector<std::string> argumuent = splitArgs(_buffer);
+		_buffer.empty();
+		std::vector<std::string>::const_iterator it;
+		for (it = argumuent.begin(); it != argumuent.end(); it++)
+			std::cout << *it << std::endl;
+
+	}
+	else
+		std::cout << "Recieving a non-complete message, saving in buffer" << std::endl;
+	debug("parseClientMessage", END);
+}
 
 
 /*--------------- Exception ------------- */

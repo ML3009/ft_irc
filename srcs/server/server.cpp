@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/30 23:17:59 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/31 15:59:18 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,6 @@ void server::run_server(){
 	debug("run_server", BEGIN);	
 	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
-
-
-	// std::map<int, user>::const_iterator it;
-	// for (it = _client.begin(); it != _client.end(); it++)
-	// 	std::cout << "fd [" << it->first << "] | " << it->second.revents << std::endl; 
 	debug("run_server", END);	
 
 }
@@ -141,7 +136,8 @@ void server::getNewClient(){
 	socklen_t			size 	= sizeof(sockaddr_in);
 
 	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&address, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
-	
+	!(fcntl(fd, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
+
 	user User(fd);
 	_client[fd] = User;
 	_pollFD.push_back(pollfd());
@@ -168,12 +164,13 @@ void server::getClientMessage(){
 				std::cout << "DISCONNECTED" << std::endl;
 				exit(0);	
 			}
-			else
-			{
+			else{
 				std::string buff (buffer);
-				std::cout << "BUFFER : " << buff << buffer;
+				buff[buff.length()] = '\0';
+				user.parseClientMessage(buff);
 			}
 		}
 	}
 	debug("getClientMessage", END);	
 }
+

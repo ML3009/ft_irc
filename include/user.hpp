@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2023/12/30 22:39:37 by purple           ###   ########.fr       */
+/*   Updated: 2023/12/31 15:59:04 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ public :
             int                 getfd() const;
             std::string         getUsername() const;
 // Function
+			void parseClientMessage(std::string buffer);
+            
 protected :
 
 private :
