@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2023/12/31 15:58:55 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 13:47:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ class server{
 			void getClientMessage(void);
 
 // Getter / Setter
-			std::map<int, user> getClientMap() const;
+			//std::map<int, user> getClientMap();
 			int					getUserCount() const;
-			user                getUser(int fd) const;
+			//user& 				getUser(int fd);
 
 // Exception
 	protected:
@@ -43,7 +43,7 @@ class server{
 			int					_userCount;
 			std::string			_password;
 			std::vector<pollfd>	_pollFD;
-			std::map<int, user> _client;
+
 			
 };
 

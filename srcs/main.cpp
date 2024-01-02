@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/01 17:46:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 13:47:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 bool handleSignal	= false;
 int DEBUG			= YES;
-int CONSTRUCTOR		= NO;
+int CONSTRUCTOR		= YES;
 int	LOG				= STDOUT;
+std::map<int, user> clientMap;
 
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2023/12/31 15:59:04 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 13:17:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ public :
 // Setter / Getter
             int                 getfd() const;
             std::string         getUsername() const;
+            std::string         getBuffer() const;
 // Function
-			void parseClientMessage(std::string buffer);
+			void parseClientMessage(std::string  buffer);
             
 protected :
 

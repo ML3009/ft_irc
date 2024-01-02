@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2023/12/31 15:59:18 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 13:56:23 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,24 +58,24 @@ server::~server(){
 
 /*---------- Getter / Setter ------------ */
 
-std::map<int, user> server::getClientMap() const {return _client;}
+//std::map<int, user> server::getClientMap() {return _client;}
 
 int server::getUserCount() const { return _userCount;}
 
-user server::getUser(int fd) const {
-    debug("getUser", BEGIN);
-    
-    std::map<int, user> map = this->getClientMap();
-    std::map<int, user>::const_iterator it;
-    for (it = map.begin(); it != map.end(); it++) {
-        if (it->first == fd) {
-            debug("getUser", END);
-            return it->second;
-        }
-    }
-    debug("getUser", END);
-    return NULL;
-}
+// user& server::getUser(int fd){
+// 	debug("getUser", BEGIN);
+//     std::map<int, user>::iterator it;
+// 	debug("1",5);
+//     for (it = getClientMap().begin(); it != getClientMap().end(); it++) {
+// 		debug("2",5);
+//         if (it->first == fd) {
+//             debug("getUser", END);
+//             return it->second;
+//         }
+//     }
+//     debug("getUser", END);
+//     throw userException();
+// }
 /*--------------- Function -------------- */
 
 
@@ -139,7 +139,7 @@ void server::getNewClient(){
 	!(fcntl(fd, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 
 	user User(fd);
-	_client[fd] = User;
+	clientMap[fd] = User;
 	_pollFD.push_back(pollfd());
 	_pollFD.back().fd = fd;
 	_pollFD.back().events = POLLIN;
@@ -149,25 +149,21 @@ void server::getNewClient(){
 
 void server::getClientMessage(){
 	debug("getClientMessage", BEGIN);
-
-	std::vector<pollfd>::const_iterator it;
+	std::vector<pollfd>::iterator it;
 	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	{
 		if (it->revents == POLLIN)
 		{
-			user user = getUser(it->fd);
-			//(user == NULL) ? void() : (std::perror("user"), throw userException());
 			char buffer[1024];
-			std::cout << "User : " << user.getUsername() << " base fd : " << it->fd << " user fd : " << user.getfd()<< std::endl;
-			if (recv(user.getfd(), buffer, 1024, 0) <= 0)
+			if (recv(clientMap[it->fd].getfd(), buffer, 1024, 0) <= 0)
 			{
 				std::cout << "DISCONNECTED" << std::endl;
 				exit(0);	
 			}
 			else{
 				std::string buff (buffer);
-				buff[buff.length()] = '\0';
-				user.parseClientMessage(buff);
+				memset(buffer, 0, sizeof(char));
+				clientMap[it->fd].parseClientMessage(buff);
 			}
 		}
 	}

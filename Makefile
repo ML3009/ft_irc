@@ -1,7 +1,7 @@
 DEFAULT_TARGET = ircserv
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 
 SRC_DIR = srcs
 OBJ_DIR = .obj

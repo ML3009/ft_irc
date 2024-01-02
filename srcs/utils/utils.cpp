@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:07:01 by purple            #+#    #+#             */
-/*   Updated: 2024/01/01 17:55:50 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 10:35:40 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 bool completeCommand(std::string msg){
-    if (msg.length() > 2 && msg[msg.length()] == '\n' && msg[msg.length() - 1] == '\r')
+    if (msg.length() > 2 && msg[msg.length() - 1] == '\n' && msg[msg.length() - 2] == '\r')
         return COMPLETE;
     return INCOMPLETE;
 }

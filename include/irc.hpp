@@ -3,31 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/01 10:10:17 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 13:47:25 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <fstream>
+
+#include <cstring>
+#include <cstdio>
 #include <cstdlib>
 #include <csignal>
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+#include <cerrno>
+#include <vector>
+#include <map>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include <cerrno>
-#include <cstdio>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include <vector>
 #include <poll.h>
-#include <map>
+
 
 #include "irc_fct.hpp"
 #include "irc_exception.hpp"
@@ -38,6 +41,9 @@
 extern int CONSTRUCTOR; // Display constructor message
 extern int DEBUG; // Display debug message
 extern int LOG;
+extern std::map<int, user> clientMap;
+
+
 #define BEGIN	0
 #define END		1
 #define YES     1
