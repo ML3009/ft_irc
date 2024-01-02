@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 14:51:40 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 16:25:54 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,34 +69,12 @@ std::string user::getBuffer() const{return _buffer;}
 
 void user::parseClientMessage(std::string buffer){
 	debug("parseClientMessage", BEGIN);
-	// std::cout << "Client fd : " << this->getfd()  << std::endl ;
 	_buffer.append(buffer);
 	buffer.clear();
-	// debug("Parse",5);
-
-	// std::cout << "buffer size " << (_buffer.length()) << " for [" << _buffer << "]"  <<std::endl ;
-	// for (int i = 0; i < (int)(_buffer.length()); i++) {
-    //     char currentChar = _buffer[i];
-        
-    //     if (currentChar == '\n') {
-    //         std::cout << "\\n" << " position : " << i  ;
-    //     } else if (currentChar == '\r') {
-    //         std::cout << "\\r"<< " position : " << i;
-    //     } else if (currentChar == '\t') {
-    //         std::cout << "\\t"<< " position : " << i;
-    //     } else {
-    //         std::cout << currentChar;
-    //     }
-    // }
-
 	if (completeCommand(_buffer) == COMPLETE)
 	{
-		std::vector<std::string> argumuent = splitArgs(_buffer);
+		std::vector<std::string> argument = splitArgs(_buffer);
 		_buffer.clear();
-		std::vector<std::string>::const_iterator it;
-		for (it = argumuent.begin(); it != argumuent.end(); it++)
-			std::cout << *it << std::endl;
-
 	}
 	else
 		std::cout << "\nRecieving a non-complete message, saving in buffer" << std::endl;

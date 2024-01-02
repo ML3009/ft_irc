@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 13:56:23 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/02 15:25:43 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,24 +58,8 @@ server::~server(){
 
 /*---------- Getter / Setter ------------ */
 
-//std::map<int, user> server::getClientMap() {return _client;}
-
 int server::getUserCount() const { return _userCount;}
 
-// user& server::getUser(int fd){
-// 	debug("getUser", BEGIN);
-//     std::map<int, user>::iterator it;
-// 	debug("1",5);
-//     for (it = getClientMap().begin(); it != getClientMap().end(); it++) {
-// 		debug("2",5);
-//         if (it->first == fd) {
-//             debug("getUser", END);
-//             return it->second;
-//         }
-//     }
-//     debug("getUser", END);
-//     throw userException();
-// }
 /*--------------- Function -------------- */
 
 
