@@ -6,12 +6,14 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 12:29:14 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:11:40 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "irc.hpp"
+
+class commands;
 
 class user;
 
@@ -48,7 +50,7 @@ class server{
 			std::string			_password;
 			std::vector<pollfd>	_pollFD;
 
-			
+
 };
 
 

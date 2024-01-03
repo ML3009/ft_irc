@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 15:02:21 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:12:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,18 @@ server::server(int port, std::string password){
 }
 
 server::server(const server& rhs){
-	
-	*this = rhs; 
+
+	*this = rhs;
 	display_constructor(SERVER_CC);
 
 }
 
 server&	server::operator=(const server& rhs){
 
-	if (this != &rhs)
-		*this = rhs;
+	if (this != &rhs){
+		_port = rhs._port;
+		_password = rhs._password;
+	}
 	display_constructor(SERVER_AO);
 	return *this;
 }
@@ -65,7 +67,7 @@ std::vector<pollfd> server::getpollfd() { return _pollFD;}
 
 
 void server::init_server(){
-	
+
 	debug("init_server", BEGIN);
 	int opt = 1;
 	int	serverSocket;
@@ -85,10 +87,10 @@ void server::init_server(){
 	!(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) == -1) ? void() : (std::perror("socket option"), throw socketoptException());
 	#endif
 	!(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) ? void() : (std::perror("socket option"), throw socketoptException());
-	
+
 	//Option socket to be non bloquant
 	!(fcntl(serverSocket, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
-	
+
 	//Bind the socket
 	!(bind(serverSocket, (struct sockaddr *)&serverAdress, sizeof(serverAdress)) == -1) ? void() : (std::perror("bind"), throw bindException());
 
@@ -104,17 +106,17 @@ void server::init_server(){
 }
 
 void server::run_server(){
-	
-	debug("run_server", BEGIN);	
+
+	debug("run_server", BEGIN);
 	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
-	debug("run_server", END);	
+	debug("run_server", END);
 
 }
 /*--------------- Exception ------------- */
 
 void server::getNewClient(){
-	debug("getNewClient", BEGIN);	
+	debug("getNewClient", BEGIN);
 
 	int fd;
 	struct sockaddr_in	address = {};
@@ -153,11 +155,11 @@ void server::getClientMessage(){
 				std::string buff (buffer);
 				buff.append("\0");
 				memset(buffer, 0, sizeof(char));
-				clientMap[it->fd].parseClientMessage(buff);
+				clientMap[it->fd].parseClientMessage(*this, buff);
 			}
 		}
 	}
-	debug("getClientMessage", END);	
+	debug("getClientMessage", END);
 }
 
 void server::disconnect_client(user client){
