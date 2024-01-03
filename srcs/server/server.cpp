@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:12:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:35:00 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void server::disconnect_client(user client){
 	close(client.getfd());
 	clientMap.erase(client.getfd());
 	_userCount--;
-	std::cout << "disconnection" << std::endl;
+	std::cout << "\e[0;33m" << "[Disconnected]"  << " \e[0m" << std::endl;
 }
 
 void server::closeServerSocket() {close(_pollFD[0].fd);}

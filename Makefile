@@ -47,9 +47,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HDR_FILES)
 clean:
 	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) object ... $(RESET)"
 	@rm -rf $(OBJ_DIR)
-	@rm logs.txt
 	@printf "$(CURSIVE)$(GREEN)\t   done\n$(RESET)"
-
+	
 fclean: clean
 	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) executable ... $(RESET)"
 	@rm -f $(DEFAULT_TARGET)
