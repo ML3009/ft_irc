@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/03 16:05:39 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:28:12 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,17 @@ commands::commands(){
 }
 
 commands::commands(const commands& rhs){
-	(void)rhs;
+	*this = rhs;
+	display_constructor(COMMANDS_CC);
 
 }
 
 commands& commands::operator=(const commands& rhs){
-	if(this != &rhs)
-	{
-		(void)rhs;
+	if(this != &rhs) {
+		// this->cmdMap.clear();  // Effacer la map actuelle
+		for (std::map<std::string, cmdFunctionPointer>::const_iterator it = rhs.cmdMap.begin(); it != rhs.cmdMap.end(); ++it)
+			this->cmdMap[it->first] = it->second;
 	}
-
 	return *this;
 }
 
@@ -68,16 +69,11 @@ commands::~commands(){
 void	commands::getCommand(server Server, user Client, std::vector<std::string> argument) {
 
 	debug("getCommand", BEGIN);
-	(void)Client;
-	(void)Server;
 	std::cout << "getCommand" << std::endl;
 	if (!argument.empty()) {
 		for (std::map<std::string, cmdFunctionPointer>::iterator it = cmdMap.begin(); it!= cmdMap.end(); ++it) {
-			if (it->first == argument[0]) {
-				std::cout << "getCommand, it->first : ";
-				std::cout << it->first << std::endl;
-			}
-
+			if (it->first == argument[0])
+				(this->*(it->second))(Server, Client, argument);
 		}
 	}
 	debug("getCommand", END);
