@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:12:43 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:35:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
 std::string user::getBuffer() const{return _buffer;}
 std::string user::getPassword() const{return _password;}
+std::string user::getNickname() const{return _nickname;}
 /*--------------- Function -------------- */
 void printBuffers(const std::string& buffer, const std::string& _buffer) {
     std::cout << "buffer: ";
@@ -95,9 +96,7 @@ void printBuffers(const std::string& buffer, const std::string& _buffer) {
 void user::parseClientMessage(server Server, std::string buffer){
 	debug("parseClientMessage", BEGIN);
 	size_t bufferLength = std::strlen(buffer.c_str());
-	printBuffers(buffer, _buffer);
 	_buffer.append((bufferLength > 0 && buffer[bufferLength] == '\n') ? buffer.substr(0, bufferLength - 1) : buffer);
-	printBuffers(buffer, _buffer);
 	buffer.clear();
 
 	if (completeCommand(_buffer) == COMPLETE)
@@ -109,7 +108,6 @@ void user::parseClientMessage(server Server, std::string buffer){
 	}
 	else
 		std::cout << "\n[Recieving a non-complete message, saving in buffer]\x1b[0m" << std::endl;
-	printBuffers(buffer, _buffer);
 	debug("parseClientMessage", END);
 	return;
 }

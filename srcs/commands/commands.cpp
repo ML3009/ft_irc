@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/03 16:05:39 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:33:22 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,15 @@ void	commands::getAuthentified(server Server, user Client, std::vector<std::stri
 				getCommand(Server, Client, argument);
 				break;
 			default:
-				std::cout << "Command not found" << std::endl;
+				std::cout << "\e[0;33m" << "[ You are not connected to the server ]" << " \e[0m" << std::endl;
+				if (!(Client.getPassword().empty()))
+					std::cout << "\e[0;36m" << "\t[Password] OK" << std::endl;
+				else{
+					std::cout << "\e[0;36m" << "\tuse /PASS before doing anything" << " \e[0m" << std::endl;
+					break;
+				}
+				!(Client.getUsername().empty()) ? std::cout << "\e[0;36m" << "\t[Username] " << Client.getUsername() << std::endl : std::cout << "\e[0;36m" << "\t[/USER] username must be set" << std::endl;
+				!(Client.getNickname().empty()) ? std::cout << "\e[0;36m" << "\t[Nickname] " << Client.getNickname() << std::endl : std::cout << "\e[0;36m" << "\t[/NICK] nickname must be set" << " \e[0m" << std::endl;
 		}
 	}
 	debug("getAuthentified", END);
