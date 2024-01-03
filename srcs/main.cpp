@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 13:47:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 14:59:37 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 bool handleSignal	= false;
-int DEBUG			= YES;
-int CONSTRUCTOR		= YES;
+int DEBUG			= NO;
+int CONSTRUCTOR		= NO;
 int	LOG				= STDOUT;
 std::map<int, user> clientMap;
 

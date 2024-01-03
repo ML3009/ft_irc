@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 16:25:54 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:01:24 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,23 @@
 
 
 
-
 /*----------------- Coplien ------------- */
 
 user::user(){
-	
 
 }
 user::user(int fd){
 	_fd = fd;
-	_username = "default";
-	_nickname = "default";
-	_realname = "default";
+	_username = "";
+	_nickname = "";
 	_buffer = "";
-	_password = "default";
+	_password = "";
 	_hostname = "127.0.0.1";
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
-    
-    *this = rhs; 
+
+    *this = rhs;
 	display_constructor(USER_DC);
 
 }
@@ -41,13 +38,12 @@ user::user(const user& rhs){
 user&	user::operator=(const user& rhs){
 
 	if (this != &rhs) {
+		_fd = rhs._fd;
 		_username = rhs._username;
 		_nickname = rhs._nickname;
-		_realname = rhs._realname;
 		_buffer = rhs._buffer;
 		_password = rhs._password;
 		_hostname = rhs._hostname;
-		_fd = rhs._fd;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -65,9 +61,10 @@ user::~user(){
 int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
 std::string user::getBuffer() const{return _buffer;}
+std::string user::getPassword() const{return _password;}
 /*--------------- Function -------------- */
 
-void user::parseClientMessage(std::string buffer){
+void user::parseClientMessage(server Server, std::string buffer){
 	debug("parseClientMessage", BEGIN);
 	_buffer.append(buffer);
 	buffer.clear();
@@ -75,10 +72,20 @@ void user::parseClientMessage(std::string buffer){
 	{
 		std::vector<std::string> argument = splitArgs(_buffer);
 		_buffer.clear();
+		commands cmd;
+		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 	}
 	else
 		std::cout << "\nRecieving a non-complete message, saving in buffer" << std::endl;
 	debug("parseClientMessage", END);
+	return;
+}
+
+bool	user::isAuthentified(void) {
+	debug("isAuthentified", BEGIN);
+	if (_password.empty() || _username.empty() || _nickname.empty())
+		return false;
+	return true;
 }
 
 

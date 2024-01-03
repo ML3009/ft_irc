@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 13:47:25 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 10:28:32 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
 
 #include <cstring>
 #include <cstdio>
@@ -36,6 +35,8 @@
 #include "irc_exception.hpp"
 #include "server.hpp"
 #include "user.hpp"
+#include "commands.hpp"
+#include "channel.hpp"
 
 /* ---- DEBUG AND LOGS ---- */
 extern int CONSTRUCTOR; // Display constructor message
@@ -53,6 +54,23 @@ extern std::map<int, user> clientMap;
 #define COMPLETE true
 #define INCOMPLETE false
 
+#define PASS 0 //authentifier
+#define NICK 1 //nickname
+#define USER 2 //user
+#define QUIT 3 //quit
+
+#define JOIN 4 //rejoindre un channel
+#define PART 5 //quitter un channel
+#define KICK 6
+#define INVITE 7
+#define TOPIC 8
+#define MODE 9
+
+#define PRIVMSG 10
+
+#define PING 11
+#define PONG 12
 
 
-extern bool	handleSignal; 
+
+extern bool	handleSignal;
