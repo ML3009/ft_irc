@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 13:47:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 12:29:14 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,14 @@ class server{
 			void run_server(void);
 			void getNewClient(void);
 			void getClientMessage(void);
+			void disconnect_client(user client);
+			void closeServerSocket();
+
 
 // Getter / Setter
 			//std::map<int, user> getClientMap();
 			int					getUserCount() const;
+			std::vector<pollfd> getpollfd();
 			//user& 				getUser(int fd);
 
 // Exception

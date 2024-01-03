@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 16:25:54 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 15:04:04 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,51 @@ int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
 std::string user::getBuffer() const{return _buffer;}
 /*--------------- Function -------------- */
+void printBuffers(const std::string& buffer, const std::string& _buffer) {
+    std::cout << "buffer: ";
+    for (std::size_t i = 0; i < buffer.size(); ++i) {
+        char currentChar = buffer[i];
+        if (currentChar == '\n') {
+            std::cout << "\\n ";
+        } else if (currentChar == '\0') {
+            std::cout << "\\0 ";
+        } else {
+            std::cout << currentChar << ' ';
+        }
+    }
+    std::cout << "\n";
+
+    std::cout << "_buffer: ";
+    for (std::size_t i = 0; i < _buffer.size(); ++i) {
+        char currentChar = _buffer[i];
+        if (currentChar == '\n') {
+            std::cout << "\\n ";
+        } else if (currentChar == '\0') {
+            std::cout << "\\0 ";
+        } else {
+            std::cout << currentChar << ' ';
+        }
+    }
+    std::cout << "\n";
+}
+
 
 void user::parseClientMessage(std::string buffer){
 	debug("parseClientMessage", BEGIN);
-	_buffer.append(buffer);
+	size_t bufferLength = std::strlen(buffer.c_str());
+	printBuffers(buffer, _buffer);
+	_buffer.append((bufferLength > 0 && buffer[bufferLength] == '\n') ? buffer.substr(0, bufferLength - 1) : buffer);
+	printBuffers(buffer, _buffer);
 	buffer.clear();
+
 	if (completeCommand(_buffer) == COMPLETE)
 	{
 		std::vector<std::string> argument = splitArgs(_buffer);
 		_buffer.clear();
 	}
 	else
-		std::cout << "\nRecieving a non-complete message, saving in buffer" << std::endl;
+		std::cout << "\n[Recieving a non-complete message, saving in buffer]\x1b[0m" << std::endl;
+	printBuffers(buffer, _buffer);
 	debug("parseClientMessage", END);
 }
 

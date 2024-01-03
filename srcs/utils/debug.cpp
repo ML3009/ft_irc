@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:43 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 11:04:49 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 12:50:15 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ void debug(std::string msg, int type){
         logfile << "--> [ Entering ] Function : " << msg << std::endl;
     else if (type == END && LOG == LOGFILE)
         logfile << "<-- [ Leaving ]  Function : " << msg << std::endl;
-    else 
+    else if (LOG == LOGFILE){
+        std::cout << "\e[0;33m DEBUG HERE : " << msg << " \e[0m" << std::endl;
+        logfile   << "DEBUG HERE : " << msg << std::endl;
+    }
+    else
         std::cout << "\e[0;33m DEBUG HERE : " << msg << " \e[0m" << std::endl;
     logfile.close();
         

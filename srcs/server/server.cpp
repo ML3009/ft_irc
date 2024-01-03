@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 15:25:43 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 15:02:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ server::~server(){
 /*---------- Getter / Setter ------------ */
 
 int server::getUserCount() const { return _userCount;}
-
+std::vector<pollfd> server::getpollfd() { return _pollFD;}
 /*--------------- Function -------------- */
 
 
@@ -69,6 +69,7 @@ void server::init_server(){
 	debug("init_server", BEGIN);
 	int opt = 1;
 	int	serverSocket;
+	_userCount = 0;
 	struct	sockaddr_in serverAdress;
 
 	// Set up server address
@@ -133,19 +134,24 @@ void server::getNewClient(){
 
 void server::getClientMessage(){
 	debug("getClientMessage", BEGIN);
+	if (_userCount == 0 || _pollFD.size() == 1)
+		return ;
 	std::vector<pollfd>::iterator it;
 	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	{
+
 		if (it->revents == POLLIN)
 		{
 			char buffer[1024];
 			if (recv(clientMap[it->fd].getfd(), buffer, 1024, 0) <= 0)
 			{
-				std::cout << "DISCONNECTED" << std::endl;
-				exit(0);	
+				disconnect_client(clientMap[it->fd]);
+				it = _pollFD.erase(it);
+				return;
 			}
 			else{
 				std::string buff (buffer);
+				buff.append("\0");
 				memset(buffer, 0, sizeof(char));
 				clientMap[it->fd].parseClientMessage(buff);
 			}
@@ -154,3 +160,11 @@ void server::getClientMessage(){
 	debug("getClientMessage", END);	
 }
 
+void server::disconnect_client(user client){
+	close(client.getfd());
+	clientMap.erase(client.getfd());
+	_userCount--;
+	std::cout << "disconnection" << std::endl;
+}
+
+void server::closeServerSocket() {close(_pollFD[0].fd);}

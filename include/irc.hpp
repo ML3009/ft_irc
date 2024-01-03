@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/02 13:47:25 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 11:55:30 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ extern int LOG;
 extern std::map<int, user> clientMap;
 
 
+#define HERE	-1
 #define BEGIN	0
 #define END		1
 #define YES     1
