@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 11:00:26 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:31:59 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,14 +132,14 @@ void	commands::functionPASS(server Server, user Client, std::vector<std::string>
 	(void)Server;
 	(void)argument;
 	int	count = 0;
-	std::cout << "before" << count << std::endl;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
 		std::cout << *it << std::endl;
 	}
-	std::cout << "count:" << count << std::endl;
-	std::cout << "after" << count << std::endl;
-	if (count != 2)
+	if (count != 2) {
 		std::cout << "Required two arguments." << std::endl;
+		return;
+	}
+	argument[1] == Server.getPassword() ? Client.
 
 
 	std::cout << "PASS" << std::endl;

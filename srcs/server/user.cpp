@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 12:43:19 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:11 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,6 @@ void user::parseClientMessage(server Server, const std::string &buffer){
 	{
 		std::vector<std::string> argument = splitArgs(_buffer);
 		_buffer.clear();
-		for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it){
-			std::cout << "BEFORE TOUT :"<<*it << std::endl;
-		}
 		commands cmd;
 		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 		argument.clear();
