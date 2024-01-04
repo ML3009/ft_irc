@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 17:21:59 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 17:29:23 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@
 //     RPLFunctions["473"] = &ERR_INVITEONLYCHAN;
 //     RPLFunctions["502"] = &ERR_USERSDONTMATCH;
 // }
+std::string RPL_WELCOME(server &server, user &client);
+std::string RPL_YOURHOST(server &server, user &client);
+std::string RPL_CREATED(server &server, user &client);
+std::string RPL_MYINFO(server &server, user &client);
 
 
 std::string displayRPL(server &server, user &client, std::string RPL){
@@ -56,10 +60,10 @@ std::string displayRPL(server &server, user &client, std::string RPL){
 }
 
 void displayWelcome(server &server, user &client){
-	server.sendMsg(client, server, "01");
-	server.sendMsg(client, server, "02");
-	server.sendMsg(client, server, "03");
-	server.sendMsg(client, server, "04");
+	server.sendMsg(client, server, RPL_WELCOME(server, client));
+	server.sendMsg(client, server, RPL_YOURHOST(server, client));
+	server.sendMsg(client, server, RPL_CREATED(server, client));
+	server.sendMsg(client, server, RPL_MYINFO(server, client));
 }
 
 std::string RPL_WELCOME(server &server, user &client){
@@ -73,7 +77,9 @@ std::string RPL_YOURHOST(server &server, user &client){
 	return "Notre serveur hôte IRC est " + server.getID();
 }
 
-std::string RPL_CREATED() {
+std::string RPL_CREATED(server &server, user &client) {
+	(void)server;
+	(void)client;
     std::time_t now = std::time(NULL);
     std::tm* localTime = std::localtime(&now);
 

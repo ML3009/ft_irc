@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 17:22:43 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 17:25:25 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,8 @@ void	commands::functionUSER(server& Server, user& Client, std::vector<std::strin
 		Client.setRealname(argument[4]);
 	}
 	Client.setUsername(argument[1]);
-	std::cout << "USER " << Client.getUsername() << " | REAL NAME " << Client.getRealname() << std::endl;
+	displayWelcome(Server, Client);
+	//std::cout << "USER " << Client.getUsername() << " | REAL NAME " << Client.getRealname() << std::endl;
 	return;
 }
 void	commands::functionQUIT(server& Server, user& Client, std::vector<std::string>& argument){
@@ -269,25 +270,6 @@ void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::st
 	(void)Client;
 	(void)argument;
 	std::cout << "PRIVMSG" << std::endl;
-
-	return;
-}
-void	commands::functionPING(server Server, user Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PING" << std::endl;
-
-	return;
-}
-
-void	commands::functionPONG(server Server, user Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PONG" << std::endl;
 
 	return;
 }

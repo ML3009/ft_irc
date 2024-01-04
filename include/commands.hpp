@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 13:52:08 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:23:38 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ class commands {
 	void functionTOPIC(server& Server, user& Client, std::vector<std::string>& argument);
 	void functionMODE(server& Server, user& Client, std::vector<std::string>& argument);
 	void functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionPING(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionPONG(server& Server, user& Client, std::vector<std::string>& argument);
 
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);
