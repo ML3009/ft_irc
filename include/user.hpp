@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:23:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/03 17:07:29 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ public :
 			std::string         getBuffer() const;
 			std::string			getPassword() const;
 			std::string 		getNickname() const;
+			clock_t		 		getLastPing() const;
 // Function
 			void				parseClientMessage(server Server, std::string  buffer);
 			bool				isAuthentified(void);
@@ -49,6 +50,7 @@ private :
 			std::string         _buffer;
 			std::string         _password;
 			int                 _fd;
+			clock_t				_last_ping;
 
 
 

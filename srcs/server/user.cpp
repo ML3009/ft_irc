@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:35:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 10:37:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ user::user(int fd){
 	_buffer = "";
 	_password = "";
 	_hostname = "127.0.0.1";
+	_last_ping = clock();
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
@@ -44,6 +45,7 @@ user&	user::operator=(const user& rhs){
 		_buffer = rhs._buffer;
 		_password = rhs._password;
 		_hostname = rhs._hostname;
+		_last_ping = rhs._last_ping;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -58,12 +60,16 @@ user::~user(){
 /*---------------- Operator ------------- */
 
 /*---------- Getter / Setter ------------ */
+
 int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
 std::string user::getBuffer() const{return _buffer;}
 std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
+clock_t		user::getLastPing() const{return _last_ping;}
+
 /*--------------- Function -------------- */
+
 void printBuffers(const std::string& buffer, const std::string& _buffer) {
     std::cout << "buffer: ";
     for (std::size_t i = 0; i < buffer.size(); ++i) {
