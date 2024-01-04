@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 12:36:31 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class server{
 			void getClientMessage(void);
 			void disconnect_client(user client);
 			void closeServerSocket();
+			void timeout_client(int fd);
+			bool LastPing(user client);
 
 
 // Getter / Setter
@@ -50,6 +52,8 @@ class server{
 			int					_userCount;
 			std::string			_password;
 			std::vector<pollfd>	_pollFD;
+			clock_t				_upTime;
+			clock_t				_maxtimeout;
 
 
 };

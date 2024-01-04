@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 12:02:06 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <csignal>
+#include <ctime>
+#include <cerrno>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <fstream>
-#include <cerrno>
 #include <vector>
 #include <map>
 #include <unistd.h>
@@ -41,10 +42,11 @@
 #include "channel.hpp"
 
 /* ---- DEBUG AND LOGS ---- */
-extern int CONSTRUCTOR; // Display constructor message
-extern int DEBUG; // Display debug message
-extern int LOG;
-extern std::map<int, user> clientMap;
+extern int					CONSTRUCTOR; // Display constructor message
+extern int					DEBUG; // Display debug message
+extern int					LOG;
+extern bool					handleSignal;
+extern std::map<int, user> 	clientMap;
 
 
 #define HERE	-1
@@ -54,25 +56,12 @@ extern std::map<int, user> clientMap;
 #define NO      -1
 #define LOGFILE 1
 #define STDOUT  0
+
 #define COMPLETE true
 #define INCOMPLETE false
 
-#define PASS 0 //authentifier
-#define NICK 1 //nickname
-#define USER 2 //user
-#define QUIT 3 //quit
-
-#define JOIN 4 //rejoindre un channel
-#define PART 5 //quitter un channel
-#define KICK 6
-#define INVITE 7
-#define TOPIC 8
-#define MODE 9
-
-#define PRIVMSG 10
-
-#define PING 11
-#define PONG 12
+#define TIMEOUT true
+#define TIMEIN	false
 
 #define PASS 0 //authentifier
 #define NICK 1 //nickname
@@ -91,5 +80,21 @@ extern std::map<int, user> clientMap;
 #define PING 11
 #define PONG 12
 
+#define PASS 0 //authentifier
+#define NICK 1 //nickname
+#define USER 2 //user
+#define QUIT 3 //quit
 
-extern bool	handleSignal;
+#define JOIN 4 //rejoindre un channel
+#define PART 5 //quitter un channel
+#define KICK 6
+#define INVITE 7
+#define TOPIC 8
+#define MODE 9
+
+#define PRIVMSG 10
+
+#define PING 11
+#define PONG 12
+
+

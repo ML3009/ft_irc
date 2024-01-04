@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 12:36:39 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:39 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ public :
 			std::string         getBuffer() const;
 			std::string			getPassword() const;
 			std::string 		getNickname() const;
+			clock_t		 		getLastPing() const;
 // Function
 			void				parseClientMessage(server Server, const std::string &buffer);
 			bool				isAuthentified(void);
@@ -51,6 +52,7 @@ private :
 			std::string         _buffer;
 			std::string         _password;
 			int                 _fd;
+			clock_t				_last_ping;
 
 
 

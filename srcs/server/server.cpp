@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 12:37:46 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:30:00 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ server::server(){
 	_port = 6667;
 	_password = "password";
 	_userCount = 0;
+	_upTime = clock();
+	_maxtimeout = 10000;
 
 	display_constructor(SERVER_DC);
 }
@@ -26,6 +28,9 @@ server::server(){
 server::server(int port, std::string password){
 	_port = port;
 	_password = password;
+	_userCount = 0;
+	_upTime = clock();
+	_maxtimeout = 10000;
 
 	display_constructor(SERVER_PC);
 
@@ -43,6 +48,9 @@ server&	server::operator=(const server& rhs){
 	if (this != &rhs){
 		_port = rhs._port;
 		_password = rhs._password;
+		_userCount = rhs._userCount;
+		_upTime = rhs._upTime;
+		_maxtimeout = rhs._maxtimeout;
 	}
 	display_constructor(SERVER_AO);
 	return *this;
@@ -111,6 +119,11 @@ void server::run_server(){
 	debug("run_server", BEGIN);
 	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
+	if (_userCount > 0)
+		for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); it++)
+			if (LastPing(it->second) == TIMEOUT) 
+				return timeout_client(it->first);
+	
 	debug("run_server", END);
 
 }
@@ -170,3 +183,19 @@ void server::disconnect_client(user client){
 }
 
 void server::closeServerSocket() {close(_pollFD[0].fd);}
+
+void server::timeout_client(int fd){
+	disconnect_client(clientMap[fd]);
+	std::cout << "\e[0;36m" << " user has been kick for [ AFK ]" << " \e[0m" << std::endl;  
+	// std::vector<pollfd>::iterator it;
+	// for (it = _pollFD.begin(); it != _pollFD.end(); it++)
+	// 	if (it->fd == fd)
+	// 		it = _pollFD.erase(it);
+}
+
+bool server::LastPing(user client){
+	clock_t actual = clock();
+	if (actual - client.getLastPing() > _maxtimeout)
+		return TIMEOUT;
+	return TIMEIN;
+}
