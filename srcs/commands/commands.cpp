@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 13:31:59 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:10:03 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,9 @@ commands::~commands(){
 /*--------------- Function -------------- */
 
 
-void	commands::getCommand(server Server, user Client, std::vector<std::string>& argument) {
+void	commands::getCommand(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getCommand", BEGIN);
-	std::cout << "getCommand" << std::endl;
 	if (!argument.empty()) {
 		for (std::map<std::string, cmdFunctionPointer>::iterator it = cmdMap.begin(); it!= cmdMap.end(); ++it) {
 			if (it->first == argument[0])
@@ -81,7 +80,7 @@ void	commands::getCommand(server Server, user Client, std::vector<std::string>& 
 	return;
 }
 
-void	commands::getAuthentified(server Server, user Client, std::vector<std::string>& argument) {
+void	commands::getAuthentified(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getAuthentified", BEGIN);
 	int cmd = isCmdAuthentified(Client, argument[0]);
@@ -90,10 +89,10 @@ void	commands::getAuthentified(server Server, user Client, std::vector<std::stri
 			case PASS:
 				getCommand(Server, Client, argument);
 				break;
-			case USER:
+			case NICK:
 				getCommand(Server, Client, argument);
 				break;
-			case NICK:
+			case USER:
 				getCommand(Server, Client, argument);
 				break;
 			default:
@@ -112,58 +111,98 @@ void	commands::getAuthentified(server Server, user Client, std::vector<std::stri
 	return;
 }
 
-int	commands::isCmdAuthentified(user Client, std::string argument){
+int	commands::isCmdAuthentified(user& Client, std::string argument){
 	if (!argument.empty()) {
 		if (Client.getPassword().empty() && argument == "/PASS")
 			return 0;
 		else if (!Client.getPassword().empty()){
-			std::string cmd[2] = {"/NICK", "/USER"};
-			for(int i = 1; i < 3; i++)
-				if (argument == cmd[i])
-					return i;
+			if (Client.getNickname().empty() && argument == "/NICK")
+				return 1;
+			if (!Client.getNickname().empty() && argument == "/USER")
+				return 2;
 		}
 	}
    return -1;
 }
 
-void	commands::functionPASS(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionPASS(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Client;
-	(void)Server;
-	(void)argument;
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
 		std::cout << *it << std::endl;
 	}
 	if (count != 2) {
-		std::cout << "Required two arguments." << std::endl;
+		std::cout << "[Password] ERR_NEEDMOREPARAMS (461)." << std::endl;
 		return;
 	}
-	argument[1] == Server.getPassword() ? Client.
-
-
-	std::cout << "PASS" << std::endl;
+	if (argument[1] == Server.getPassword()) {
+		if (Client.getPassword().empty())
+			Client.setPassword(argument[1]);
+		else {
+			return std::cout << "[Password] ERR_ALREADYREGISTRED (462)" << std::endl, void();
+		}
+	}
+	else
+		std::cout << "[Password] Wrong password." << std::endl;
 	return;
 }
-void	commands::functionNICK(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionNICK(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "NICK" << std::endl;
-
+	int	count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
+		std::cout << *it << std::endl;
+	}
+	if (count != 2) {
+		std::cout << "[Nickname] ERR_NEEDMOREPARAMS (461)." << std::endl;
+		return;
+	}
+	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos) {
+		std::cout << "[Nickname] ERR_ERRONEUSNICKNAME (432)." << std::endl;
+		return;
+	}
+	for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it) {
+		if (argument[1] == it->second.getNickname()) {
+			std::cout << "[Nickname] ERR_NICKNAMEINUSE (433)." << std::endl;
+			return;
+		}
+	}
+	Client.setNickname(argument[1]);
+	//std::cout << Client.getNickname() << std::endl;
 	return;
 }
-void	commands::functionUSER(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionUSER(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "USER" << std::endl;
-
+	(void)Server;
+	int	count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
+		std::cout << *it << std::endl;
+	}
+	if (count < 4) {
+		std::cout << "[User] ERR_NEEDMOREPARAMS (461)." << std::endl;
+		return;
+	}
+	if (!Client.getUsername().empty()) {
+		std::cout << "[User] ERR_ALREADYREGISTRED (462)." << std::endl;
+		return;
+	}
+	if (argument[4][0] == ':')
+	{
+		std::string tmp;
+		for (unsigned long i = 4; i < argument.size(); i++) {
+			tmp += argument[i];
+			tmp += " ";
+		}
+		Client.setRealname(tmp);
+	} else {
+		Client.setRealname(argument[4]);
+	}
+	Client.setUsername(argument[1]);
+	std::cout << "USER " << Client.getUsername() << " | REAL NAME " << Client.getRealname() << std::endl;
 	return;
 }
-void	commands::functionQUIT(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionQUIT(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -172,7 +211,7 @@ void	commands::functionQUIT(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionJOIN(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionJOIN(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -181,7 +220,7 @@ void	commands::functionJOIN(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionPART(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionPART(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -190,7 +229,7 @@ void	commands::functionPART(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionKICK(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionKICK(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -199,7 +238,7 @@ void	commands::functionKICK(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionINVITE(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionINVITE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -208,7 +247,7 @@ void	commands::functionINVITE(server Server, user Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionTOPIC(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -217,7 +256,7 @@ void	commands::functionTOPIC(server Server, user Client, std::vector<std::string
 
 	return;
 }
-void	commands::functionMODE(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionMODE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -226,7 +265,7 @@ void	commands::functionMODE(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -235,7 +274,7 @@ void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::stri
 
 	return;
 }
-void	commands::functionPING(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionPING(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -245,7 +284,7 @@ void	commands::functionPING(server Server, user Client, std::vector<std::string>
 	return;
 }
 
-void	commands::functionPONG(server Server, user Client, std::vector<std::string>& argument){
+void	commands::functionPONG(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
