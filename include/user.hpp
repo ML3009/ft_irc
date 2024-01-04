@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:23:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 12:36:39 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ public :
 			std::string			getPassword() const;
 			std::string 		getNickname() const;
 // Function
-			void				parseClientMessage(server Server, std::string  buffer);
+			void				parseClientMessage(server Server, const std::string &buffer);
 			bool				isAuthentified(void);
+			void				addData(const std::string &buffer);
+
 
 protected :
 

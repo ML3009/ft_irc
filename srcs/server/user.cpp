@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 16:35:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 12:43:19 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,47 +64,23 @@ std::string user::getBuffer() const{return _buffer;}
 std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
 /*--------------- Function -------------- */
-void printBuffers(const std::string& buffer, const std::string& _buffer) {
-    std::cout << "buffer: ";
-    for (std::size_t i = 0; i < buffer.size(); ++i) {
-        char currentChar = buffer[i];
-        if (currentChar == '\n') {
-            std::cout << "\\n ";
-        } else if (currentChar == '\0') {
-            std::cout << "\\0 ";
-        } else {
-            std::cout << currentChar << ' ';
-        }
-    }
-    std::cout << "\n";
 
-    std::cout << "_buffer: ";
-    for (std::size_t i = 0; i < _buffer.size(); ++i) {
-        char currentChar = _buffer[i];
-        if (currentChar == '\n') {
-            std::cout << "\\n ";
-        } else if (currentChar == '\0') {
-            std::cout << "\\0 ";
-        } else {
-            std::cout << currentChar << ' ';
-        }
-    }
-    std::cout << "\n";
-}
-
-
-void user::parseClientMessage(server Server, std::string buffer){
+void user::parseClientMessage(server Server, const std::string &buffer){
 	debug("parseClientMessage", BEGIN);
-	size_t bufferLength = std::strlen(buffer.c_str());
-	_buffer.append((bufferLength > 0 && buffer[bufferLength] == '\n') ? buffer.substr(0, bufferLength - 1) : buffer);
-	buffer.clear();
-
-	if (completeCommand(_buffer) == COMPLETE)
+	(void) Server;
+	addData(buffer);
+	if (completeCommand(_buffer, 1) == COMPLETE)
 	{
 		std::vector<std::string> argument = splitArgs(_buffer);
 		_buffer.clear();
+		for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it){
+			std::cout << "BEFORE TOUT :"<<*it << std::endl;
+		}
 		commands cmd;
 		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
+		argument.clear();
+		if (!argument.empty())
+			std::cout << "NOT EMPTY" << std::endl;
 	}
 	else
 		std::cout << "\n[Recieving a non-complete message, saving in buffer]\x1b[0m" << std::endl;
@@ -119,5 +95,18 @@ bool	user::isAuthentified(void) {
 	return true;
 }
 
+void user::addData(const std::string &buffer){
+	debug("addData", BEGIN);
+	if (completeCommand(buffer, 0) == COMPLETE)
+		_buffer += buffer;
+	else
+	{
+		size_t i = -1;
+		while (++i < buffer.length() && (buffer[i] != '\r' && buffer[i] != '\n'&& buffer[i] != '\0'))
+			_buffer += buffer[i];
+	}
+	debug("addData", END);
+	return;
+}
 
 /*--------------- Exception ------------- */

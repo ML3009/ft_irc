@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/03 16:19:51 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/03 17:12:40 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,26 @@ class commands {
 		~commands();
 
 
-	void	getCommand(server Server, user Client, std::vector<std::string> argument);
-	void	getAuthentified(server Server, user Client, std::vector<std::string> argument);
+	void	getCommand(server Server, user Client, std::vector<std::string>& argument);
+	void	getAuthentified(server Server, user Client, std::vector<std::string>& argument);
 	int		isCmdAuthentified(user Client, std::string argument);
 
-	void functionPASS(server Server, user Client, std::vector<std::string> argument);
-	void functionNICK(server Server, user Client, std::vector<std::string> argument);
-	void functionUSER(server Server, user Client, std::vector<std::string> argument);
-	void functionQUIT(server Server, user Client, std::vector<std::string> argument);
-	void functionJOIN(server Server, user Client, std::vector<std::string> argument);
-	void functionPART(server Server, user Client, std::vector<std::string> argument);
-	void functionKICK(server Server, user Client, std::vector<std::string> argument);
-	void functionINVITE(server Server, user Client, std::vector<std::string> argument);
-	void functionTOPIC(server Server, user Client, std::vector<std::string> argument);
-	void functionMODE(server Server, user Client, std::vector<std::string> argument);
-	void functionPRIVMSG(server Server, user Client, std::vector<std::string> argument);
-	void functionPING(server Server, user Client, std::vector<std::string> argument);
-	void functionPONG(server Server, user Client, std::vector<std::string> argument);
+	void functionPASS(server Server, user Client, std::vector<std::string>& argument);
+	void functionNICK(server Server, user Client, std::vector<std::string>& argument);
+	void functionUSER(server Server, user Client, std::vector<std::string>& argument);
+	void functionQUIT(server Server, user Client, std::vector<std::string>& argument);
+	void functionJOIN(server Server, user Client, std::vector<std::string>& argument);
+	void functionPART(server Server, user Client, std::vector<std::string>& argument);
+	void functionKICK(server Server, user Client, std::vector<std::string>& argument);
+	void functionINVITE(server Server, user Client, std::vector<std::string>& argument);
+	void functionTOPIC(server Server, user Client, std::vector<std::string>& argument);
+	void functionMODE(server Server, user Client, std::vector<std::string>& argument);
+	void functionPRIVMSG(server Server, user Client, std::vector<std::string>& argument);
+	void functionPING(server Server, user Client, std::vector<std::string>& argument);
+	void functionPONG(server Server, user Client, std::vector<std::string>& argument);
 
 	private:
-		typedef void (commands::*cmdFunctionPointer)(server Server, user Client, std::vector<std::string> argument);
+		typedef void (commands::*cmdFunctionPointer)(server Server, user Client, std::vector<std::string>& argument);
 		std::map<std::string, cmdFunctionPointer> cmdMap;
 
 /*std::string strComp[4] = {"PASS", "NICK", "USER", "QUIT", "JOIN", "PART", "KICK", "INVITE", "TOPIC", "MODE", "PRIVMSG", "PING", "PONG"};

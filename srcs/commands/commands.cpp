@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/03 16:37:28 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:00:26 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ commands::~commands(){
 /*--------------- Function -------------- */
 
 
-void	commands::getCommand(server Server, user Client, std::vector<std::string> argument) {
+void	commands::getCommand(server Server, user Client, std::vector<std::string>& argument) {
 
 	debug("getCommand", BEGIN);
 	std::cout << "getCommand" << std::endl;
@@ -81,7 +81,7 @@ void	commands::getCommand(server Server, user Client, std::vector<std::string> a
 	return;
 }
 
-void	commands::getAuthentified(server Server, user Client, std::vector<std::string> argument) {
+void	commands::getAuthentified(server Server, user Client, std::vector<std::string>& argument) {
 
 	debug("getAuthentified", BEGIN);
 	int cmd = isCmdAuthentified(Client, argument[0]);
@@ -126,16 +126,26 @@ int	commands::isCmdAuthentified(user Client, std::string argument){
    return -1;
 }
 
-void	commands::functionPASS(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionPASS(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Client;
 	(void)Server;
 	(void)argument;
-	std::cout << "PASS" << std::endl;
+	int	count = 0;
+	std::cout << "before" << count << std::endl;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
+		std::cout << *it << std::endl;
+	}
+	std::cout << "count:" << count << std::endl;
+	std::cout << "after" << count << std::endl;
+	if (count != 2)
+		std::cout << "Required two arguments." << std::endl;
 
+
+	std::cout << "PASS" << std::endl;
 	return;
 }
-void	commands::functionNICK(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionNICK(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -144,7 +154,7 @@ void	commands::functionNICK(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionUSER(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionUSER(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -153,7 +163,7 @@ void	commands::functionUSER(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionQUIT(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionQUIT(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -162,7 +172,7 @@ void	commands::functionQUIT(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionJOIN(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionJOIN(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -171,7 +181,7 @@ void	commands::functionJOIN(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionPART(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionPART(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -180,7 +190,7 @@ void	commands::functionPART(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionKICK(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionKICK(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -189,7 +199,7 @@ void	commands::functionKICK(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionINVITE(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionINVITE(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -198,7 +208,7 @@ void	commands::functionINVITE(server Server, user Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionTOPIC(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionTOPIC(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -207,7 +217,7 @@ void	commands::functionTOPIC(server Server, user Client, std::vector<std::string
 
 	return;
 }
-void	commands::functionMODE(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionMODE(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -216,7 +226,7 @@ void	commands::functionMODE(server Server, user Client, std::vector<std::string>
 
 	return;
 }
-void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -225,7 +235,7 @@ void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::stri
 
 	return;
 }
-void	commands::functionPING(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionPING(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -235,7 +245,7 @@ void	commands::functionPING(server Server, user Client, std::vector<std::string>
 	return;
 }
 
-void	commands::functionPONG(server Server, user Client, std::vector<std::string> argument){
+void	commands::functionPONG(server Server, user Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
