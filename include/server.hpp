@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:29:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 16:26:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class server{
 			void closeServerSocket();
 			void timeout_client(int fd);
 			bool LastPing(user client);
+			void sendMsg(user &client, server &server, std::string RPL);
 
 
 // Getter / Setter
@@ -42,6 +43,7 @@ class server{
 			int					getUserCount() const;
 			std::vector<pollfd> getpollfd();
 			std::string			getPassword() const;
+			std::string 		getID() const;
 			//user& 				getUser(int fd);
 
 // Exception
@@ -51,6 +53,7 @@ class server{
 			int					_port;
 			int					_userCount;
 			std::string			_password;
+			std::string			_ID;
 			std::vector<pollfd>	_pollFD;
 			clock_t				_upTime;
 			clock_t				_maxtimeout;

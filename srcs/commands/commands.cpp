@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 13:31:59 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 14:44:04 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ commands::commands(){
 	cmdMap["/NICK"] = &commands::functionNICK;
 	cmdMap["/PART"] = &commands::functionPART;
 	cmdMap["/PASS"] = &commands::functionPASS;
-	cmdMap["/PING"] = &commands::functionPING;
-	cmdMap["/PONG"] = &commands::functionPONG;
 	cmdMap["/PRIVMSG"] = &commands::functionPRIVMSG;
 	cmdMap["/QUIT"] = &commands::functionQUIT;
 	cmdMap["/TOPIC"] = &commands::functionTOPIC;
@@ -139,7 +137,6 @@ void	commands::functionPASS(server Server, user Client, std::vector<std::string>
 		std::cout << "Required two arguments." << std::endl;
 		return;
 	}
-	argument[1] == Server.getPassword() ? Client.
 
 
 	std::cout << "PASS" << std::endl;
@@ -235,25 +232,15 @@ void	commands::functionPRIVMSG(server Server, user Client, std::vector<std::stri
 
 	return;
 }
-void	commands::functionPING(server Server, user Client, std::vector<std::string>& argument){
 
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PING" << std::endl;
+// void commands::sendRPLWelcome(server &Server, user &Client)
+// {
+// 	"001: Bienvenue sur le serveur IRC. Connecté avec succès !"
+// 	"002: Notre serveur hôte IRC est irc.example.com."
+// 	"003: Ce serveur a été créé le 1er janvier 2024 à 12h00."
+// 	"004: irc.example.com Serveur IRC v1.0. Modes supportés : +i, +t, +n. Utilisez /HELP pour obtenir de l'aide."
 
-	return;
-}
-
-void	commands::functionPONG(server Server, user Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PONG" << std::endl;
-
-	return;
-}
+// }
 
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:32:32 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/04 14:29:04 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,38 +69,9 @@ std::string user::getNickname() const{return _nickname;}
 clock_t		user::getLastPing() const{return _last_ping;}
 
 /*--------------- Function -------------- */
-void printBuffers(const std::string& buffer, const std::string& _buffer) {
-    std::cout << "buffer: ";
-    for (std::size_t i = 0; i < buffer.size(); ++i) {
-        char currentChar = buffer[i];
-        if (currentChar == '\n') {
-            std::cout << "\\n ";
-        } else if (currentChar == '\0') {
-            std::cout << "\\0 ";
-        } else {
-            std::cout << currentChar << ' ';
-        }
-    }
-    std::cout << "\n";
-
-    std::cout << "_buffer: ";
-    for (std::size_t i = 0; i < _buffer.size(); ++i) {
-        char currentChar = _buffer[i];
-        if (currentChar == '\n') {
-            std::cout << "\\n ";
-        } else if (currentChar == '\0') {
-            std::cout << "\\0 ";
-        } else {
-            std::cout << currentChar << ' ';
-        }
-    }
-    std::cout << "\n";
-}
-
 
 void user::parseClientMessage(server Server, const std::string &buffer){
 	debug("parseClientMessage", BEGIN);
-	(void) Server;
 	addData(buffer);
 	if (completeCommand(_buffer, 1) == COMPLETE)
 	{

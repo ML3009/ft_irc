@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:30:00 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 16:59:03 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ server::server(){
 	_password = "password";
 	_userCount = 0;
 	_upTime = clock();
+	_ID = "IRC";
 	_maxtimeout = 10000;
 
 	display_constructor(SERVER_DC);
@@ -26,6 +27,7 @@ server::server(){
 
 
 server::server(int port, std::string password){
+	_ID = "IRC";
 	_port = port;
 	_password = password;
 	_userCount = 0;
@@ -51,6 +53,7 @@ server&	server::operator=(const server& rhs){
 		_userCount = rhs._userCount;
 		_upTime = rhs._upTime;
 		_maxtimeout = rhs._maxtimeout;
+		_ID = rhs._ID;
 	}
 	display_constructor(SERVER_AO);
 	return *this;
@@ -71,6 +74,7 @@ server::~server(){
 int server::getUserCount() const { return _userCount;}
 std::vector<pollfd> server::getpollfd() { return _pollFD;}
 std::string server::getPassword() const{return _password;}
+std::string server::getID() const{return _ID;}
 /*--------------- Function -------------- */
 
 
@@ -158,7 +162,7 @@ void server::getClientMessage(){
 
 		if (it->revents == POLLIN)
 		{
-			char buffer[1024];
+			char buffer[512];
 			int bytes = recv(clientMap[it->fd].getfd(), buffer, 1024, 0);
 			if (bytes <= 0)
 			{
@@ -195,7 +199,18 @@ void server::timeout_client(int fd){
 
 bool server::LastPing(user client){
 	clock_t actual = clock();
+	std::cout << "client [" << client.getfd() << "] | " << actual - client.getLastPing() << std::endl;
 	if (actual - client.getLastPing() > _maxtimeout)
 		return TIMEOUT;
 	return TIMEIN;
+}
+
+void server::sendMsg(user &client, server &server, std::string RPL){
+	std::string msg;
+	msg = ":" + getID() + " " + RPL + " " + client.getNickname() + " : " + displayRPL(server, client, RPL) + "\r\n";
+	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
+		std::perror("send:");
+	std::cout 	<< "---- SERVER RESPONSE ----\n"
+				<< msg << "\n"
+				<< "-------------------------" << std::endl;
 }
