@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 17:16:50 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class server{
 			//std::map<int, user> getClientMap();
 			int					getUserCount() const;
 			std::vector<pollfd> getpollfd();
+			std::string			getPassword() const;
 			//user& 				getUser(int fd);
 
 // Exception

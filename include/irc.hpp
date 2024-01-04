@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 17:05:34 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 13:29:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <cerrno>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <string>
 #include <fstream>
 #include <vector>

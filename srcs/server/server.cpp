@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 10:58:44 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 13:30:00 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ server::~server(){
 
 int server::getUserCount() const { return _userCount;}
 std::vector<pollfd> server::getpollfd() { return _pollFD;}
+std::string server::getPassword() const{return _password;}
 /*--------------- Function -------------- */
 
 
@@ -158,17 +159,16 @@ void server::getClientMessage(){
 		if (it->revents == POLLIN)
 		{
 			char buffer[1024];
-			if (recv(clientMap[it->fd].getfd(), buffer, 1024, 0) <= 0)
+			int bytes = recv(clientMap[it->fd].getfd(), buffer, 1024, 0);
+			if (bytes <= 0)
 			{
 				disconnect_client(clientMap[it->fd]);
 				it = _pollFD.erase(it);
 				return;
 			}
 			else{
-				std::string buff (buffer);
-				buff.append("\0");
-				memset(buffer, 0, sizeof(char));
-				clientMap[it->fd].parseClientMessage(*this, buff);
+				buffer[bytes] = '\0';
+				clientMap[it->fd].parseClientMessage(*this, buffer);
 			}
 		}
 	}
