@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:29:39 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 16:18:23 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,17 @@ public :
 // Operator
 // Setter / Getter
 			int                 getfd() const;
+			std::string 		getNickname() const;
 			std::string         getUsername() const;
+			std::string 		getRealname() const;
 			std::string         getBuffer() const;
 			std::string			getPassword() const;
-			std::string 		getNickname() const;
 			clock_t		 		getLastPing() const;
+
+			void				setPassword(std::string password);
+			void				setNickname(std::string nickname);
+			void				setUsername(std::string username);
+			void				setRealname(std::string realname);
 // Function
 			void				parseClientMessage(server Server, const std::string &buffer);
 			bool				isAuthentified(void);
@@ -49,6 +55,7 @@ private :
 			std::string         _hostname;
 			std::string         _nickname;
 			std::string         _username;
+			std::string			_realname;
 			std::string         _buffer;
 			std::string         _password;
 			int                 _fd;

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 14:29:04 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/04 17:23:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ user::user(int fd){
 	_fd = fd;
 	_username = "";
 	_nickname = "";
+	_realname = "";
 	_buffer = "";
 	_password = "";
 	_hostname = "127.0.0.1";
@@ -41,6 +42,7 @@ user&	user::operator=(const user& rhs){
 	if (this != &rhs) {
 		_fd = rhs._fd;
 		_username = rhs._username;
+		_realname = rhs._realname;
 		_nickname = rhs._nickname;
 		_buffer = rhs._buffer;
 		_password = rhs._password;
@@ -63,10 +65,33 @@ user::~user(){
 
 int 		user::getfd() const {return _fd;}
 std::string user::getUsername() const{return _username;}
+std::string user::getRealname() const{return _realname;}
 std::string user::getBuffer() const{return _buffer;}
 std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
 clock_t		user::getLastPing() const{return _last_ping;}
+
+void	user::setPassword(std::string password) {
+	_password = password;
+	return;
+}
+
+void	user::setNickname(std::string nickname) {
+	_nickname = nickname;
+	return;
+}
+
+void	user::setUsername(std::string username) {
+	_username = username;
+	return;
+}
+
+
+void	user::setRealname(std::string realname) {
+	_realname = realname;
+	return;
+}
+
 
 /*--------------- Function -------------- */
 
