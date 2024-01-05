@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 16:26:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/05 22:59:45 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class server{
 			void timeout_client(int fd);
 			bool LastPing(user client);
 			void sendMsg(user &client, server &server, std::string RPL);
+			void sendrawMsg(user &client, server &server, std::string message);
 			void sendMsg2(server &Server, user &User, std::string str);
 
 			void	sendJoinMsg(server &Server, user& Client, std::string channelName);

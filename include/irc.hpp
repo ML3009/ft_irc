@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:29:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/05 22:32:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,3 +99,10 @@ extern std::map<channel, std::vector<user> > channelMap;
 #define PONG 12
 
 
+#define RPL_JOIN_C 10;
+#define RPL_NICK_C 11;
+#define RPL_QUIT_C 12;
+#define RPL_QUIT_M_C 13;
+#define RPL_KICK_C 14;
+#define RPL_NOTICE_C 15;
+#define RPL_PRIVMSG_C 16;

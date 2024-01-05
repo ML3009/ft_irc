@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/04 17:25:25 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/05 23:12:25 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,15 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				getCommand(Server, Client, argument);
 				break;
 			default:
-				std::cout << "\e[0;33m" << "[ You are not connected to the server ]" << " \e[0m" << std::endl;
+				Server.sendrawMsg(Client, Server, "\e[0;33m[ You are not connected to the server ]\e[0m");
 				if (!(Client.getPassword().empty()))
-					std::cout << "\e[0;36m" << "\t[Password] OK" << std::endl;
+					Server.sendrawMsg(Client, Server, "\e[0;36m\t[Password] OK\e[0m");
 				else{
-					std::cout << "\e[0;36m" << "\tuse /PASS before doing anything" << " \e[0m" << std::endl;
+					Server.sendrawMsg(Client, Server, "\e[0;36m\tuse /PASS before doing anything\e[0m");
 					break;
 				}
-				!(Client.getUsername().empty()) ? std::cout << "\e[0;36m" << "\t[Username] " << Client.getUsername() << std::endl : std::cout << "\e[0;36m" << "\t[/USER] username must be set" << std::endl;
-				!(Client.getNickname().empty()) ? std::cout << "\e[0;36m" << "\t[Nickname] " << Client.getNickname() << std::endl : std::cout << "\e[0;36m" << "\t[/NICK] nickname must be set" << " \e[0m" << std::endl;
+				!(Client.getUsername().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Username] " + Client.getUsername())  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/USER] username must be set \e[0m");
+				!(Client.getNickname().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Nickname] " + Client.getNickname())  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/NICK] nickname must be set \e[0m");
 		}
 	}
 	debug("getAuthentified", END);
@@ -128,18 +128,18 @@ void	commands::functionPASS(server& Server, user& Client, std::vector<std::strin
 		std::cout << *it << std::endl;
 	}
 	if (count != 2) {
-		std::cout << "[Password] ERR_NEEDMOREPARAMS (461)." << std::endl;
+		Server.sendMsg(Client, Server, "461");
 		return;
 	}
 	if (argument[1] == Server.getPassword()) {
 		if (Client.getPassword().empty())
 			Client.setPassword(argument[1]);
-		else {
-			return std::cout << "[Password] ERR_ALREADYREGISTRED (462)" << std::endl, void();
-		}
+		else 
+			return 	Server.sendMsg(Client, Server, "462");
 	}
 	else
-		std::cout << "[Password] Wrong password." << std::endl;
+		Server.sendMsg(Client, Server, "464");
+
 	return;
 }
 void	commands::functionNICK(server& Server, user& Client, std::vector<std::string>& argument){
@@ -149,19 +149,13 @@ void	commands::functionNICK(server& Server, user& Client, std::vector<std::strin
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
 		std::cout << *it << std::endl;
 	}
-	if (count != 2) {
-		std::cout << "[Nickname] ERR_NEEDMOREPARAMS (461)." << std::endl;
-		return;
-	}
-	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos) {
-		std::cout << "[Nickname] ERR_ERRONEUSNICKNAME (432)." << std::endl;
-		return;
-	}
+	if (count != 2) 
+		return Server.sendMsg(Client, Server, "461");
+	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
+		return Server.sendMsg(Client, Server, "432");
 	for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it) {
-		if (argument[1] == it->second.getNickname()) {
-			std::cout << "[Nickname] ERR_NICKNAMEINUSE (433)." << std::endl;
-			return;
-		}
+		if (argument[1] == it->second.getNickname())
+			return Server.sendMsg(Client, Server, "463");
 	}
 	Client.setNickname(argument[1]);
 	//std::cout << Client.getNickname() << std::endl;
@@ -175,12 +169,10 @@ void	commands::functionUSER(server& Server, user& Client, std::vector<std::strin
 		std::cout << *it << std::endl;
 	}
 	if (count < 4) {
-		std::cout << "[User] ERR_NEEDMOREPARAMS (461)." << std::endl;
-		return;
+		return Server.sendMsg(Client, Server, "461");
 	}
 	if (!Client.getUsername().empty()) {
-		std::cout << "[User] ERR_ALREADYREGISTRED (462)." << std::endl;
-		return;
+		return Server.sendMsg(Client, Server, "462");
 	}
 	if (argument[4][0] == ':')
 	{
@@ -212,11 +204,11 @@ void	commands::functionJOIN(server& Server, user& Client, std::vector<std::strin
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count)
 		std::cout << *it << std::endl;
 	if (count < 2 || count > 3) 
-		return Server.sendMsg2(Server, Client, "[Join] ERR_NEEDMOREPARAMS (461).");
+		return Server.sendMsg(Client, Server, "461");
 	if (argument[1][0] != '&' && argument[1][0] != '#') 
-		return Server.sendMsg2(Server, Client, "[Join] ERR_BADCHANMASK (476).");
+		return Server.sendMsg(Client, Server, "476");
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos) 
-		return Server.sendMsg2(Server, Client, "[Join] ERR_BADCHANMASK (476).");
+		return Server.sendMsg(Client, Server, "476");
 	if (!channelMap.empty()) {
 		for (std::map<channel, std::vector<user> >::iterator it = channelMap.begin(); it != channelMap.end(); ++it) {
 			if (argument[1] == it->first.getChannelName()) {

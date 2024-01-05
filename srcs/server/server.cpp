@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 17:28:53 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/05 22:59:17 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,18 @@ bool server::LastPing(user client){
 void server::sendMsg(user &client, server &server, std::string RPL){
 	std::string msg;
 	(void)server;
-	msg = ":" + getID() + " " + RPL + " " + client.getNickname() + " : " + RPL/*displayRPL(server, client, RPL)*/ + "\r\n";
+	msg = ":" + getID() + " " + RPL + " " + client.getNickname() + " : " + displayRPL(server, client, RPL) + "\r\n";
+	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
+		std::perror("send:");
+	std::cout 	<< "---- SERVER RESPONSE ----\n"
+				<< msg << "\n"
+				<< "-------------------------" << std::endl;
+}
+
+void server::sendrawMsg(user &client, server &server, std::string message){
+	std::string msg;
+	(void)server;
+	msg = ":" + getID() + " " + client.getNickname() + " : " + message + "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
