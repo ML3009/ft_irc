@@ -16,9 +16,7 @@
 
 /*----------------- Coplien ------------- */
 
-user::user(){
-
-}
+user::user(){}
 user::user(int fd){
 	_fd = fd;
 	_username = "";

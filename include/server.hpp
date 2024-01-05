@@ -36,6 +36,10 @@ class server{
 			void timeout_client(int fd);
 			bool LastPing(user client);
 			void sendMsg(user &client, server &server, std::string RPL);
+			void sendMsg2(server &Server, user &User, std::string str);
+
+			void	sendJoinMsg(server &Server, user& Client, std::string channelName);
+			void	sendUserJoinMsg(server& Server, const user& NewUser, std::string channelName);
 
 
 // Getter / Setter

@@ -12,8 +12,6 @@
 
 #include "commands.hpp"
 
-
-
 /*----------------- Coplien ------------- */
 
 commands::commands(){
@@ -172,7 +170,6 @@ void	commands::functionNICK(server& Server, user& Client, std::vector<std::strin
 void	commands::functionUSER(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
-	(void)Server;
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
 		std::cout << *it << std::endl;
@@ -198,7 +195,6 @@ void	commands::functionUSER(server& Server, user& Client, std::vector<std::strin
 	}
 	Client.setUsername(argument[1]);
 	displayWelcome(Server, Client);
-	//std::cout << "USER " << Client.getUsername() << " | REAL NAME " << Client.getRealname() << std::endl;
 	return;
 }
 void	commands::functionQUIT(server& Server, user& Client, std::vector<std::string>& argument){
@@ -212,11 +208,31 @@ void	commands::functionQUIT(server& Server, user& Client, std::vector<std::strin
 }
 void	commands::functionJOIN(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "JOIN" << std::endl;
-
+	int	count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count)
+		std::cout << *it << std::endl;
+	if (count < 2 || count > 3) 
+		return Server.sendMsg2(Server, Client, "[Join] ERR_NEEDMOREPARAMS (461).");
+	if (argument[1][0] != '&' && argument[1][0] != '#') 
+		return Server.sendMsg2(Server, Client, "[Join] ERR_BADCHANMASK (476).");
+	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos) 
+		return Server.sendMsg2(Server, Client, "[Join] ERR_BADCHANMASK (476).");
+	if (!channelMap.empty()) {
+		for (std::map<channel, std::vector<user> >::iterator it = channelMap.begin(); it != channelMap.end(); ++it) {
+			if (argument[1] == it->first.getChannelName()) {
+				it->second.push_back(Client);
+				Server.sendJoinMsg(Server, Client, argument[1]);
+				count = 1;
+			}
+		}
+	}
+	if (count != 1) {
+		channel Channel(argument[1]);
+		channelMap[Channel].push_back(Client);
+		Channel.setOperator(Client);
+		Server.sendJoinMsg(Server, Client, argument[1]);
+	}
+	Server.sendUserJoinMsg(Server, Client, argument[1]); 
 	return;
 }
 void	commands::functionPART(server& Server, user& Client, std::vector<std::string>& argument){
@@ -224,7 +240,7 @@ void	commands::functionPART(server& Server, user& Client, std::vector<std::strin
 	(void)Server;
 	(void)Client;
 	(void)argument;
-	std::cout << "PART" << std::endl;
+	std::cout << "PART = quitter le channel" << std::endl;
 
 	return;
 }

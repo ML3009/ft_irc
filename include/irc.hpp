@@ -47,6 +47,7 @@ extern int					DEBUG; // Display debug message
 extern int					LOG;
 extern bool					handleSignal;
 extern std::map<int, user> 	clientMap;
+extern std::map<channel, std::vector<user> > channelMap;
 
 
 #define HERE	-1

@@ -17,6 +17,7 @@ int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= LOGFILE;
 std::map<int, user> clientMap;
+std::map<channel, std::vector<user> > channelMap;
 
 
 

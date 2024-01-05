@@ -14,18 +14,26 @@
 
 #include "irc.hpp"
 
-
-
 class channel {
 
 	public:
+//Coplien
 		channel();
+		channel(std::string channelName);
 		channel(const channel& rhs);
 		channel& operator=(const channel& rhs);
 		~channel();
 
+// Setter / Getter		
+		std::string	getChannelName() const;
+		void	setOperator(user& Client) ;
+
+//operator
+		bool operator<(const channel& other) const;
+	
 	private:
+		std::string	_channelName;
+		std::vector<std::string>	_operatorName;
 
 };
 
-std::ostream& operator<<(std::ostream& o, const channel& rhs);

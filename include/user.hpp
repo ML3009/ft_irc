@@ -17,6 +17,8 @@
 
 class commands;
 
+class channel;
+
 class server;
 
 class user

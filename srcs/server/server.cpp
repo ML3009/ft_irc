@@ -199,7 +199,7 @@ void server::timeout_client(int fd){
 
 bool server::LastPing(user client){
 	clock_t actual = clock();
-	std::cout << "client [" << client.getfd() << "] | " << actual - client.getLastPing() << std::endl;
+	//std::cout << "client [" << client.getfd() << "] | " << actual - client.getLastPing() << std::endl;
 	if (actual - client.getLastPing() > _maxtimeout)
 		return TIMEOUT;
 	return TIMEIN;
@@ -214,4 +214,50 @@ void server::sendMsg(user &client, server &server, std::string RPL){
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
 				<< msg << "\n"
 				<< "-------------------------" << std::endl;
+}
+
+
+void server::sendMsg2(server &Server, user &Client, std::string str){
+	(void)Server;
+	std::string msg;
+	msg = str;
+	//msg = ":" + getID() + " " + Client.getNickname() + " : "  + str + "\r\n";
+	if (send(Client.getfd(), msg.c_str(), msg.length(), 0) == -1)
+		std::perror("send:");
+	std::cout 	<< "---- SERVER RESPONSE ----\n"
+				<< msg << "\n"
+				<< "-------------------------" << std::endl;
+}
+
+
+void	server::sendJoinMsg(server& Server, user& Client, std::string channelName){
+
+    std::string msg = ":" + Server.getID() + " 332 " + Client.getNickname() + " " + channelName + " :Bienvenue dans le nouveau canal!\r\n";
+    
+    if (send(Client.getfd(), msg.c_str(), msg.length(), 0) == -1) {
+        std::perror("send:");
+    }
+
+    std::cout << "---- SERVER RESPONSE ----\n" << msg << "\n-------------------------" << std::endl;
+	return;
+}
+
+
+void server::sendUserJoinMsg(server& Server, const user& NewUser, std::string channelName) {
+    std::string msg = ":" + NewUser.getNickname() + "!" + NewUser.getUsername() + "@" + Server.getID() +
+                      " JOIN " + channelName + "\r\n";
+
+	std::map<channel, std::vector<user> >::iterator it;
+	for (it = channelMap.begin(); it != channelMap.end(); ++it) 
+		if (channelName == it->first.getChannelName())
+			break;
+	std::vector<user> usersInChannel = it->second;
+	for (std::vector<user>::iterator userIt = usersInChannel.begin(); userIt != usersInChannel.end(); ++userIt) {
+		if (userIt->getUsername() != NewUser.getUsername()) {
+			if (send(userIt->getfd(), msg.c_str(), msg.length(), 0) == -1) {
+                 std::perror("send:");
+             }
+		}
+	}
+	std::cout << "---- SERVER RESPONSE ----\n" << msg << "\n-------------------------" << std::endl;
 }

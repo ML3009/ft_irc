@@ -15,23 +15,25 @@
 /*----------------- Coplien ------------- */
 
 channel::channel(){
+	_channelName = "";
+}
 
+channel::channel(std::string channelName) {
+	_channelName = channelName;
 }
 
 channel::channel(const channel& rhs){
-	(void)rhs;
+	*this = rhs;
 }
 
 channel& channel::operator=(const channel& rhs){
-	if(this != &rhs)
-	{}
-
+	if(this != &rhs){
+		_channelName = rhs._channelName;
+	}
 	return *this;
 }
 
-channel::~channel(){
-
-}
+channel::~channel(){}
 
 
 /*---------------- Operator ------------- */
@@ -39,8 +41,20 @@ channel::~channel(){
 
 /*---------- Getter / Setter ------------ */
 
+std::string channel::getChannelName() const {return _channelName;}
 
+void	channel::setOperator(user& Client) {
+
+	std::string tmp = Client.getUsername();
+	_operatorName.push_back(tmp);
+	return;
+}
 /*--------------- Function -------------- */
 
 
-/*--------------- Exception ------------- */
+// 
+	
+
+/*--------------- operator ------------- */
+
+bool channel::operator<(const channel& other)  const {return _channelName < other._channelName;}
