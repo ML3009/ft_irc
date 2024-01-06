@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/05 22:32:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/06 19:03:06 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,3 +106,16 @@ extern std::map<channel, std::vector<user> > channelMap;
 #define RPL_KICK_C 14;
 #define RPL_NOTICE_C 15;
 #define RPL_PRIVMSG_C 16;
+
+#define pvm_CHANNEL 1;
+#define pvm_USER    2;
+
+#define BLK "\e[0;30m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define YEL "\e[0;33m"
+#define BLU "\e[0;34m"
+#define MAG "\e[0;35m"
+#define CYN "\e[0;36m"
+#define WHT "\e[0;37m"
+#define COLOR_RESET "\e[0m"

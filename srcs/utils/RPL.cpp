@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/05 23:11:55 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/06 19:56:33 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int special_code(std::string RPL){
 }
 
 
-std::string displayRPL(server &server, user &client, std::string RPL){
+std::string displayRPL(server &server, user &client, std::string RPL, std::string message){
 {
     int code;
     if ((int)std::strtol(RPL.c_str(), NULL, 10))
@@ -49,11 +49,11 @@ std::string displayRPL(server &server, user &client, std::string RPL){
     case 13:
         return RPL_QUIT_M(server, client, "");
     case 14:
-        return RPL_KICK(server, client, "channel", "user", "message");
+        return RPL_KICK(server, client, "channel", "user", message);
     case 15:
-        return RPL_NOTICE(server, client, "channel", "message");
+        return RPL_NOTICE(server, client, "channel", message);
     case 16:
-        return RPL_PRIVMSG(server, client, "channel", "message");
+        return RPL_PRIVMSG(message);
     case 221:
         return RPL_UMODEIS(server, client, "mode");
     case 321:
@@ -73,23 +73,23 @@ std::string displayRPL(server &server, user &client, std::string RPL){
     case 366:
         return RPL_ENDOFNAMES(server, client, "channel");
     case 401:
-        return ERR_NOSUCHNICK(server, client, "user", "dest");
+        return ERR_NOSUCHNICK(server, client);
     case 403:
         return ERR_NOSUCHCHANNEL(server, client, "channel");
     case 404:
-        return ERR_CANNOTSENDTOCHAN(server, client, "channel");
+        return ERR_CANNOTSENDTOCHAN(server, client);
     case 405:
         return ERR_TOOMANYCHANNELS(server, client, "channel");
     case 407:
         return ERR_TOOMANYTARGETS(server, client, "channel");
     case 411:
-        return ERR_NORECIPIENT(server, client, "message");
+        return ERR_NORECIPIENT(server, client, message);
     case 412:
         return ERR_NOTEXTTOSEND(server, client);
     case 413:
-        return ERR_NOTOPLEVEL(server, client, "message");
+        return ERR_NOTOPLEVEL(server, client, message);
     case 414:
-        return ERR_WILDTOPLEVEL(server, client, "message");
+        return ERR_WILDTOPLEVEL(server, client, message);
     case 421:
         return ERR_UNKNOWNCOMMAND(server, client);
     case 431:
@@ -141,12 +141,12 @@ void displayWelcome(server &server, user &client){
 std::string RPL_WELCOME(server &server, user &client){
 	(void)server;
 	(void)client;
-	return "Bienvenue sur le serveur IRC. Connecté avec succès !\n";
+	return "\e[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\n\e[0m";
 }
 
 std::string RPL_YOURHOST(server &server, user &client){
 	(void)client;
-	return "Notre serveur hôte IRC est " + server.getID() + "\n";
+	return "\e[0;34mNotre serveur hôte IRC est \e[0m\e[0;33m" + server.getID() + "\e[0m\n";
 }
 
 std::string RPL_CREATED(server &server, user &client) {
@@ -156,14 +156,14 @@ std::string RPL_CREATED(server &server, user &client) {
     std::tm* localTime = std::localtime(&now);
 
     char buffer[80];
-    std::strftime(buffer, sizeof(buffer), "Ce serveur a été créé le %d %B %Y à %H:%M:%S.\n", localTime);
+    std::strftime(buffer, sizeof(buffer), "\e[0;34mCe serveur a été créé le \e[0m\e[0;36m%d %B %Y à %H:%M:%S.\n\e[0m", localTime);
     
     return buffer;
 }
 
 std::string RPL_MYINFO(server &server, user &client){
 	(void)client;
-	return server.getID() + " Serveur IRC v1.0. Modes supportés : +i, +t, +k, +o, +l. Utilisez /HELP pour obtenir de l'aide.\n";
+	return "\e[0;33m" + server.getID() + "\e[0m \e[0;34mServeur IRC v1.0. Modes supportés : \e[0m\e[0;35m[+i +t +k +o +l]. \e[0;34mUtilisez /HELP pour obtenir de l'aide.\n\e[0m";
 }
 
 /*---------------------------------------------------------------------------------------------------*/
@@ -202,7 +202,7 @@ std::string RPL_CHANNELMODEIS(server& server, user& client, const std::string& c
 std::string RPL_NOTOPIC(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "331  " + channel + " :No topic is set";
+    return RED + channel + " :No topic is set" + COLOR_RESET;
 }
 
 std::string RPL_TOPIC(server& server, user& client, const std::string& channel, const std::string& topic) {
@@ -224,40 +224,43 @@ std::string RPL_ENDOFNAMES(server& server, user& client, const std::string& chan
     return "366  " + channel + " :End of /NAMES list";
 }
 
-std::string ERR_NOSUCHNICK(server& server, user& client, const std::string& user_nick, const std::string& dest_nick) {
+std::string ERR_NOSUCHNICK(server& server, user& client) {
     (void)server;
     (void)client;
-    return "401 " + user_nick + " " + dest_nick + " :No such nick/channel";
+    return "\e[0;31m No such nickname\e[0m";
 }
 
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "403  " + channel + " :No such channel";
+    return RED + channel + " :No such channel" + COLOR_RESET;;
 }
 
 
-std::string ERR_CANNOTSENDTOCHAN(server& server, user& client, const std::string& channel) {
+std::string ERR_CANNOTSENDTOCHAN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "404 " + channel + " :Cannot send to channel";
+    return "\e[0;31mCannot send to channel\e[0m";
 }
 std::string ERR_TOOMANYCHANNELS(server& server, user& client, const std::string& channel) {
+    (void)channel;
     (void)server;
     (void)client;
-    return "405  " + channel + " :You have joined too many channels";
+    return "\e[0;31mYou have joined too many channels\e[0m";
 }
 
 std::string ERR_TOOMANYTARGETS(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "407 " + channel + " :Duplicate recipients. No message delivered";
+    (void)channel;
+    return "\e[0;31mDuplicate recipients. No message delivered\e[0m";
 }
 
 std::string ERR_NORECIPIENT(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
-    return "411 " + message + " :No recipient given";
+    (void)message;
+    return "\e[0;31mNo recipient given\e[0m";
 }
 
 
@@ -265,112 +268,121 @@ std::string ERR_NORECIPIENT(server& server, user& client, const std::string& mes
 std::string ERR_NOTEXTTOSEND(server& server, user& client) {
     (void)server;
     (void)client;
-    return "412 :No text to send";
+    return "\e[0;31mNo text to send\e[0m";
 }
 
 std::string ERR_NOTOPLEVEL(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
-    return "413 " + message + " :No toplevel domain specified";
+    (void)message;
+    return "\e[0;31mNo toplevel domain specified\e[0m";
 }
 
 std::string ERR_WILDTOPLEVEL(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
-    return "414 " + message + " :Wildcard in toplevel domain";
+    (void)message;
+    return "\e[0;31mWildcard in toplevel domain\e[0m";
 }
 
 
 std::string ERR_UNKNOWNCOMMAND(server& server, user& client) {
     (void)server;
     (void)client;
-    return "421 :Unknown command";
+    return "\e[0;31mUnknown command\e[0m";
 }
 
 std::string ERR_NONICKNAMEGIVEN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "431 :No nickname given";
+    return "\e[0;31mNo nickname given\e[0m";
 }
 
 std::string ERR_ERRONEUSNICKNAME(server& server, user& client, const std::string& nickname) {
     (void)server;
     (void)client;
-    return "432 " + nickname + " :Erroneus nickname";
+    (void)nickname;
+    return "\e[0;31mErroneus nickname\e[0m";
 }
 
 std::string ERR_NICKNAMEINUSE(server& server, user& client, const std::string& nickname) {
     (void)server;
     (void)client;
-    return "433 " + nickname + " :Nickname is already in use";
+    (void)nickname;
+    return "\e[0;31mNickname is already in use\e[0m";
 }
 
 std::string ERR_USERNOTINCHANNEL(server& server, user& client, const std::string& user, const std::string& channel) {
     (void)server;
     (void)client;
-    return "441 " + user + " " + channel + " :They aren't on that channel";
+    (void)channel;
+    return "\e[0;31m " + user + " is not on that channel\e[0m";
 }
 
 std::string ERR_NOTONCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "442 " + channel + " :You're not on that channel";
+    (void)channel;
+    return "\e[0;31mYou're not on that channel\e[0m";
 }
 
 std::string ERR_NOTREGISTERED(server& server, user& client) {
     (void)server;
     (void)client;
-    return "451 :You have not registered";
+    return "\e[0;31mYou have not registered\e[0m";
 }
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) {
     (void)server;
     (void)client;
-    return "461 :Not enough parameters";
+    return "\e[0;31mNot enough parameters\e[0m";
 }
 
 
 std::string ERR_ALREADYREGISTRED(server& server, user& client) {
     (void)server;
     (void)client;
-    return "462 :You may not reregister";
+    return "\e[0;31mYou may not reregister\e[0m";
 }
 
 std::string ERR_PASSWDMISMATCH(server& server, user& client) {
     (void)server;
     (void)client;
-    return "464 :Password incorrect";
+    return "\e[0;31mPassword incorrect\e[0m";
 }
 std::string ERR_NOLOGIN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "465 :You are not logged in";
+    return "\e[0;31mYou are not logged in\e[0m";
 }
 std::string ERR_UNKNOWNMODE(server& server, user& client, const std::string& mode) {
     (void)server;
     (void)client;
-    return "472 " + mode + " :is unknown mode char to me";
+    return "\e[0;31m " + mode + " :is unknown mode char to me\e[0m";
 }
 std::string ERR_INVITEONLYCHAN(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "473  " + channel + " :Cannot join channel (+i)";
+    (void)channel;
+    return "\e[0;31m Cannot join channel (+i)\e[0m";
 }
 
 std::string ERR_BADCHANMASK(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "476 " + channel + " :Bad Channel Mask";
+    (void)channel;
+    return "\e[0;31mBad Channel Mask\e[0m";
 }
 
 std::string ERR_CHANOPRIVSNEEDED(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return "482  " + channel + " :You're not channel operator";
+    (void)channel;
+    return "\e[0;31mYou're not channel operator\e[0m";
 }
 std::string ERR_USERSDONTMATCH(server& server, user& client) {
     (void)server;
     (void)client;
-    return "502 :Can't change mode for other users";
+    return "\e[0;31mCan't change mode for other users\e[0m";
 }
 
 /*--------------------------------------------------------------------------------------*/
@@ -405,8 +417,6 @@ std::string RPL_NOTICE(server& server, user& client, const std::string& channel,
     (void)client;
     return " NOTICE " + channel + " :" + message;
 }
-std::string RPL_PRIVMSG(server& server, user& client, const std::string& channel, const std::string& message) {
-    (void)server;
-    (void)client;
-    return " PRIVMSG " + channel + " :" + message;
+std::string RPL_PRIVMSG(const std::string& message) {
+    return message;
 }

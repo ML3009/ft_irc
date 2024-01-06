@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/05 23:12:25 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/06 19:55:02 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,20 @@ commands::~commands(){
 void	commands::getCommand(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getCommand", BEGIN);
+	bool command = false;
 	if (!argument.empty()) {
-		for (std::map<std::string, cmdFunctionPointer>::iterator it = cmdMap.begin(); it!= cmdMap.end(); ++it) {
+		for (std::map<std::string, cmdFunctionPointer>::iterator it = cmdMap.begin(); it != cmdMap.end(); ++it) {
 			if (it->first == argument[0])
+			{
 				(this->*(it->second))(Server, Client, argument);
+				command = true;
+			}
 		}
+		if (command == false)
+			Server.sendMsg(Client, Server,"421");
 	}
+	else
+		Server.sendMsg(Client, Server,"421");
 	debug("getCommand", END);
 
 	return;
@@ -99,8 +107,8 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 					Server.sendrawMsg(Client, Server, "\e[0;36m\tuse /PASS before doing anything\e[0m");
 					break;
 				}
-				!(Client.getUsername().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Username] " + Client.getUsername())  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/USER] username must be set \e[0m");
-				!(Client.getNickname().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Nickname] " + Client.getNickname())  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/NICK] nickname must be set \e[0m");
+				!(Client.getUsername().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Username] " + Client.getUsername() + "\e[0m")  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/USER] username must be set \e[0m");
+				!(Client.getNickname().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Nickname] " + Client.getNickname() + "\e[0m") : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/NICK] nickname must be set \e[0m");
 		}
 	}
 	debug("getAuthentified", END);
@@ -273,15 +281,49 @@ void	commands::functionMODE(server& Server, user& Client, std::vector<std::strin
 	return;
 }
 void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PRIVMSG" << std::endl;
-
+	int destination = 0; // 0 FOR USER | 1 FOR CHANNEL
+	int count = 0;
+	std::string message;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
+	if (count < 3)
+	{
+		if (argument[1][0] == '&' && argument[1][0] == '#' && count == 2)
+			return Server.sendMsg(Client, Server, "412");
+		else if (count == 2){
+			for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it)
+				if (argument[1] == it->second.getNickname())
+					return Server.sendMsg(Client, Server, "412");
+				return Server.sendMsg(Client, Server, "411");
+		}
+		else
+			return Server.sendMsg(Client, Server, "461");
+	}
+	if (argument[1][0] != '&' && argument[1][0] != '#')
+		destination = 1;
+	if (destination == 1){
+		for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it){
+			if (argument[1] == it->second.getNickname())
+			{
+				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
+					message += *it + " ";
+				Server.sendMsgToUser(Client, it->second, Server, "RPL_PRIVMSG", message);
+				return;
+			}
+		}
+		return Server.sendMsg(Client, Server, "401");	
+	}
+	else
+	{
+		for (std::map<channel, std::vector<user> >::iterator it = channelMap.begin(); it != channelMap.end(); ++it) {
+			if (argument[1] == it->first.getChannelName())
+			{
+				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
+					message += *it + " ";
+				Server.sendMsgToChannel(Client, it->second, Server, "RPL_PRIVMSG", message, argument[1]);
+			}
+			else
+				return Server.sendMsg(Client, Server, "401");
+		}
+	}
 	return;
 }
-
-
-
-/*--------------- Exception ------------- */

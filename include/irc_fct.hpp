@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/05 23:09:50 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/06 13:30:29 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void 	                display_constructor(std::string msg);
 /* UTILS   */
 bool						completeCommand(std::string msg, int opt);
 std::vector<std::string>	splitArgs(std::string buffer);
-std::string					displayRPL(server &server, user &client, std::string RPL);
+std::string					displayRPL(server &server, user &client, std::string RPL, std::string message);
 void displayWelcome(server &server, user &client);
 
 
@@ -45,9 +45,9 @@ std::string RPL_NOTOPIC(server& server, user& client, const std::string& channel
 std::string RPL_TOPIC(server& server, user& client, const std::string& channel, const std::string& topic) ;
 std::string RPL_NAMREPLY(server& server, user& client, const std::string& channel, const std::string& users) ;
 std::string RPL_ENDOFNAMES(server& server, user& client, const std::string& channel) ;
-std::string ERR_NOSUCHNICK(server& server, user& client, const std::string& user_nick, const std::string& dest_nick) ;
+std::string ERR_NOSUCHNICK(server& server, user& client); // 401
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& channel) ;
-std::string ERR_CANNOTSENDTOCHAN(server& server, user& client, const std::string& channel) ;
+std::string ERR_CANNOTSENDTOCHAN(server& server, user& client) ; //404
 std::string ERR_TOOMANYCHANNELS(server& server, user& client, const std::string& channel) ;
 std::string ERR_TOOMANYTARGETS(server& server, user& client, const std::string& channel) ;
 std::string ERR_NORECIPIENT(server& server, user& client, const std::string& message) ;
@@ -76,6 +76,6 @@ std::string RPL_QUIT(server& server, user& client) ;
 std::string RPL_QUIT_M(server& server, user& client, const std::string& message) ;
 std::string RPL_KICK(server& server, user& client, const std::string& channel, const std::string& user, const std::string& message) ;
 std::string RPL_NOTICE(server& server, user& client, const std::string& channel, const std::string& message) ;
-std::string RPL_PRIVMSG(server& server, user& client, const std::string& channel, const std::string& message) ;
+std::string RPL_PRIVMSG(const std::string& message);
 
 
