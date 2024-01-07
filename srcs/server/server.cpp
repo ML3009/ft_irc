@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 17:28:53 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/06 19:29:55 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,11 @@ bool server::LastPing(user client){
 void server::sendMsg(user &client, server &server, std::string RPL){
 	std::string msg;
 	(void)server;
-	msg = ":" + getID() + " " + RPL + " " + client.getNickname() + " : " + RPL/*displayRPL(server, client, RPL)*/ + "\r\n";
+	msg = "\e[0m:\e[0;33m" + getID() 
+		+ "\e[0m \e[0;32m" + RPL 
+		+ "\e[0m \e[0;34m" + client.getNickname() 
+		+ "\e[0m :" + displayRPL(server, client, RPL, "") 
+		+ "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
@@ -216,6 +220,51 @@ void server::sendMsg(user &client, server &server, std::string RPL){
 				<< "-------------------------" << std::endl;
 }
 
+void server::sendrawMsg(user &client, server &server, std::string message){
+	std::string msg;
+	(void)server;
+	msg = ":" + getID() + " " + client.getNickname() + " : " + message + "\r\n";
+	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
+		std::perror("send:");
+	std::cout 	<< "---- SERVER RESPONSE ----\n"
+				<< msg << "\n"
+				<< "-------------------------" << std::endl;
+}
+
+void server::sendMsgToChannel(user &client, std::vector<user> &list, server &server, std::string RPL, std::string message, std::string channel) {
+    for (std::vector<user>::iterator it = list.begin(); it != list.end(); ++it) {
+        if (it->getfd() == client.getfd())
+            continue;
+        std::string msg = "\e[0m:\e[0;35m"
+                        + client.getNickname() + "\e[0m!\e[0;35m"
+                        + std::to_string(client.getfd()) + "\e[0m@\e[0;33m"
+                        + server.getID() + "\e[0m \e[0;32m"
+                        + RPL + "\e[0m \e[0;34m" 
+                        + channel + "\e[0m | \e[0;34m" 
+						+ it->getNickname() + "\e[0m :"
+                        + displayRPL(server, client, RPL, message) + "\r\n";
+        if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
+            std::perror("send:");
+        std::cout  << "---- SERVER RESPONSE ----\n"
+                    << msg << "\n"
+                    << "-------------------------" << std::endl;
+    }
+}
+
+void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
+    std::string msg = "\e[0m:\e[0;35m"
+                    + client.getNickname() + "\e[0m!\e[0;35m" 
+                    + std::to_string(client.getfd()) + "\e[0m@\e[0;33m"
+                    + server.getID() + "\e[0m \e[0;32m"
+                    + RPL + "\e[0m \e[0;34m"
+                    + dest.getNickname() + "\e[0m :" 
+                    + displayRPL(server, client, RPL, message) + "\r\n";
+    if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
+        std::perror("send:");
+    std::cout   << "---- SERVER RESPONSE ----\n"
+                << msg << "\n"
+                << "-------------------------" << std::endl;
+}
 
 void server::sendMsg2(server &Server, user &Client, std::string str){
 	(void)Server;
