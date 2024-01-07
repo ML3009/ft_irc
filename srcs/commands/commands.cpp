@@ -16,17 +16,17 @@
 
 commands::commands(){
 
-	cmdMap["/INVITE"] = &commands::functionINVITE;
-	cmdMap["/JOIN"] = &commands::functionJOIN;
-	cmdMap["/KICK"] = &commands::functionKICK;
-	cmdMap["/MODE"] = &commands::functionMODE;
-	cmdMap["/NICK"] = &commands::functionNICK;
-	cmdMap["/PART"] = &commands::functionPART;
-	cmdMap["/PASS"] = &commands::functionPASS;
-	cmdMap["/PRIVMSG"] = &commands::functionPRIVMSG;
-	cmdMap["/QUIT"] = &commands::functionQUIT;
-	cmdMap["/TOPIC"] = &commands::functionTOPIC;
-	cmdMap["/USER"] = &commands::functionUSER;
+	cmdMap["/INVITE"] = &commands::cmdINVITE;
+	cmdMap["/JOIN"] = &commands::cmdJOIN;
+	cmdMap["/KICK"] = &commands::cmdKICK;
+	cmdMap["/MODE"] = &commands::cmdMODE;
+	cmdMap["/NICK"] = &commands::cmdNICK;
+	cmdMap["/PART"] = &commands::cmdPART;
+	cmdMap["/PASS"] = &commands::cmdPASS;
+	cmdMap["/PRIVMSG"] = &commands::cmdPRIVMSG;
+	cmdMap["/QUIT"] = &commands::cmdQUIT;
+	cmdMap["/TOPIC"] = &commands::cmdTOPIC;
+	cmdMap["/USER"] = &commands::cmdUSER;
 }
 
 commands::commands(const commands& rhs){
@@ -121,7 +121,7 @@ int	commands::isCmdAuthentified(user& Client, std::string argument){
    return -1;
 }
 
-void	commands::functionPASS(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count){
@@ -142,7 +142,7 @@ void	commands::functionPASS(server& Server, user& Client, std::vector<std::strin
 		std::cout << "[Password] Wrong password." << std::endl;
 	return;
 }
-void	commands::functionNICK(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	int	count = 0;
@@ -167,7 +167,7 @@ void	commands::functionNICK(server& Server, user& Client, std::vector<std::strin
 	//std::cout << Client.getNickname() << std::endl;
 	return;
 }
-void	commands::functionUSER(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	int	count = 0;
@@ -197,7 +197,7 @@ void	commands::functionUSER(server& Server, user& Client, std::vector<std::strin
 	displayWelcome(Server, Client);
 	return;
 }
-void	commands::functionQUIT(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -206,13 +206,16 @@ void	commands::functionQUIT(server& Server, user& Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionJOIN(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument){
 
+	// modif pour prevoir plusieurs canaux 
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count)
-		std::cout << *it << std::endl;
-	if (count < 2 || count > 3) 
+	if (count < 2) 
 		return Server.sendMsg2(Server, Client, "[Join] ERR_NEEDMOREPARAMS (461).");
+	for (int i = 0; i < argument[i][0] == '&' || argument[i][0] == '#'; i++) {
+
+	}
 	if (argument[1][0] != '&' && argument[1][0] != '#') 
 		return Server.sendMsg2(Server, Client, "[Join] ERR_BADCHANMASK (476).");
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos) 
@@ -235,7 +238,7 @@ void	commands::functionJOIN(server& Server, user& Client, std::vector<std::strin
 	Server.sendUserJoinMsg(Server, Client, argument[1]); 
 	return;
 }
-void	commands::functionPART(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -244,7 +247,7 @@ void	commands::functionPART(server& Server, user& Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionKICK(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -253,7 +256,7 @@ void	commands::functionKICK(server& Server, user& Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionINVITE(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -262,7 +265,7 @@ void	commands::functionINVITE(server& Server, user& Client, std::vector<std::str
 
 	return;
 }
-void	commands::functionTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -271,7 +274,7 @@ void	commands::functionTOPIC(server& Server, user& Client, std::vector<std::stri
 
 	return;
 }
-void	commands::functionMODE(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;
@@ -280,7 +283,7 @@ void	commands::functionMODE(server& Server, user& Client, std::vector<std::strin
 
 	return;
 }
-void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
 	(void)Client;

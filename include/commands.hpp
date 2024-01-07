@@ -26,17 +26,17 @@ class commands {
 	void	getAuthentified(server& Server, user& Client, std::vector<std::string>& argument);
 	int		isCmdAuthentified(user& Client, std::string argument);
 
-	void functionPASS(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionNICK(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionUSER(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionQUIT(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionJOIN(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionPART(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionKICK(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionINVITE(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionTOPIC(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionMODE(server& Server, user& Client, std::vector<std::string>& argument);
-	void functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdPASS(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdNICK(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdUSER(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdQUIT(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdPART(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdKICK(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdMODE(server& Server, user& Client, std::vector<std::string>& argument);
+	void cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument);
 
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);
