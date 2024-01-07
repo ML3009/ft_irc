@@ -281,7 +281,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 
 	return;
 }
-void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
+void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
 	int destination = 0; // 0 FOR USER | 1 FOR CHANNEL
 	int count = 0;
 	std::string message;
