@@ -34,6 +34,7 @@ class channel {
 	private:
 		std::string	_channelName;
 		std::vector<std::string>	_operatorName;
+		// METTRE un pointeur vers la classe user !!!! 
 
 };
 
