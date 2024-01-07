@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/06 19:55:02 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 22:04:58 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ commands::commands(){
 	cmdMap["/QUIT"] = &commands::functionQUIT;
 	cmdMap["/TOPIC"] = &commands::functionTOPIC;
 	cmdMap["/USER"] = &commands::functionUSER;
+	cmdMap["@bot"] = &commands::functionBOT;
 }
 
 commands::commands(const commands& rhs){
@@ -289,11 +290,12 @@ void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::st
 	{
 		if (argument[1][0] == '&' && argument[1][0] == '#' && count == 2)
 			return Server.sendMsg(Client, Server, "412");
-		else if (count == 2){
+		else if (count == 2)
+		{
 			for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it)
 				if (argument[1] == it->second.getNickname())
 					return Server.sendMsg(Client, Server, "412");
-				return Server.sendMsg(Client, Server, "411");
+			return Server.sendMsg(Client, Server, "411");
 		}
 		else
 			return Server.sendMsg(Client, Server, "461");
@@ -306,7 +308,7 @@ void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::st
 			{
 				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 					message += *it + " ";
-				Server.sendMsgToUser(Client, it->second, Server, "RPL_PRIVMSG", message);
+				Server.sendMsgToUser(Client, it->second, Server, "PRIVMSG", message);
 				return;
 			}
 		}
@@ -319,11 +321,26 @@ void	commands::functionPRIVMSG(server& Server, user& Client, std::vector<std::st
 			{
 				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 					message += *it + " ";
-				Server.sendMsgToChannel(Client, it->second, Server, "RPL_PRIVMSG", message, argument[1]);
+				Server.sendMsgToChannel(Client, it->second, Server, "PRIVMSG", message, argument[1]);
 			}
 			else
 				return Server.sendMsg(Client, Server, "401");
 		}
 	}
 	return;
+}
+
+void	commands::functionBOT(server& Server, user& Client, std::vector<std::string>& argument){
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
+	if (count == 2 && argument[1] == "HELP")
+		Server.getbot().help(Server, Client);
+	else if (count == 2 && argument[1] == "FACT")
+	{
+		std::srand(std::time(0));
+		Server.getbot().getfact(Server, Client, std::rand() % 10);
+	}
+	else
+		Server.getbot().sayhello(Server, Client);
+
 }

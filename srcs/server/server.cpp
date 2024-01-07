@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/06 19:29:55 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 21:49:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int server::getUserCount() const { return _userCount;}
 std::vector<pollfd> server::getpollfd() { return _pollFD;}
 std::string server::getPassword() const{return _password;}
 std::string server::getID() const{return _ID;}
+bot 		&server::getbot() {return _bot;}
+
 /*--------------- Function -------------- */
 
 
@@ -259,6 +261,21 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
                     + RPL + "\e[0m \e[0;34m"
                     + dest.getNickname() + "\e[0m :" 
                     + displayRPL(server, client, RPL, message) + "\r\n";
+    if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
+        std::perror("send:");
+    std::cout   << "---- SERVER RESPONSE ----\n"
+                << msg << "\n"
+                << "-------------------------" << std::endl;
+}
+
+void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string message) {
+    std::string msg = "\e[0m:\e[0;35m"
+                    + bot.getName() + "\e[0m!\e[0;35m" 
+                    + "BOT\e[0m@\e[0;33m"
+                    + server.getID() + "\e[0m \e[0;32m"
+                    + "PRIVMSG \e[0m \e[0;34m"
+                    + dest.getNickname() + "\e[0m :" 
+                    + displayRPL(server, dest, "HI_BOT", message) + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"

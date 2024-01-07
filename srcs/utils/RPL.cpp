@@ -6,27 +6,29 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/06 19:56:33 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 18:03:52 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 int special_code(std::string RPL){
-    if (RPL == "RPL_JOIN")
+    if (RPL == "JOIN")
         return 10;
-    if (RPL == "RPL_NICK")
+    if (RPL == "NICK")
         return 11;
-    if (RPL == "RPL_QUIT")
+    if (RPL == "QUIT")
         return 12;
-    if (RPL == "RPL_QUIT_M")
+    if (RPL == "QUIT_M")
         return 13;
-    if (RPL == "RPL_KICK")
+    if (RPL == "KICK")
         return 14;
-    if (RPL == "RPL_NOTICE")
+    if (RPL == "NOTICE")
         return 15;
-    if (RPL == "RPL_PRIVMSG")
+    if (RPL == "PRIVMSG")
         return 16;
+    if (RPL == "HI_BOT")
+        return 17;
     return -1;
 }
 
@@ -54,6 +56,8 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         return RPL_NOTICE(server, client, "channel", message);
     case 16:
         return RPL_PRIVMSG(message);
+    case 17:
+        return HI_BOT(message);
     case 221:
         return RPL_UMODEIS(server, client, "mode");
     case 321:
@@ -418,5 +422,8 @@ std::string RPL_NOTICE(server& server, user& client, const std::string& channel,
     return " NOTICE " + channel + " :" + message;
 }
 std::string RPL_PRIVMSG(const std::string& message) {
+    return message;
+}
+std::string HI_BOT(const std::string& message){
     return message;
 }

@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/06 14:16:24 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 17:59:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class commands {
 	void functionTOPIC(server& Server, user& Client, std::vector<std::string>& argument);
 	void functionMODE(server& Server, user& Client, std::vector<std::string>& argument);
 	void functionPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument);
+	void functionBOT(server& Server, user& Client, std::vector<std::string>& argument);
 
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);

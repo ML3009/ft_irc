@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/06 19:03:06 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 17:56:20 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 #include "user.hpp"
 #include "commands.hpp"
 #include "channel.hpp"
+#include "bot.hpp"
 
 /* ---- DEBUG AND LOGS ---- */
 extern int					CONSTRUCTOR; // Display constructor message

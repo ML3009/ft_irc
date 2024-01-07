@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/06 13:30:29 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 18:04:28 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,6 @@ std::string RPL_QUIT_M(server& server, user& client, const std::string& message)
 std::string RPL_KICK(server& server, user& client, const std::string& channel, const std::string& user, const std::string& message) ;
 std::string RPL_NOTICE(server& server, user& client, const std::string& channel, const std::string& message) ;
 std::string RPL_PRIVMSG(const std::string& message);
+std::string HI_BOT(const std::string& message);
 
 
