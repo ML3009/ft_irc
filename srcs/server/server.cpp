@@ -6,7 +6,7 @@
 /*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 21:49:21 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/07 22:16:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,12 +234,15 @@ void server::sendrawMsg(user &client, server &server, std::string message){
 }
 
 void server::sendMsgToChannel(user &client, std::vector<user> &list, server &server, std::string RPL, std::string message, std::string channel) {
+    std::ostringstream oss;
     for (std::vector<user>::iterator it = list.begin(); it != list.end(); ++it) {
         if (it->getfd() == client.getfd())
             continue;
-        std::string msg = "\e[0m:\e[0;35m"
+		oss.clear();
+    	oss << client.getfd();
+		std::string msg = "\e[0m:\e[0;35m"
                         + client.getNickname() + "\e[0m!\e[0;35m"
-                        + std::to_string(client.getfd()) + "\e[0m@\e[0;33m"
+                        + oss.str() + "\e[0m@\e[0;33m"
                         + server.getID() + "\e[0m \e[0;32m"
                         + RPL + "\e[0m \e[0;34m" 
                         + channel + "\e[0m | \e[0;34m" 
@@ -254,9 +257,11 @@ void server::sendMsgToChannel(user &client, std::vector<user> &list, server &ser
 }
 
 void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
+   	std::ostringstream oss;
+    oss << client.getfd();
     std::string msg = "\e[0m:\e[0;35m"
                     + client.getNickname() + "\e[0m!\e[0;35m" 
-                    + std::to_string(client.getfd()) + "\e[0m@\e[0;33m"
+                    + oss.str() + "\e[0m@\e[0;33m"
                     + server.getID() + "\e[0m \e[0;32m"
                     + RPL + "\e[0m \e[0;34m"
                     + dest.getNickname() + "\e[0m :" 
@@ -269,7 +274,7 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
 }
 
 void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string message) {
-    std::string msg = "\e[0m:\e[0;35m"
+	std::string msg = "\e[0m:\e[0;35m"
                     + bot.getName() + "\e[0m!\e[0;35m" 
                     + "BOT\e[0m@\e[0;33m"
                     + server.getID() + "\e[0m \e[0;32m"
