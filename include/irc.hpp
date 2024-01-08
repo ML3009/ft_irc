@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 17:56:20 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:49:04 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ extern int					DEBUG; // Display debug message
 extern int					LOG;
 extern bool					handleSignal;
 extern std::map<int, user> 	clientMap;
-extern std::map<channel, std::vector<user> > channelMap;
+extern std::map<std::string, channel> channelMap;
 
 
 #define HERE	-1

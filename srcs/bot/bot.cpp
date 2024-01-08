@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 22:03:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 12:45:38 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /*----------------- Coplien ------------- */
 
 bot::bot(){
-    
+
     _factmap[0] = "IRC a été inventé par Jarkko Oikarinen en 1988. À l'origine, il s'agissait d'un moyen pour les étudiants de l'Université d'Oulu en Finlande de communiquer.";
     _factmap[1] = "Le terme 'canal' dans IRC fait référence à un canal de discussion, où plusieurs utilisateurs peuvent discuter en temps réel. Les canaux sont précédés du symbole '#' (par exemple, #chat).";
     _factmap[2] = "Les utilisateurs qui ont des droits spéciaux sur un canal sont appelés opérateurs de canal. Ils peuvent modérer la discussion et gérer les utilisateurs.";
@@ -30,7 +30,6 @@ bot::bot(){
     _factmap[8] = "Il existe de nombreux clients IRC disponibles, des clients en ligne de commande classiques tels que Irssi aux clients graphiques modernes tels que HexChat.";
     _factmap[9] = " IRC a survécu à l'épreuve du temps malgré l'émergence de nouvelles technologies de messagerie. Il reste populaire pour les communautés de discussion en ligne.";
     _name = "ROOOOHBot";
-    std::cout << "BOT INITIALISED" << std::endl;
 }
 
 bot::bot(const bot& rhs){
@@ -54,8 +53,8 @@ std::string bot::getName() const {return _name;}
 
 void bot::sayhello(server &server, user &client){
     server.sendMsgFromBot(*this, client ,server, "Hi ! you call me without anything :(\n You can ask me for help with"
-                                                    + std::string(BLU) +" @bot HELP" + COLOR_RESET 
-                                                    +"\n\tor\nask for a fact with "+ std::string(BLU) +"@bot FACT"+ COLOR_RESET);    
+                                                    + std::string(BLU) +" @bot HELP" + COLOR_RESET
+                                                    +"\n\tor\nask for a fact with "+ std::string(BLU) +"@bot FACT"+ COLOR_RESET);
 }
 
 void bot::help(server &server, user &client){

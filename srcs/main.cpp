@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 17:18:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:49:20 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,20 @@ int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= LOGFILE;
 std::map<int, user> clientMap;
-std::map<channel, std::vector<user> > channelMap;
+std::map<std::string, channel> channelMap;
+
+//std::map<std::string channel, std::vector<channel> > channelMap;
+
+//Channel {
+
+// 	public:
+// 		getUsername
+// 		display user
+
+// 	private :
+
+// 	std::vector<user> user;
+// }
 
 
 
