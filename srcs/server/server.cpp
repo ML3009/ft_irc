@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 15:38:22 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:39:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void server::run_server(){
 		for(std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
 			if (LastPing(it->second) == TIMEOUT) 
 				return timeout_client(it->first);
-	
+
 	debug("run_server", END);
 
 }
@@ -211,10 +211,10 @@ bool server::LastPing(user &client){
 void server::sendMsg(user &client, server &server, std::string RPL){
 	std::string msg;
 	(void)server;
-	msg = "\e[0m:\e[0;33m" + getID() 
-		+ "\e[0m \e[0;32m" + RPL 
-		+ "\e[0m \e[0;34m" + client.getNickname() 
-		+ "\e[0m :" + displayRPL(server, client, RPL, "") 
+	msg = "\e[0m:\e[0;33m" + getID()
+		+ "\e[0m \e[0;32m" + RPL
+		+ "\e[0m \e[0;34m" + client.getNickname()
+		+ "\e[0m :" + displayRPL(server, client, RPL, "")
 		+ "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
@@ -245,8 +245,8 @@ void server::sendMsgToChannel(user &client, std::vector<user> &list, server &ser
                         + client.getNickname() + "\e[0m!\e[0;35m"
                         + oss.str() + "\e[0m@\e[0;33m"
                         + server.getID() + "\e[0m \e[0;32m"
-                        + RPL + "\e[0m \e[0;34m" 
-                        + channel + "\e[0m | \e[0;34m" 
+                        + RPL + "\e[0m \e[0;34m"
+                        + channel + "\e[0m | \e[0;34m"
 						+ it->getNickname() + "\e[0m :"
                         + displayRPL(server, client, RPL, message) + "\r\n";
         if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
@@ -261,11 +261,11 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
    	std::ostringstream oss;
     oss << client.getfd();
     std::string msg = "\e[0m:\e[0;35m"
-                    + client.getNickname() + "\e[0m!\e[0;35m" 
+                    + client.getNickname() + "\e[0m!\e[0;35m"
                     + oss.str() + "\e[0m@\e[0;33m"
                     + server.getID() + "\e[0m \e[0;32m"
                     + RPL + "\e[0m \e[0;34m"
-                    + dest.getNickname() + "\e[0m :" 
+                    + dest.getNickname() + "\e[0m :"
                     + displayRPL(server, client, RPL, message) + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
@@ -276,11 +276,11 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
 
 void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string message) {
 	std::string msg = "\e[0m:\e[0;35m"
-                    + bot.getName() + "\e[0m!\e[0;35m" 
+                    + bot.getName() + "\e[0m!\e[0;35m"
                     + "BOT\e[0m@\e[0;33m"
                     + server.getID() + "\e[0m \e[0;32m"
                     + "PRIVMSG \e[0m \e[0;34m"
-                    + dest.getNickname() + "\e[0m :" 
+                    + dest.getNickname() + "\e[0m :"
                     + displayRPL(server, dest, "HI_BOT", message) + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
@@ -305,7 +305,7 @@ void server::sendMsg2(server &Server, user &Client, std::string str){
 void	server::sendJoinMsg(server& Server, user& Client, std::string channelName){
 
     std::string msg = ":" + Server.getID() + " 332 " + Client.getNickname() + " " + channelName + " :Bienvenue dans le nouveau canal!\r\n";
-    
+
     if (send(Client.getfd(), msg.c_str(), msg.length(), 0) == -1) {
         std::perror("send:");
     }
@@ -316,20 +316,23 @@ void	server::sendJoinMsg(server& Server, user& Client, std::string channelName){
 
 
 void server::sendUserJoinMsg(server& Server, const user& NewUser, std::string channelName) {
-    std::string msg = ":" + NewUser.getNickname() + "!" + NewUser.getUsername() + "@" + Server.getID() +
-                      " JOIN " + channelName + "\r\n";
+    (void)Server;
+	(void)NewUser;
+	(void)channelName;
+	// std::string msg = ":" + NewUser.getNickname() + "!" + NewUser.getUsername() + "@" + Server.getID() +
+    //                   " JOIN " + channelName + "\r\n";
 
-	std::map<channel, std::vector<user> >::iterator it;
-	for (it = channelMap.begin(); it != channelMap.end(); ++it) 
-		if (channelName == it->first.getChannelName())
-			break;
-	std::vector<user> usersInChannel = it->second;
-	for (std::vector<user>::iterator userIt = usersInChannel.begin(); userIt != usersInChannel.end(); ++userIt) {
-		if (userIt->getUsername() != NewUser.getUsername()) {
-			if (send(userIt->getfd(), msg.c_str(), msg.length(), 0) == -1) {
-                 std::perror("send:");
-             }
-		}
-	}
-	std::cout << "---- SERVER RESPONSE ----\n" << msg << "\n-------------------------" << std::endl;
+	// std::map<channel, std::vector<user> >::iterator it;
+	// for (it = channelMap.begin(); it != channelMap.end(); ++it)
+	// 	if (channelName == it->first.getChannelName())
+	// 		break;
+	// std::vector<user> usersInChannel = it->second;
+	// for (std::vector<user>::iterator userIt = usersInChannel.begin(); userIt != usersInChannel.end(); ++userIt) {
+	// 	if (userIt->getUsername() != NewUser.getUsername()) {
+	// 		if (send(userIt->getfd(), msg.c_str(), msg.length(), 0) == -1) {
+    //              std::perror("send:");
+    //          }
+	// 	}
+	// }
+	// std::cout << "---- SERVER RESPONSE ----\n" << msg << "\n-------------------------" << std::endl;
 }

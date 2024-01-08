@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/06 14:16:33 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:19:51 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,28 @@ class channel {
 		channel& operator=(const channel& rhs);
 		~channel();
 
-// Setter / Getter		
-		std::string	getChannelName() const;
-		void	setOperator(user& Client) ;
+// Setter / Getter
+		std::string					getChannelName() const;
+		std::vector<user>			getChannelUser() const;
+		std::vector<std::string> getChannelOperators() const;
+
+		void						setOperator(std::string channelOperator) ;
+		void						setChannelUser(user& Client);
+
+
+
+		void						display_operators(std::vector<std::string> channelOperator);
+		void						display_users(std::vector<user> channelUser);
+
 
 //operator
-		bool operator<(const channel& other) const;
-	
+		//bool operator<(const channel& other) const;
+
 	private:
-		std::string	_channelName;
-		std::vector<std::string>	_operatorName;
-		// METTRE un pointeur vers la classe user !!!! 
+		std::string					_channelName;
+		std::vector<user>			_channelUser;
+		std::vector<std::string>	_channelOperator;
+		// METTRE un pointeur vers la classe user !!!!
 
 };
 

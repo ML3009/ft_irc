@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 10:31:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:38:03 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /*----------------- Coplien ------------- */
 
 bot::bot(){
-    
+
     _factmap[0] = "IRC a été inventé par Jarkko Oikarinen en 1988. À l'origine, il s'agissait d'un moyen pour les étudiants de l'Université d'Oulu en Finlande de communiquer.";
     _factmap[1] = "Le terme 'canal' dans IRC fait référence à un canal de discussion, où plusieurs utilisateurs peuvent discuter en temps réel. Les canaux sont précédés du symbole '#' (par exemple, #chat).";
     _factmap[2] = "Les utilisateurs qui ont des droits spéciaux sur un canal sont appelés opérateurs de canal. Ils peuvent modérer la discussion et gérer les utilisateurs.";
@@ -53,8 +53,8 @@ std::string bot::getName() const {return _name;}
 
 void bot::sayhello(server &server, user &client){
     server.sendMsgFromBot(*this, client ,server, "Hi ! you call me without anything :(\n You can ask me for help with"
-                                                    + std::string(BLU) +" @bot HELP" + COLOR_RESET 
-                                                    +"\n\tor\nask for a fact with "+ std::string(BLU) +"@bot FACT"+ COLOR_RESET);    
+                                                    + std::string(BLU) +" @bot HELP" + COLOR_RESET
+                                                    +"\n\tor\nask for a fact with "+ std::string(BLU) +"@bot FACT"+ COLOR_RESET);
 }
 
 void bot::help(server &server, user &client){

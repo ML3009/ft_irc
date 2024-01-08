@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 11:45:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:39:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
 }
 
 void displayWelcome(server &server, user &client){
-    
+
 	if (send(client.getfd(), RPL_WELCOME(server, client).c_str(), RPL_WELCOME(server, client).length(), 0) == -1 ||
     	send(client.getfd(), RPL_YOURHOST(server, client).c_str(), RPL_YOURHOST(server, client).length(), 0) == -1 ||
         send(client.getfd(), RPL_CREATED(server, client).c_str(), RPL_CREATED(server, client).length(), 0) == -1 ||
@@ -161,7 +161,7 @@ std::string RPL_CREATED(server &server, user &client) {
 
     char buffer[80];
     std::strftime(buffer, sizeof(buffer), "\e[0;34mCe serveur a été créé le \e[0m\e[0;36m%d %B %Y à %H:%M:%S.\n\e[0m", localTime);
-    
+
     return buffer;
 }
 
@@ -345,7 +345,7 @@ std::string ERR_NEEDMOREPARAMS(server& server, user& client) {
 std::string ERR_ALREADYREGISTRED(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mYou may not reregister\e[0m";
+    return "\e[0;31mYou are already registered\e[0m";
 }
 
 std::string ERR_PASSWDMISMATCH(server& server, user& client) {
