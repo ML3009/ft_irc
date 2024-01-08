@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/07 22:09:50 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:29:53 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 		return Server.sendMsg(Client, Server, "461");
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
 		return Server.sendMsg(Client, Server, "432");
-	for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it) {
+	for(std::map<int, user>::iterator it = Server.getMap().begin(); it != Server.getMap().end(); ++it) {
 		if (argument[1] == it->second.getNickname())
 			return Server.sendMsg(Client, Server, "463");
 	}
@@ -293,7 +293,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			return Server.sendMsg(Client, Server, "412");
 		else if (count == 2)
 		{
-			for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it)
+			for(std::map<int, user>::iterator it = Server.getMap().begin(); it != Server.getMap().end(); ++it)
 				if (argument[1] == it->second.getNickname())
 					return Server.sendMsg(Client, Server, "412");
 			return Server.sendMsg(Client, Server, "411");
@@ -304,7 +304,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	if (argument[1][0] != '&' && argument[1][0] != '#')
 		destination = 1;
 	if (destination == 1){
-		for(std::map<int, user>::iterator it = clientMap.begin(); it != clientMap.end(); ++it){
+		for(std::map<int, user>::iterator it = Server.getMap().begin(); it != Server.getMap().end(); ++it){
 			if (argument[1] == it->second.getNickname())
 			{
 				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)

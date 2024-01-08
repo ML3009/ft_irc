@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/06 14:16:14 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:18:12 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ public :
 			void				setUsername(std::string username);
 			void				setRealname(std::string realname);
 // Function
-			void				parseClientMessage(server Server, const std::string &buffer);
+			void				parseClientMessage(server &Server, const std::string &buffer);
 			bool				isAuthentified(void);
 			void				addData(const std::string &buffer);
 

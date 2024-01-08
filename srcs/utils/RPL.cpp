@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 18:03:52 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 11:45:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,92 +42,92 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         code = special_code(RPL);
     switch (code)
     {
-    case 10:
-        return RPL_JOIN(server, client, "channel");
-    case 11:
-        return RPL_NICK(server, client, "old", "new");
-    case 12:
-        return RPL_QUIT(server, client);
-    case 13:
-        return RPL_QUIT_M(server, client, "");
-    case 14:
-        return RPL_KICK(server, client, "channel", "user", message);
-    case 15:
-        return RPL_NOTICE(server, client, "channel", message);
-    case 16:
-        return RPL_PRIVMSG(message);
-    case 17:
-        return HI_BOT(message);
-    case 221:
-        return RPL_UMODEIS(server, client, "mode");
-    case 321:
-        return RPL_LISTSTART(server, client);
-    case 322:
-        return RPL_LIST(server, client, "channel", "nb", "topic");
-    case 323:
-        return RPL_LISTEND(server, client);
-    case 324:
-        return RPL_CHANNELMODEIS(server, client, "channel", "mode");
-    case 331:
-        return RPL_NOTOPIC(server, client, "channel");
-    case 332:
-        return RPL_TOPIC(server, client, "channel", "topic");
-    case 353:
-        return RPL_NAMREPLY(server, client, "channel", "user");
-    case 366:
-        return RPL_ENDOFNAMES(server, client, "channel");
-    case 401:
-        return ERR_NOSUCHNICK(server, client);
-    case 403:
-        return ERR_NOSUCHCHANNEL(server, client, "channel");
-    case 404:
-        return ERR_CANNOTSENDTOCHAN(server, client);
-    case 405:
-        return ERR_TOOMANYCHANNELS(server, client, "channel");
-    case 407:
-        return ERR_TOOMANYTARGETS(server, client, "channel");
-    case 411:
-        return ERR_NORECIPIENT(server, client, message);
-    case 412:
-        return ERR_NOTEXTTOSEND(server, client);
-    case 413:
-        return ERR_NOTOPLEVEL(server, client, message);
-    case 414:
-        return ERR_WILDTOPLEVEL(server, client, message);
-    case 421:
-        return ERR_UNKNOWNCOMMAND(server, client);
-    case 431:
-        return ERR_NONICKNAMEGIVEN(server, client);
-    case 432:
-        return ERR_ERRONEUSNICKNAME(server, client, "nickname");
-    case 433:
-        return ERR_NICKNAMEINUSE(server, client,"nickname");
-    case 441:
-        return ERR_USERNOTINCHANNEL(server, client,"user", "channel");
-    case 442:
-        return ERR_NOTONCHANNEL(server, client, "channel");
-    case 451:
-        return ERR_NOTREGISTERED(server, client);
-    case 461:
-        return ERR_NEEDMOREPARAMS(server, client);
-    case 462:
-        return ERR_ALREADYREGISTRED(server, client);
-    case 464:
-        return ERR_PASSWDMISMATCH(server, client);
-    case 465:
-        return ERR_NOLOGIN(server, client);
-    case 472:
-        return ERR_UNKNOWNMODE(server, client, "mode");
-    case 473:
-        return ERR_INVITEONLYCHAN(server, client, "channel");
-    case 476:
-        return ERR_BADCHANMASK(server, client, "channel");
-    case 482:
-        return ERR_CHANOPRIVSNEEDED(server, client,"channel");
-    case 502:
-        return ERR_USERSDONTMATCH(server, client);
-    default:
-        return RPL;
+        case 10:
+            return RPL_JOIN(server, client, "channel");
+        case 11:
+            return RPL_NICK(server, client, "old", "new");
+        case 12:
+            return RPL_QUIT(server, client);
+        case 13:
+            return RPL_QUIT_M(server, client, "");
+        case 14:
+            return RPL_KICK(server, client, "channel", "user", message);
+        case 15:
+            return RPL_NOTICE(server, client, "channel", message);
+        case 16:
+            return RPL_PRIVMSG(message);
+        case 17:
+            return HI_BOT(message);
+        case 221:
+            return RPL_UMODEIS(server, client, "mode");
+        case 321:
+            return RPL_LISTSTART(server, client);
+        case 322:
+            return RPL_LIST(server, client, "channel", "nb", "topic");
+        case 323:
+            return RPL_LISTEND(server, client);
+        case 324:
+            return RPL_CHANNELMODEIS(server, client, "channel", "mode");
+        case 331:
+            return RPL_NOTOPIC(server, client, "channel");
+        case 332:
+            return RPL_TOPIC(server, client, "channel", "topic");
+        case 353:
+            return RPL_NAMREPLY(server, client, "channel", "user");
+        case 366:
+            return RPL_ENDOFNAMES(server, client, "channel");
+        case 401:
+            return ERR_NOSUCHNICK(server, client);
+        case 403:
+            return ERR_NOSUCHCHANNEL(server, client, "channel");
+        case 404:
+            return ERR_CANNOTSENDTOCHAN(server, client);
+        case 405:
+            return ERR_TOOMANYCHANNELS(server, client, "channel");
+        case 407:
+            return ERR_TOOMANYTARGETS(server, client, "channel");
+        case 411:
+            return ERR_NORECIPIENT(server, client, message);
+        case 412:
+            return ERR_NOTEXTTOSEND(server, client);
+        case 413:
+            return ERR_NOTOPLEVEL(server, client, message);
+        case 414:
+            return ERR_WILDTOPLEVEL(server, client, message);
+        case 421:
+            return ERR_UNKNOWNCOMMAND(server, client);
+        case 431:
+            return ERR_NONICKNAMEGIVEN(server, client);
+        case 432:
+            return ERR_ERRONEUSNICKNAME(server, client, "nickname");
+        case 433:
+            return ERR_NICKNAMEINUSE(server, client,"nickname");
+        case 441:
+            return ERR_USERNOTINCHANNEL(server, client,"user", "channel");
+        case 442:
+            return ERR_NOTONCHANNEL(server, client, "channel");
+        case 451:
+            return ERR_NOTREGISTERED(server, client);
+        case 461:
+            return ERR_NEEDMOREPARAMS(server, client);
+        case 462:
+            return ERR_ALREADYREGISTRED(server, client);
+        case 464:
+            return ERR_PASSWDMISMATCH(server, client);
+        case 465:
+            return ERR_NOLOGIN(server, client);
+        case 472:
+            return ERR_UNKNOWNMODE(server, client, "mode");
+        case 473:
+            return ERR_INVITEONLYCHAN(server, client, "channel");
+        case 476:
+            return ERR_BADCHANMASK(server, client, "channel");
+        case 482:
+            return ERR_CHANOPRIVSNEEDED(server, client,"channel");
+        case 502:
+            return ERR_USERSDONTMATCH(server, client);
+        default:
+            return RPL;
     }
 }
 

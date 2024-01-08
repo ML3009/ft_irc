@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 21:49:24 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:38:03 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ class server{
 			void run_server(void);
 			void getNewClient(void);
 			void getClientMessage(void);
-			void disconnect_client(user client);
+			void disconnect_client(user &client);
 			void closeServerSocket();
 			void timeout_client(int fd);
-			bool LastPing(user client);
+			bool LastPing(user &client);
 			
 			void sendMsg(user &client, server &server, std::string RPL);
 			void sendrawMsg(user &client, server &server, std::string message);
@@ -53,7 +53,8 @@ class server{
 			std::vector<pollfd> getpollfd();
 			std::string			getPassword() const;
 			std::string 		getID() const;
-			bot 				&getbot() ;
+			bot 				&getbot();
+			std::map<int, user> &getMap();
 
 			//user& 				getUser(int fd);
 
@@ -70,6 +71,7 @@ class server{
 			clock_t				_upTime;
 			clock_t				_maxtimeout;
 			bot					_bot;
+			std::map<int, user> 	_clientMap;
 
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:44 by purple            #+#    #+#             */
-/*   Updated: 2024/01/07 17:56:20 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:32:41 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ extern int					CONSTRUCTOR; // Display constructor message
 extern int					DEBUG; // Display debug message
 extern int					LOG;
 extern bool					handleSignal;
-extern std::map<int, user> 	clientMap;
 extern std::map<channel, std::vector<user> > channelMap;
 
 

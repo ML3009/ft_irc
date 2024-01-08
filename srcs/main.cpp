@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 17:18:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:32:47 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ bool handleSignal	= false;
 int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= LOGFILE;
-std::map<int, user> clientMap;
 std::map<channel, std::vector<user> > channelMap;
 
 

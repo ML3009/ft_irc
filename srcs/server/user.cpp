@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 17:23:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 15:17:59 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	user::setRealname(std::string realname) {
 
 /*--------------- Function -------------- */
 
-void user::parseClientMessage(server Server, const std::string &buffer){
+void user::parseClientMessage(server &Server, const std::string &buffer){
 	debug("parseClientMessage", BEGIN);
 	addData(buffer);
 	if (completeCommand(_buffer, 1) == COMPLETE)
