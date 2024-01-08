@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 15:38:03 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:51:32 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "irc.hpp"
-#include "user.hpp"	
+#include "user.hpp"
 #include "bot.hpp"
 class commands;
+
+class channel;
 
 class server{
 	public:
@@ -34,10 +36,10 @@ class server{
 			void closeServerSocket();
 			void timeout_client(int fd);
 			bool LastPing(user &client);
-			
+
 			void sendMsg(user &client, server &server, std::string RPL);
 			void sendrawMsg(user &client, server &server, std::string message);
-			
+
 			void sendMsgToChannel(user &client, std::vector<user> &list, server &server, std::string RPL, std::string message, std::string channel);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
 			void sendMsgFromBot(bot &bot, user &dest, server &server, std::string message);
@@ -54,7 +56,8 @@ class server{
 			std::string			getPassword() const;
 			std::string 		getID() const;
 			bot 				&getbot();
-			std::map<int, user> &getMap();
+			std::map<int, user> &getUserMap();
+			std::map<std::string, channel> &getChannelMap();
 
 			//user& 				getUser(int fd);
 
@@ -72,6 +75,7 @@ class server{
 			clock_t				_maxtimeout;
 			bot					_bot;
 			std::map<int, user> 	_clientMap;
+			std::map<std::string, channel> _channelMap;
 
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:39:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:51:08 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ std::vector<pollfd> server::getpollfd() { return _pollFD;}
 std::string server::getPassword() const{return _password;}
 std::string server::getID() const{return _ID;}
 bot 		&server::getbot() {return _bot;}
-std::map<int, user> &server::getMap(){return _clientMap;}
+std::map<int, user> &server::getUserMap(){return _clientMap;}
+std::map<std::string, channel>& server::getChannelMap(){return _channelMap;}
 
 /*--------------- Function -------------- */
 
@@ -128,7 +129,7 @@ void server::run_server(){
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
 	if (_userCount > 0)
 		for(std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
-			if (LastPing(it->second) == TIMEOUT) 
+			if (LastPing(it->second) == TIMEOUT)
 				return timeout_client(it->first);
 
 	debug("run_server", END);
@@ -193,7 +194,7 @@ void server::closeServerSocket() {close(_pollFD[0].fd);}
 
 void server::timeout_client(int fd){
 	disconnect_client(_clientMap[fd]);
-	std::cout << "\e[0;36m" << " user has been kick for [ AFK ]" << " \e[0m" << std::endl;  
+	std::cout << "\e[0;36m" << " user has been kick for [ AFK ]" << " \e[0m" << std::endl;
 	// std::vector<pollfd>::iterator it;
 	// for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	// 	if (it->fd == fd)

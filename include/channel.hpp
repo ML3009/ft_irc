@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:19:51 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:53:02 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ class channel {
 
 
 //operator
-		//bool operator<(const channel& other) const;
+
 
 	private:
 		std::string					_channelName;
 		std::vector<user>			_channelUser;
 		std::vector<std::string>	_channelOperator;
-		// METTRE un pointeur vers la classe user !!!!
+
 
 };
 

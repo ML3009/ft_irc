@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:27:05 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:52:52 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,3 @@ void	channel::display_users(std::vector<user> channelUser){
 
 /*--------------- operator ------------- */
 
-//bool channel::operator<(const channel& other)  const {return _channelName < other._channelName;}

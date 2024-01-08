@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:38:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:50:50 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 		return Server.sendMsg(Client, Server, "461");
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
 		return Server.sendMsg(Client, Server, "432");
-	for(std::map<int, user>::iterator it = Server.getMap().begin(); it != Server.getMap().end(); ++it) {
+	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it) {
 		if (argument[1] == it->second.getNickname())
 			return Server.sendMsg(Client, Server, "463");
 	}
@@ -214,8 +214,8 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 		return Server.sendMsg(Client, Server, "476");
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos)
 		return Server.sendMsg(Client, Server, "476");
-	if (!channelMap.empty()) {
-		for (std::map<std::string, channel>::iterator it = channelMap.begin(); it != channelMap.end(); ++it) {
+	if (!Server.getChannelMap().empty()) {
+		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 			if (argument[1] == it->second.getChannelName()) {
 				it->second.setChannelUser(Client);
 				Server.sendJoinMsg(Server, Client, argument[1]);
@@ -227,7 +227,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 	if (count != 1) {
 		channel Channel(argument[1]);
 		Channel.setOperator(Client.getUsername());
-		channelMap[argument[1]] = Channel;
+		Server.getChannelMap()[argument[1]] = Channel;
 		Server.sendJoinMsg(Server, Client, argument[1]);
 	}
 	Server.sendUserJoinMsg(Server, Client, argument[1]);

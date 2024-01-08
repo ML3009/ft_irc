@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:37:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:49:01 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool handleSignal	= false;
 int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= LOGFILE;
-std::map<std::string, channel> channelMap;
+//std::map<std::string, channel> channelMap;
 
 //std::map<std::string channel, std::vector<channel> > channelMap;
 
