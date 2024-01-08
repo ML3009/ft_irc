@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/08 16:36:20 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/08 16:41:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ extern int					CONSTRUCTOR; // Display constructor message
 extern int					DEBUG; // Display debug message
 extern int					LOG;
 extern bool					handleSignal;
-extern std::map<int, user> 	clientMap;
-extern std::map<channel, std::vector<user> > channelMap;
+extern std::map<std::string, channel> channelMap;
 
 
 #define HERE	-1
