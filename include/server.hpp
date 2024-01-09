@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:51:32 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:33:30 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 #include "irc.hpp"
 #include "user.hpp"
 #include "bot.hpp"
+#include "channel.hpp"
 class commands;
-
-class channel;
 
 class server{
 	public:
@@ -40,7 +39,7 @@ class server{
 			void sendMsg(user &client, server &server, std::string RPL);
 			void sendrawMsg(user &client, server &server, std::string message);
 
-			void sendMsgToChannel(user &client, std::vector<user> &list, server &server, std::string RPL, std::string message, std::string channel);
+			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
 			void sendMsgFromBot(bot &bot, user &dest, server &server, std::string message);
 

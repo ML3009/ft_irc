@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:39:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/09 10:15:33 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int special_code(std::string RPL){
 }
 
 
-std::string displayRPL(server &server, user &client, std::string RPL, std::string message){
+std::string displayRPL(server &server, user &client, std::string RPL, std::string message, std::string channel){
 {
     int code;
     if ((int)std::strtol(RPL.c_str(), NULL, 10))
@@ -43,7 +43,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
     switch (code)
     {
         case 10:
-            return RPL_JOIN(server, client, "channel");
+            return RPL_JOIN(server, client, channel);
         case 11:
             return RPL_NICK(server, client, "old", "new");
         case 12:
@@ -51,9 +51,9 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 13:
             return RPL_QUIT_M(server, client, "");
         case 14:
-            return RPL_KICK(server, client, "channel", "user", message);
+            return RPL_KICK(server, client, channel, "user", message);
         case 15:
-            return RPL_NOTICE(server, client, "channel", message);
+            return RPL_NOTICE(server, client, channel, message);
         case 16:
             return RPL_PRIVMSG(message);
         case 17:
@@ -63,29 +63,29 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 321:
             return RPL_LISTSTART(server, client);
         case 322:
-            return RPL_LIST(server, client, "channel", "nb", "topic");
+            return RPL_LIST(server, client, channel, "nb", "topic");
         case 323:
             return RPL_LISTEND(server, client);
         case 324:
-            return RPL_CHANNELMODEIS(server, client, "channel", "mode");
+            return RPL_CHANNELMODEIS(server, client, channel, "mode");
         case 331:
-            return RPL_NOTOPIC(server, client, "channel");
+            return RPL_NOTOPIC(server, client, channel);
         case 332:
-            return RPL_TOPIC(server, client, "channel", "topic");
+            return RPL_TOPIC(server, client, channel, "topic");
         case 353:
-            return RPL_NAMREPLY(server, client, "channel", "user");
+            return RPL_NAMREPLY(server, client, channel, "user");
         case 366:
-            return RPL_ENDOFNAMES(server, client, "channel");
+            return RPL_ENDOFNAMES(server, client, channel);
         case 401:
             return ERR_NOSUCHNICK(server, client);
         case 403:
-            return ERR_NOSUCHCHANNEL(server, client, "channel");
+            return ERR_NOSUCHCHANNEL(server, client, channel);
         case 404:
             return ERR_CANNOTSENDTOCHAN(server, client);
         case 405:
-            return ERR_TOOMANYCHANNELS(server, client, "channel");
+            return ERR_TOOMANYCHANNELS(server, client, channel);
         case 407:
-            return ERR_TOOMANYTARGETS(server, client, "channel");
+            return ERR_TOOMANYTARGETS(server, client, channel);
         case 411:
             return ERR_NORECIPIENT(server, client, message);
         case 412:
@@ -103,9 +103,9 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 433:
             return ERR_NICKNAMEINUSE(server, client,"nickname");
         case 441:
-            return ERR_USERNOTINCHANNEL(server, client,"user", "channel");
+            return ERR_USERNOTINCHANNEL(server, client,"user", channel);
         case 442:
-            return ERR_NOTONCHANNEL(server, client, "channel");
+            return ERR_NOTONCHANNEL(server, client, channel);
         case 451:
             return ERR_NOTREGISTERED(server, client);
         case 461:
@@ -119,11 +119,11 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 472:
             return ERR_UNKNOWNMODE(server, client, "mode");
         case 473:
-            return ERR_INVITEONLYCHAN(server, client, "channel");
+            return ERR_INVITEONLYCHAN(server, client, channel);
         case 476:
-            return ERR_BADCHANMASK(server, client, "channel");
+            return ERR_BADCHANMASK(server, client, channel);
         case 482:
-            return ERR_CHANOPRIVSNEEDED(server, client,"channel");
+            return ERR_CHANOPRIVSNEEDED(server, client,channel);
         case 502:
             return ERR_USERSDONTMATCH(server, client);
         default:
@@ -237,7 +237,8 @@ std::string ERR_NOSUCHNICK(server& server, user& client) {
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
-    return RED + channel + " :No such channel" + COLOR_RESET;;
+    (void)channel;
+    return RED + " No such channel" + COLOR_RESET;;
 }
 
 

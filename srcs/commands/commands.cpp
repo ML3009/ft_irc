@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:50:50 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/09 10:22:55 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 			if (argument[1] == it->second.getChannelName()) {
 				it->second.setChannelUser(Client);
-				Server.sendJoinMsg(Server, Client, argument[1]);
+				Server.sendMsgToUser(Client, Client, Server, "JOIN ", displayRPL(Server, Client, "JOIN", "",argument[1]));
 				it->second.display_operators(it->second.getChannelOperators());
 				count = 1;
 			}
@@ -228,9 +228,9 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 		channel Channel(argument[1]);
 		Channel.setOperator(Client.getUsername());
 		Server.getChannelMap()[argument[1]] = Channel;
-		Server.sendJoinMsg(Server, Client, argument[1]);
+		Server.sendMsgToUser(Client, Client, Server, "JOIN ", displayRPL(Server, Client, "JOIN", "",argument[1]));
 	}
-	Server.sendUserJoinMsg(Server, Client, argument[1]);
+	Server.sendMsgToChannel(Client, Server, "WELCOME", Client.getNickname() + " Join the channel. Say hi to him" ,argument[1]);
 	return;
 }
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
