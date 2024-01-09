@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:53:02 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/09 10:08:15 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class channel {
 
 		void						display_operators(std::vector<std::string> channelOperator);
 		void						display_users(std::vector<user> channelUser);
+		bool						isAlreadyinChannel(user &Client);
 
 
 //operator

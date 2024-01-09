@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:07:01 by purple            #+#    #+#             */
-/*   Updated: 2024/01/04 13:20:54 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:35:51 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,19 @@ std::vector<std::string> splitArgs(std::string buffer){
         arg = strtok(NULL, "\r\n ");
     }
     debug("splitArgs", END);
+    return args;
+}
+
+
+std::vector<std::string> splitCmdJoin(std::string buffer){
+    debug("splitCmdJoin", BEGIN);
+    std::vector<std::string> args;
+    char *arg = strtok((char *)buffer.c_str(), ",");
+    while (arg != NULL && !buffer.empty())
+    {
+        args.push_back(arg);
+        arg = strtok(NULL, ",");
+    }
+    debug("splitsplitCmdJoin", END);
     return args;
 }
