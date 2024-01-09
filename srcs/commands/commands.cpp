@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/09 10:22:55 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/09 10:25:32 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,31 +206,45 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument){
 
 	// modif pour prevoir plusieurs canaux
+	//splitarg deux vector : 1 avec canal 1 avec cle
+	//gere mode -k : mettre le container std::set -> on ne peut pas avoir de doublon. stocker le k dans un endroit qui sera tjrs le mm.
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
-	if (count < 2 || count > 3)
+	if (count < 2)
 		return Server.sendMsg(Client, Server, "461");
-	if (argument[1][0] != '&' && argument[1][0] != '#')
-		return Server.sendMsg(Client, Server, "476");
-	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos)
-		return Server.sendMsg(Client, Server, "476");
-	if (!Server.getChannelMap().empty()) {
-		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
-			if (argument[1] == it->second.getChannelName()) {
-				it->second.setChannelUser(Client);
-				Server.sendMsgToUser(Client, Client, Server, "JOIN ", displayRPL(Server, Client, "JOIN", "",argument[1]));
-				it->second.display_operators(it->second.getChannelOperators());
-				count = 1;
+	std::vector<std::string> channel_tmp = splitCmdJoin(argument[1]);
+	if (count > 2){
+		std::vector<std::string> key_tmp = splitCmdJoin(argument[2]);
+		if (channel_tmp.size() < key_tmp.size())
+			return Server.sendMsg(Client, Server, "461");
+	}
+	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
+		if (channel_tmp[i][0] != '&' && channel_tmp[i][0] != '#')
+			return Server.sendMsg(Client, Server, "476");
+		if (channel_tmp[i].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos)
+			return Server.sendMsg(Client, Server, "476");
+		if (!Server.getChannelMap().empty()) {
+			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+				if (channel_tmp[i] == it->second.getChannelName()) {
+					if (it->second.isAlreadyinChannel(Client) == true) 
+						return;
+					it->second.setChannelUser(Client);
+					Server.sendJoinMsg(Server, Client, channel_tmp[i]);
+					it->second.display_operators(it->second.getChannelOperators());
+					count = 1;
+				}
 			}
 		}
+		if (count != 1) {
+			channel Channel(channel_tmp[i]);
+			Channel.setChannelUser(Client);
+			Channel.setOperator(Client.getUsername());
+			Server.getChannelMap()[channel_tmp[i]] = Channel;
+			Server.sendJoinMsg(Server, Client, channel_tmp[i]);
+		}
+		Server.sendUserJoinMsg(Server, Client, channel_tmp[i]);
 	}
-	if (count != 1) {
-		channel Channel(argument[1]);
-		Channel.setOperator(Client.getUsername());
-		Server.getChannelMap()[argument[1]] = Channel;
-		Server.sendMsgToUser(Client, Client, Server, "JOIN ", displayRPL(Server, Client, "JOIN", "",argument[1]));
-	}
-	Server.sendMsgToChannel(Client, Server, "WELCOME", Client.getNickname() + " Join the channel. Say hi to him" ,argument[1]);
+
 	return;
 }
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){

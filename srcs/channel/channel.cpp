@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/08 16:52:52 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/09 10:13:44 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,15 @@ void	channel::setChannelUser(user& Client) {
 	_channelUser.push_back(Client);
 	return;
 
+}
+
+bool	channel::isAlreadyinChannel(user &Client) {
+	std::cout << Client.getUsername();
+	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
+		if (it->getUsername() == Client.getUsername())
+			return true;
+	}
+	return false;
 }
 /*--------------- Function -------------- */
 
