@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 11:09:32 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:30:05 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@ class server{
 			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
 			void sendMsgFromBot(bot &bot, user &dest, server &server, std::string message);
-
-			void	sendJoinMsg(server &Server, user& Client, std::string channelName);
-			void	sendUserJoinMsg(server& Server, const user& NewUser, std::string channelName);
-
 
 // Getter / Setter
 			//std::map<int, user> getClientMap();

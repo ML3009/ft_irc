@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 12:19:51 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:25:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 472:
             return ERR_UNKNOWNMODE(server, client, "mode");
         case 473:
-            return ERR_INVITEONLYCHAN(server, client, "channel");
+            return ERR_INVITEONLYCHAN(server, client, channel);
         case 475:
-            return ERR_BADCHANNELKEY(server, client, "channel");
+            return ERR_BADCHANNELKEY(server, client, channel);
         case 476:
             return ERR_BADCHANMASK(server, client, channel);
         case 482:
@@ -370,14 +370,14 @@ std::string ERR_INVITEONLYCHAN(server& server, user& client, const std::string& 
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31m Cannot join channel (+i)\e[0m";
+    return "\e[0;31m Cannot join " + channel + " (+i)\e[0m";
 }
 
 std::string ERR_BADCHANNELKEY(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mBad Channel Key\e[0m";
+    return "\e[0;31mBad Channel Key for " + channel + " \e[0m";
 }
 
 

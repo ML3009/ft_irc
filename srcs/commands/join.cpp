@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 11:59:19 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:17:19 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argumen
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count != 2 && count != 3)
-		return Server.sendMsg(Client, Server, "461"), -1;
+		return Server.sendMsg(Client, Server, "461", "", ""), -1;
 	if (count == 3)
 		return 1;
 	return 0;
@@ -27,9 +27,9 @@ int	parseChannelName(server &Server, user &Client, std::vector<std::string>& cha
 
 	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
 		if (channel_tmp[i][0] != '&' && channel_tmp[i][0] != '#')
-			return Server.sendMsg(Client, Server, "476"), -1;
+			return Server.sendMsg(Client, Server, "476", "", ""), -1;
 		if (channel_tmp[i].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos)
-			return Server.sendMsg(Client, Server, "476"), -1;
+			return Server.sendMsg(Client, Server, "476", "", ""), -1;
 	}
 	return 0;
 
@@ -40,22 +40,21 @@ int	parseChannelKeyword(server &Server, user &Client, std::vector<std::string>& 
 	int	key = 0;
 	for (unsigned long i = 0; i < key_tmp.size(); ++i, ++key) {
 		if (key_tmp[i].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-#&") != std::string::npos)
-			return Server.sendMsg(Client, Server, "476"), -1;
+			return Server.sendMsg(Client, Server, "476", "", ""), -1;
 	}
 	if (channel_tmp.size() < key_tmp.size())
-		return Server.sendMsg(Client, Server, "461"), -1;
+		return Server.sendMsg(Client, Server, "461", "", ""), -1;
 	return key;
 }
 
 int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std::string> key_tmp, int pos) {
-
 	if (Channel.isAlreadyinChannel(Client) == true)
 		return USR_IN_CHANNEL;
-	if (Channel.search_mode(Channel.getMode(), 'l') == true && Channel.isFull(Server, Client) == true)
+	if (Channel.search_mode('l') == true && Channel.isFull(Server, Client) == true)
 		return CHANNELISFULL;
-	if (Channel.search_mode(Channel.getMode(), 'i') == true && Channel.isInvited(Server, Client) == false)
+	if (Channel.search_mode('i') == true && Channel.isInvited(Server, Client) == false)
 		return INVITEONLYCHAN;
-	if (Channel.search_mode(Channel.getMode(), 'k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
+	if (Channel.search_mode('k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
 		return	BADCHANNELKEY;
 	return ISVALIDUSER;
 
@@ -71,7 +70,7 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 void	UserJoinChannel(server &Server, user &Client, channel &Channel) {
 
 		Channel.setChannelUser(Client);
-		Server.sendJoinMsg(Server, Client, Channel.getChannelName());
+		Server.sendMsgToUser(Client, Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone");
 }
 
 std::vector<std::string> splitCmdJoin(std::string buffer){

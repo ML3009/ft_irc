@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:18:36 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 14:18:40 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,13 @@ channel::channel(const channel& rhs){
 channel& channel::operator=(const channel& rhs){
 	if(this != &rhs){
 		_channelName = rhs._channelName;
-		for (std::vector<user>::const_iterator it = rhs._channelUser.begin(); it != rhs._channelUser.end(); ++it)
-			_channelUser = rhs._channelUser;
-		for (std::vector<std::string>::const_iterator it = rhs._channelOperator.begin(); it != rhs._channelOperator.end(); ++it)
-			_channelOperator = rhs._channelOperator;
+		//for (std::vector<user>::const_iterator it = rhs._channelUser.begin(); it != rhs._channelUser.end(); ++it)
+		_channelUser = rhs._channelUser;
+		//for (std::vector<std::string>::const_iterator it = rhs._channelOperator.begin(); it != rhs._channelOperator.end(); ++it)
+		_channelOperator = rhs._channelOperator;
+		//for (std::set<char>::iterator it = rhs._mode.begin(); it != rhs._mode.end(); it++)
+		_mode = rhs._mode;
+		_keyword = rhs._keyword;
 	}
 	return *this;
 }
@@ -53,7 +56,7 @@ std::string channel::getChannelName() const {return _channelName;}
 std::string& channel::getKeyword() {return _keyword;}
 std::vector<user> &channel::getChannelUser() { return _channelUser;}
 std::vector<std::string> channel::getChannelOperators() const {	return _channelOperator;}
-std::set<char> channel::getMode() const {return _mode;}
+std::set<char> &channel::getMode() {return _mode;}
 
 void	channel::setOperator(std::string channelOperator) {
 	_channelOperator.push_back(channelOperator);
@@ -67,6 +70,8 @@ void	channel::setMode(std::string mode) {
 		return std::cout << "Unknow mod" << std::endl, void();
 	for (int i = 0; mode[i]; ++i)
 		_mode.insert(mode[i]);
+	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++)
+		std::cout << *it << std::endl;
 	return;
 }
 
@@ -109,6 +114,16 @@ bool	channel::isOperator(user &Client){
 	return false;
 }
 
+std::string printOP(std::string user, channel &channel){
+	std::vector<std::string> userlist = channel.getChannelOperators();
+	for (std::vector<std::string>::iterator it = userlist.begin(); it != userlist.end(); ++it){
+		if (*it == user)
+			return "[*]";
+	}
+	return "";
+}
+
+
 int		channel::getTopicStatus(channel &canal, user &client, server &server){
 	(void)server;
 	std::vector<user> userlist = canal.getChannelUser();
@@ -126,7 +141,6 @@ int		channel::getTopicStatus(channel &canal, user &client, server &server){
 
 void	channel::display_operators(std::vector<std::string> channelOperator){
 
-	std::cout << "DISPLAY OPERATORS" << std::endl;
 	std::cout << channelOperator.size() << std::endl;
 	for (std::vector<std::string>::iterator it = channelOperator.begin(); it!= channelOperator.end(); ++it)
 		std::cout << *it << std::endl;
@@ -143,13 +157,19 @@ void	channel::display_users(std::vector<user> channelUser){
 
 /* MODE */
 
-bool	channel::search_mode(std::set<char>	searchMode, char mode){
+bool	channel::search_mode(char mode){
 
-	std::cout << "DISPLAY MODE" << std::endl;
-	for (std::set<char>::iterator it = searchMode.begin(); it!= searchMode.end(); ++it)
+	for (std::set<char>::iterator it = _mode.begin(); it!= _mode.end(); ++it)
 		if (mode == *it)
 			return true;
 	return false;
+}
+
+std::string	channel::display_mode(){
+	std::string message;
+	for (std::set<char>::iterator it = _mode.begin(); it!= _mode.end(); ++it)
+		message += std::string("[") + *it + std::string( "] ");
+	return message;
 }
 
 bool	channel::isAlreadyinChannel(user &Client) {
@@ -180,16 +200,11 @@ bool	channel::isValidPass(server &Server, user &Client, std::vector<std::string>
 
 	(void)Server;
 	(void)Client;
-	if (key_tmp.size() < (unsigned long)pos)
+	if (key_tmp.empty() || key_tmp.size() < (unsigned long)pos)
 		return false;
 	if (_keyword == key_tmp[pos])
 		return true;
 	return false;
-
-
-	std::cout << "IS VALID PASS" << std::endl;
-	return true;
-
 }
 
 

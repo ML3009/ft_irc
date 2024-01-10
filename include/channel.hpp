@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:16:11 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 14:07:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class channel {
 		std::vector<user>			&getChannelUser();
 		std::vector<std::string>	getChannelOperators() const;
 		std::string&				getKeyword();
-		std::set<char>				getMode() const;
+		std::set<char>				&getMode();
 
 		void						setOperator(std::string channelOperator) ;
 		void						setChannelUser(user& Client);
@@ -44,7 +44,8 @@ class channel {
 
 
 //MODE
-		bool						search_mode(std::set<char>	searchMode, char mode);
+		bool						search_mode(char mode);
+		std::string					display_mode();
 
 
 		bool						isAlreadyinChannel(user &Client);
@@ -53,7 +54,6 @@ class channel {
 		bool						isFull(server &Server, user &Client);
 		bool						isInvited(server &Server, user &Client);
 		bool						isValidPass(server &Server, user &Client, std::vector<std::string> key_tmp, int pos);
-
 		int							parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argument);
 
 

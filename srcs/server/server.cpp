@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 11:11:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:29:38 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,16 +302,4 @@ void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string me
     std::cout   << "---- SERVER RESPONSE ----\n"
                 << msg << "\n"
                 << "-------------------------" << std::endl;
-}
-
-void	server::sendJoinMsg(server& Server, user& Client, std::string channelName){
-
-    std::string msg = ":" + Server.getID() + " 332 " + Client.getNickname() + " " + channelName + " :Bienvenue dans le nouveau canal!\r\n";
-
-    if (send(Client.getfd(), msg.c_str(), msg.length(), 0) == -1) {
-        std::perror("send:");
-    }
-
-    std::cout << "---- SERVER RESPONSE ----\n" << msg << "\n-------------------------" << std::endl;
-	return;
 }

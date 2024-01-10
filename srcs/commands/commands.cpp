@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:19:18 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 14:22:44 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,19 +236,20 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 					channelValidExist = isValidUser(Server, Client, it->second, key_tmp, i);
 					switch (channelValidExist) {
 						case USR_IN_CHANNEL:
-							Server.sendMsgToUser(Client, Client, Server, "ERROR", Client.getUsername() + " is already in " + it->second.getChannelName());
+							Server.sendMsg(Client, Server, "ERROR", Client.getUsername() + " is already in " + it->second.getChannelName(), "");
 							break;
 						case CHANNELISFULL:
-							Server.sendMsgToUser(Client, Client, Server, "ERROR", it->second.getChannelName() + "is full");
+							Server.sendMsg(Client, Server, "ERROR", it->second.getChannelName() + "is full","");
 							break;
 						case INVITEONLYCHAN:
-							Server.sendMsgToUser(Client, Client, Server, "473", it->second.getChannelName());
+							Server.sendMsg(Client, Server, "473", "", it->second.getChannelName());
 							break;
 						case BADCHANNELKEY:
-							Server.sendMsgToUser(Client, Client, Server, "476", it->second.getChannelName());
+							Server.sendMsg(Client, Server, "475", "" , it->second.getChannelName());
 							break;
 						case ISVALIDUSER:
 							UserJoinChannel(Server, Client, it->second);
+							Server.sendMsgToChannel(Client, Server, "WELCOME" , Client.getNickname() + " join the channel. Be nice to him",    channel_tmp[i]);
 					}
 				}
 			}
@@ -260,12 +261,10 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 			if (keyword == 1 && i <= key_tmp.size()) {
 				Channel.setKeyword(key_tmp[i]);
 				Channel.setMode("k");
-				std::cout << "pass: " << Channel.getKeyword() << std::endl;
 			}
 			Server.getChannelMap()[channel_tmp[i]] = Channel;
-			Server.sendJoinMsg(Server, Client, channel_tmp[i]);
+			Server.sendMsgToUser(Client, Client, Server, "WELCOME", "You are now connected on the channel " + channel_tmp[i] + ". Say hi to everyone");
 		}
-		Server.sendUserJoinMsg(Server, Client, channel_tmp[i]);
 	}
 
 	return;
@@ -422,9 +421,9 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 			for (std::map<std::string, channel>::iterator ita = Server.getChannelMap().begin(); ita != Server.getChannelMap().end(); ++ita)
 			{
 					oss << ita->second.getChannelUser().size();
-					std::string msg = ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
+					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t- Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername() + "\n"; 
+						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername() + "\n"; 
 					}
 					Server.sendMsg(Client, Server,"NAMES",msg ,"");
 					oss.str("");
@@ -437,9 +436,9 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 				if (ita->first == argument[1])
 				{
 					oss << ita->second.getChannelUser().size();
-					std::string msg = ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
+					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t- Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername()+ "\n"; 
+						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername()+ "\n"; 
 					}
 					return Server.sendMsg(Client, Server,"NAMES",msg ,"");
 				}
