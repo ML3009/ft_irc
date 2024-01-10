@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:39:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 11:08:23 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
             return ERR_UNKNOWNMODE(server, client, "mode");
         case 473:
             return ERR_INVITEONLYCHAN(server, client, "channel");
+        case 475:
+            return ERR_BADCHANNELKEY(server, client, "channel");
         case 476:
             return ERR_BADCHANMASK(server, client, "channel");
         case 482:
@@ -127,7 +129,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 502:
             return ERR_USERSDONTMATCH(server, client);
         default:
-            return RPL;
+            return message;
     }
 }
 
@@ -369,6 +371,14 @@ std::string ERR_INVITEONLYCHAN(server& server, user& client, const std::string& 
     (void)channel;
     return "\e[0;31m Cannot join channel (+i)\e[0m";
 }
+
+std::string ERR_BADCHANNELKEY(server& server, user& client, const std::string& channel) {
+    (void)server;
+    (void)client;
+    (void)channel;
+    return "\e[0;31mBad Channel Key\e[0m";
+}
+
 
 std::string ERR_BADCHANMASK(server& server, user& client, const std::string& channel) {
     (void)server;

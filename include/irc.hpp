@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/08 16:43:19 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/10 11:24:58 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <set>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -79,25 +80,11 @@ extern bool					handleSignal;
 
 #define PRIVMSG 10
 
-#define PING 11
-#define PONG 12
-
-#define PASS 0 //authentifier
-#define NICK 1 //nickname
-#define USER 2 //user
-#define QUIT 3 //quit
-
-#define JOIN 4 //rejoindre un channel
-#define PART 5 //quitter un channel
-#define KICK 6
-#define INVITE 7
-#define TOPIC 8
-#define MODE 9
-
-#define PRIVMSG 10
-
-#define PING 11
-#define PONG 12
+#define USR_IN_CHANNEL 0
+#define CHANNELISFULL 1
+#define INVITEONLYCHAN 2
+#define BADCHANNELKEY 3
+#define ISVALIDUSER 4
 
 
 #define RPL_JOIN_C 10;
