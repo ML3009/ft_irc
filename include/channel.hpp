@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/09 10:08:15 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/10 11:30:40 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class channel {
 
 // Setter / Getter
 		std::string					getChannelName() const;
-		std::vector<user>			getChannelUser() const;
+		std::vector<user>			&getChannelUser();
 		std::vector<std::string> getChannelOperators() const;
 
 		void						setOperator(std::string channelOperator) ;
@@ -37,6 +37,8 @@ class channel {
 		void						display_operators(std::vector<std::string> channelOperator);
 		void						display_users(std::vector<user> channelUser);
 		bool						isAlreadyinChannel(user &Client);
+		bool						isOperator(user &Client);
+		int 						getTopicStatus(channel &canal, user &client, server &server);
 
 
 //operator
@@ -46,6 +48,7 @@ class channel {
 		std::string					_channelName;
 		std::vector<user>			_channelUser;
 		std::vector<std::string>	_channelOperator;
+		std::string					_topic;
 
 
 };

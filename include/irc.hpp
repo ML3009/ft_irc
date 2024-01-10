@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/08 16:43:19 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/10 11:29:20 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,28 +76,12 @@ extern bool					handleSignal;
 #define INVITE 7
 #define TOPIC 8
 #define MODE 9
-
 #define PRIVMSG 10
 
-#define PING 11
-#define PONG 12
-
-#define PASS 0 //authentifier
-#define NICK 1 //nickname
-#define USER 2 //user
-#define QUIT 3 //quit
-
-#define JOIN 4 //rejoindre un channel
-#define PART 5 //quitter un channel
-#define KICK 6
-#define INVITE 7
-#define TOPIC 8
-#define MODE 9
-
-#define PRIVMSG 10
-
-#define PING 11
-#define PONG 12
+#define TOPIC_NEED_NOOP 0
+#define TOPIC_NEED_OP 1
+#define TOPIC_NONEED 2
+#define TOPIC_NOUSER 3
 
 
 #define RPL_JOIN_C 10;

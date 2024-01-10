@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/09 10:13:44 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/10 12:08:30 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ channel::~channel(){}
 /*---------- Getter / Setter ------------ */
 
 std::string channel::getChannelName() const {return _channelName;}
-std::vector<user> channel::getChannelUser() const { return _channelUser;}
+std::vector<user> &channel::getChannelUser() { return _channelUser;}
 std::vector<std::string> channel::getChannelOperators() const {	return _channelOperator;}
 
 void	channel::setOperator(std::string channelOperator) {
@@ -74,6 +74,27 @@ bool	channel::isAlreadyinChannel(user &Client) {
 }
 /*--------------- Function -------------- */
 
+bool	channel::isOperator(user &Client){
+	for (std::vector<std::string>::iterator it = _channelOperator.begin(); it!= _channelOperator.end(); ++it)
+		if (*it == Client.getUsername())
+			return true;
+	return false;
+}
+
+int		channel::getTopicStatus(channel &canal, user &client, server &server){
+	(void)server;
+	std::vector<user> userlist = canal.getChannelUser();
+	for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it){
+		if (it->getfd() == client.getfd()){
+			// if need op
+			if (canal.isOperator(client))
+				return TOPIC_NEED_OP;
+			else
+				return TOPIC_NEED_NOOP;
+		}
+	}
+	return TOPIC_NOUSER;
+}
 
 void	channel::display_operators(std::vector<std::string> channelOperator){
 

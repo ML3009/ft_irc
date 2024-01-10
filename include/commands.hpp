@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/07 22:09:40 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/09 14:10:14 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class commands {
 	void cmdMODE(server& Server, user& Client, std::vector<std::string>& argument);
 	void cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument);
 	void cmdBOT(server& Server, user& Client, std::vector<std::string>& argument);
-
+	void cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument);
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);
 		std::map<std::string, cmdFunctionPointer> cmdMap;

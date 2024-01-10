@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/09 10:15:33 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 10:37:59 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 433:
             return ERR_NICKNAMEINUSE(server, client,"nickname");
         case 441:
-            return ERR_USERNOTINCHANNEL(server, client,"user", channel);
+            return ERR_USERNOTINCHANNEL(server, client, channel);
         case 442:
             return ERR_NOTONCHANNEL(server, client, channel);
         case 451:
@@ -127,7 +127,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 502:
             return ERR_USERSDONTMATCH(server, client);
         default:
-            return RPL;
+            return message;
     }
 }
 
@@ -238,7 +238,7 @@ std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& c
     (void)server;
     (void)client;
     (void)channel;
-    return RED + " No such channel" + COLOR_RESET;;
+    return RED + std::string(" No such channel") + COLOR_RESET;;
 }
 
 
@@ -317,11 +317,11 @@ std::string ERR_NICKNAMEINUSE(server& server, user& client, const std::string& n
     return "\e[0;31mNickname is already in use\e[0m";
 }
 
-std::string ERR_USERNOTINCHANNEL(server& server, user& client, const std::string& user, const std::string& channel) {
+std::string ERR_USERNOTINCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31m " + user + " is not on that channel\e[0m";
+    return "\e[0;31m " + client.getUsername() + " is not on the channel " + channel + "\e[0m";
 }
 
 std::string ERR_NOTONCHANNEL(server& server, user& client, const std::string& channel) {

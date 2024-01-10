@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 17:33:30 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 11:09:32 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,13 @@ class server{
 			void timeout_client(int fd);
 			bool LastPing(user &client);
 
-			void sendMsg(user &client, server &server, std::string RPL);
+			void sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel);
 			void sendrawMsg(user &client, server &server, std::string message);
 
 			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
 			void sendMsgFromBot(bot &bot, user &dest, server &server, std::string message);
 
-			void sendMsg2(server &Server, user &User, std::string str);
 			void	sendJoinMsg(server &Server, user& Client, std::string channelName);
 			void	sendUserJoinMsg(server& Server, const user& NewUser, std::string channelName);
 
