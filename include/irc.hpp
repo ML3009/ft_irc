@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/10 11:29:20 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:17:53 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <set>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -78,11 +79,16 @@ extern bool					handleSignal;
 #define MODE 9
 #define PRIVMSG 10
 
+#define USR_IN_CHANNEL 0
+#define CHANNELISFULL 1
+#define INVITEONLYCHAN 2
+#define BADCHANNELKEY 3
+#define ISVALIDUSER 4
+
 #define TOPIC_NEED_NOOP 0
 #define TOPIC_NEED_OP 1
 #define TOPIC_NONEED 2
 #define TOPIC_NOUSER 3
-
 
 #define RPL_JOIN_C 10;
 #define RPL_NICK_C 11;

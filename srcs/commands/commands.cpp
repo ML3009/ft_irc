@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:13:06 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:19:18 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,6 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 			return Server.sendMsg(Client, Server, "463", "", "");
 	}
 	Client.setNickname(argument[1]);
-	//std::cout << Client.getNickname() << std::endl;
 	return;
 }
 
@@ -209,11 +208,68 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 }
 
 void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument){
-	(void)Server;
-	(void)Client;
-	(void)argument;
-}
 
+	// modif pour prevoir plusieurs canaux
+	//splitarg deux vector : 1 avec canal 1 avec cle
+	//gere mode -k : mettre le container std::set -> on ne peut pas avoir de doublon. stocker le k dans un endroit qui sera tjrs le mm.
+	std::vector<std::string> key_tmp;
+	int	keyword = parseCmdJoin(Server, Client, argument); // regarde s il y a le bon nombre d argument
+	if (keyword < 0)
+		return;
+
+	std::vector<std::string> channel_tmp = splitCmdJoin(argument[1]); // split les #channel;
+
+	if (parseChannelName(Server, Client, channel_tmp) < 0) // parse les #channel;
+		return;
+
+	if (keyword == 1){
+		key_tmp = splitCmdJoin(argument[2]); // split les mots cles
+		if (parseChannelKeyword(Server, Client, key_tmp, channel_tmp) < 0) // parse les mots cles et me permet de savoir cb il y a de cles
+			return;
+	}
+
+	int	channelValidExist = 0;
+	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
+		if (!Server.getChannelMap().empty()) {
+			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+				if (channel_tmp[i] == it->second.getChannelName()) {
+					channelValidExist = isValidUser(Server, Client, it->second, key_tmp, i);
+					switch (channelValidExist) {
+						case USR_IN_CHANNEL:
+							Server.sendMsgToUser(Client, Client, Server, "ERROR", Client.getUsername() + " is already in " + it->second.getChannelName());
+							break;
+						case CHANNELISFULL:
+							Server.sendMsgToUser(Client, Client, Server, "ERROR", it->second.getChannelName() + "is full");
+							break;
+						case INVITEONLYCHAN:
+							Server.sendMsgToUser(Client, Client, Server, "473", it->second.getChannelName());
+							break;
+						case BADCHANNELKEY:
+							Server.sendMsgToUser(Client, Client, Server, "476", it->second.getChannelName());
+							break;
+						case ISVALIDUSER:
+							UserJoinChannel(Server, Client, it->second);
+					}
+				}
+			}
+		}
+		if (channelValidExist == 0) {
+			channel Channel(channel_tmp[i]);
+			Channel.setChannelUser(Client);
+			Channel.setOperator(Client.getUsername());
+			if (keyword == 1 && i <= key_tmp.size()) {
+				Channel.setKeyword(key_tmp[i]);
+				Channel.setMode("k");
+				std::cout << "pass: " << Channel.getKeyword() << std::endl;
+			}
+			Server.getChannelMap()[channel_tmp[i]] = Channel;
+			Server.sendJoinMsg(Server, Client, channel_tmp[i]);
+		}
+		Server.sendUserJoinMsg(Server, Client, channel_tmp[i]);
+	}
+
+	return;
+}
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
@@ -285,6 +341,12 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	(void)Client;
 	(void)argument;
 	std::cout << "MODE" << std::endl;
+
+	// depassement limite utilisateur
+// utilisateur non banni
+//invite only
+// regarder mdp
+// TOPIC : est ce que tt le monde peut le changer ou pas.
 
 	return;
 }

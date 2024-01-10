@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:08:30 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 12:18:36 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,33 @@ channel::~channel(){}
 /*---------- Getter / Setter ------------ */
 
 std::string channel::getChannelName() const {return _channelName;}
+std::string& channel::getKeyword() {return _keyword;}
 std::vector<user> &channel::getChannelUser() { return _channelUser;}
 std::vector<std::string> channel::getChannelOperators() const {	return _channelOperator;}
+std::set<char> channel::getMode() const {return _mode;}
 
 void	channel::setOperator(std::string channelOperator) {
 	_channelOperator.push_back(channelOperator);
+	return;
+}
+
+
+void	channel::setMode(std::string mode) {
+
+	if (mode.find_first_not_of("itkol") != std::string::npos)
+		return std::cout << "Unknow mod" << std::endl, void();
+	for (int i = 0; mode[i]; ++i)
+		_mode.insert(mode[i]);
+	return;
+}
+
+
+void	channel::unsetMode(std::string mode) {
+
+	if (mode.find_first_not_of("itkol") != std::string::npos)
+		return std::cout << "Unknow mod" << std::endl, void();
+	for (int i = 0; mode[i]; ++i)
+		_mode.erase(mode[i]);
 	return;
 }
 
@@ -64,14 +86,20 @@ void	channel::setChannelUser(user& Client) {
 
 }
 
-bool	channel::isAlreadyinChannel(user &Client) {
-	std::cout << Client.getUsername();
-	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
-		if (it->getUsername() == Client.getUsername())
-			return true;
-	}
-	return false;
+void	channel::setKeyword(std::string keyword) {
+
+	_keyword = keyword;
+	return;
 }
+
+
+// bool	channel::isKeyWordUse(user &Client) {
+// 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
+// 		if (it->getUsername() == Client.getUsername())
+// 			return true;
+// 	}
+// 	return false;
+// }
 /*--------------- Function -------------- */
 
 bool	channel::isOperator(user &Client){
@@ -111,6 +139,60 @@ void	channel::display_users(std::vector<user> channelUser){
 		std::cout << it->getUsername() << std::endl;
 	return;
 }
+
+
+/* MODE */
+
+bool	channel::search_mode(std::set<char>	searchMode, char mode){
+
+	std::cout << "DISPLAY MODE" << std::endl;
+	for (std::set<char>::iterator it = searchMode.begin(); it!= searchMode.end(); ++it)
+		if (mode == *it)
+			return true;
+	return false;
+}
+
+bool	channel::isAlreadyinChannel(user &Client) {
+	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
+		if (it->getUsername() == Client.getUsername())
+			return true;
+	}
+	return false;
+}
+
+bool	channel::isFull(server &Server, user &Client) {
+
+	(void)Server;
+	(void)Client;
+	std::cout << "IS FULL" << std::endl;
+	return true;
+}
+
+bool	channel::isInvited(server &Server, user &Client) {
+
+	(void)Server;
+	(void)Client;
+	std::cout << "IS INVITED" << std::endl;
+	return true;
+}
+
+bool	channel::isValidPass(server &Server, user &Client, std::vector<std::string> key_tmp, int pos) {
+
+	(void)Server;
+	(void)Client;
+	if (key_tmp.size() < (unsigned long)pos)
+		return false;
+	if (_keyword == key_tmp[pos])
+		return true;
+	return false;
+
+
+	std::cout << "IS VALID PASS" << std::endl;
+	return true;
+
+}
+
+
 
 
 //
