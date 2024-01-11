@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 12:29:38 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:26:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ std::string server::getID() const{return _ID;}
 bot 		&server::getbot() {return _bot;}
 std::map<int, user> &server::getUserMap(){return _clientMap;}
 std::map<std::string, channel>& server::getChannelMap(){return _channelMap;}
+user &server::getClient(std::string name){
+	for (std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
+		if (it->second.getUsername() == name)
+			return it->second;
+	return _clientMap.begin()->second;
+}
 
 /*--------------- Function -------------- */
 
@@ -190,6 +196,14 @@ void server::disconnect_client(user &client){
 	std::cout << "\e[0;33m" << "[Disconnected]"  << " \e[0m" << std::endl;
 }
 
+bool server::userExist(std::string name){
+	for (std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); ++it)
+	{
+		if (it->second.getNickname() == name)
+			return true;
+	}
+	return false;
+}
 void server::closeServerSocket() {close(_pollFD[0].fd);}
 
 void server::timeout_client(int fd){

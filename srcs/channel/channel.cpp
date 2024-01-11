@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:18:40 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 16:12:28 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,11 @@ channel::channel(const channel& rhs){
 channel& channel::operator=(const channel& rhs){
 	if(this != &rhs){
 		_channelName = rhs._channelName;
-		//for (std::vector<user>::const_iterator it = rhs._channelUser.begin(); it != rhs._channelUser.end(); ++it)
 		_channelUser = rhs._channelUser;
-		//for (std::vector<std::string>::const_iterator it = rhs._channelOperator.begin(); it != rhs._channelOperator.end(); ++it)
 		_channelOperator = rhs._channelOperator;
-		//for (std::set<char>::iterator it = rhs._mode.begin(); it != rhs._mode.end(); it++)
 		_mode = rhs._mode;
 		_keyword = rhs._keyword;
+		_invitedUser = rhs._invitedUser;
 	}
 	return *this;
 }
@@ -57,7 +55,7 @@ std::string& channel::getKeyword() {return _keyword;}
 std::vector<user> &channel::getChannelUser() { return _channelUser;}
 std::vector<std::string> channel::getChannelOperators() const {	return _channelOperator;}
 std::set<char> &channel::getMode() {return _mode;}
-
+std::vector<std::string> &channel::getInviteList(){return _invitedUser;}
 void	channel::setOperator(std::string channelOperator) {
 	_channelOperator.push_back(channelOperator);
 	return;
@@ -106,6 +104,12 @@ void	channel::setKeyword(std::string keyword) {
 // 	return false;
 // }
 /*--------------- Function -------------- */
+bool	channel::isInvited(std::string name){
+	for (std::vector<std::string>::iterator it = _invitedUser.begin(); it!= _invitedUser.end(); ++it)
+		if (*it == name)
+			return true;
+	return false;
+}
 
 bool	channel::isOperator(user &Client){
 	for (std::vector<std::string>::iterator it = _channelOperator.begin(); it!= _channelOperator.end(); ++it)
@@ -166,17 +170,23 @@ bool	channel::search_mode(char mode){
 }
 
 std::string	channel::display_mode(){
-	std::string message;
+	std::string message = std::string("[");
 	for (std::set<char>::iterator it = _mode.begin(); it!= _mode.end(); ++it)
-		message += std::string("[") + *it + std::string( "] ");
+		message += *it;
+	message += std::string( "] ");
 	return message;
 }
 
 bool	channel::isAlreadyinChannel(user &Client) {
+	std::cout << "SEARCHING FOR " << Client.getUsername() << std::endl;
 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
 		if (it->getUsername() == Client.getUsername())
+		{
+			std::cout << "IN" << std::endl;
 			return true;
+		}
 	}
+	std::cout << "IN" << std::endl;
 	return false;
 }
 

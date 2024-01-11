@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 15:18:12 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 12:08:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ public :
 			~user();
 
 // Operator
+			bool operator==(const user& other) const {
+        		return this->getUsername() == other.getUsername();}
+
 // Setter / Getter
 			int                 getfd() const;
 			std::string 		getNickname() const;

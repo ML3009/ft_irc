@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 12:25:09 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 11:42:02 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
         case 465:
             return ERR_NOLOGIN(server, client);
         case 472:
-            return ERR_UNKNOWNMODE(server, client, "mode");
+            return ERR_UNKNOWNMODE(server, client, message);
         case 473:
             return ERR_INVITEONLYCHAN(server, client, channel);
         case 475:
@@ -425,7 +425,9 @@ std::string RPL_QUIT_M(server& server, user& client, const std::string& message)
 std::string RPL_KICK(server& server, user& client, const std::string& channel, const std::string& user, const std::string& message) {
     (void)server;
     (void)client;
-    return " KICK " + channel + " " + user + " :" + message;
+    (void)channel;
+    (void)user;
+    return message;
 }
 std::string RPL_NOTICE(server& server, user& client, const std::string& channel, const std::string& message) {
     (void)server;

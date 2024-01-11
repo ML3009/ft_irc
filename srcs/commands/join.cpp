@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:17:19 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 15:59:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,13 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 
 void	UserJoinChannel(server &Server, user &Client, channel &Channel) {
 
+		Server.sendMsgToChannel(Client, Server, "WELCOME" , Client.getNickname() + " join the channel. Be nice to him",    Channel.getChannelName());
 		Channel.setChannelUser(Client);
-		Server.sendMsgToUser(Client, Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone");
+		if (Channel.isInvited(Client.getUsername())){
+			std::vector<std::string>::iterator it = std::find(Channel.getInviteList().begin(), Channel.getInviteList().end(), Client.getUsername());
+			Channel.getInviteList().erase(it);
+		}
+		Server.sendMsg(Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone", "");
 }
 
 std::vector<std::string> splitCmdJoin(std::string buffer){

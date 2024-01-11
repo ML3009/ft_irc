@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:22:44 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 16:27:22 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 							break;
 						case ISVALIDUSER:
 							UserJoinChannel(Server, Client, it->second);
-							Server.sendMsgToChannel(Client, Server, "WELCOME" , Client.getNickname() + " join the channel. Be nice to him",    channel_tmp[i]);
+							
 					}
 				}
 			}
@@ -263,12 +263,14 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 				Channel.setMode("k");
 			}
 			Server.getChannelMap()[channel_tmp[i]] = Channel;
-			Server.sendMsgToUser(Client, Client, Server, "WELCOME", "You are now connected on the channel " + channel_tmp[i] + ". Say hi to everyone");
+			Server.sendMsg(Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone", "");
+
 		}
 	}
 
 	return;
 }
+
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
@@ -281,22 +283,67 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "KICK" << std::endl;
-
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++); 
+	if (count != 3)
+		return Server.sendMsg(Client, Server, "461", "", "");
+	if (!Server.userExist(argument[1]))		
+		return Server.sendMsg(Client, Server, "401", "", argument[1]);
+	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+		if (it->first == argument[1]){
+			if (!(it->second.isAlreadyinChannel(Client)))
+				return Server.sendMsg(Client, Server, "441", "", argument[2]);
+			if  (it->second.isAlreadyinChannel(Server.getClient(argument[2])))
+				return Server.sendMsg(Client, Server, "441", "", argument[2]);
+			if  (it->second.isOperator(Client))
+			{
+				std::string message;
+				message += "You have been kicked from " 
+				+ it->second.getChannelName() + " by " + Client.getNickname() + ".";
+				
+				std::vector<user>::iterator ita = std::find(it->second.getChannelUser().begin(), it->second.getChannelUser().end(), Server.getClient(argument[2]));
+				it->second.getChannelUser().erase(ita);
+				Server.sendMsg(Server.getClient(argument[2]), Server, "KICK", message, it->second.getChannelName());
+				Server.sendMsgToChannel(Client, Server, "KICK" , Client.getNickname() + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				return;
+			}
+			else
+				return Server.sendMsg(Client, Server, "482", "", argument[2]);
+		}
+	}
+	return Server.sendMsg(Client, Server, "403", "", argument[1]);
 	return;
 }
 
 void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "INVITE" << std::endl;
-
-	return;
+	
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
+	if (count != 3)
+		return Server.sendMsg(Client, Server, "461", "", "");
+	if (!Server.userExist(argument[1]))		
+		return Server.sendMsg(Client, Server, "401", "", argument[1]);
+	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+		if (it->first == argument[2]){
+			if (it->second.isAlreadyinChannel(Client) \
+			&& !(it->second.isAlreadyinChannel(Server.getClient(argument[1]))) \
+			&& !(it->second.isInvited(argument[1])))
+			{
+				std::string message;
+				message += "You have been invited on " 
+				+ it->second.getChannelName() + " by " + Client.getNickname() + ".";
+				
+				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", message, it->second.getChannelName());
+				it->second.getInviteList().push_back(Client.getUsername());
+				Server.sendMsgToChannel(Client, Server, "INVITE" , Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
+				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", "You are now on the invite list of " + it->second.getChannelName(), it->second.getChannelName());
+				return;
+			}
+			else
+				return Server.sendMsg(Client, Server, "441", "", argument[1]);
+		}
+	}
+	return Server.sendMsg(Client, Server, "403", "", argument[1]);
 }
 
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
@@ -370,8 +417,8 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			return Server.sendMsg(Client, Server, "461", "", "");
 	}
 	if (argument[1][0] != '&' && argument[1][0] != '#')
-		destination = 1;
-	if (destination == 1){
+		destination = pvm_USER;
+	if (destination == pvm_USER){
 		for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
 			if (argument[1] == it->second.getNickname())
 			{

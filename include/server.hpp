@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 12:30:05 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:18:38 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class server{
 			void closeServerSocket();
 			void timeout_client(int fd);
 			bool LastPing(user &client);
-
+			bool userExist(std::string name);
 			void sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel);
 			void sendrawMsg(user &client, server &server, std::string message);
 
@@ -52,6 +52,7 @@ class server{
 			bot 				&getbot();
 			std::map<int, user> &getUserMap();
 			std::map<std::string, channel> &getChannelMap();
+			user 				&getClient(std::string name);
 
 			//user& 				getUser(int fd);
 

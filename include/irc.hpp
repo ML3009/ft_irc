@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/10 12:17:53 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 10:39:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <algorithm>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -34,6 +35,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <poll.h>
+
 
 
 #include "irc_fct.hpp"
@@ -90,16 +92,19 @@ extern bool					handleSignal;
 #define TOPIC_NONEED 2
 #define TOPIC_NOUSER 3
 
-#define RPL_JOIN_C 10;
-#define RPL_NICK_C 11;
-#define RPL_QUIT_C 12;
-#define RPL_QUIT_M_C 13;
-#define RPL_KICK_C 14;
-#define RPL_NOTICE_C 15;
-#define RPL_PRIVMSG_C 16;
+#define RPL_JOIN_C 10
+#define RPL_NICK_C 11
+#define RPL_QUIT_C 12
+#define RPL_QUIT_M_C 13
+#define RPL_KICK_C 14
+#define RPL_NOTICE_C 15
+#define RPL_PRIVMSG_C 16
 
-#define pvm_CHANNEL 1;
-#define pvm_USER    2;
+#define ACCEPTED 1
+#define DECLINED -1
+
+#define pvm_CHANNEL 1
+#define pvm_USER    2
 
 #define BLK "\e[0;30m"
 #define RED "\e[0;31m"

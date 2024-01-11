@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:07:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 10:33:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ class channel {
 		std::vector<std::string>	getChannelOperators() const;
 		std::string&				getKeyword();
 		std::set<char>				&getMode();
-
+		std::vector<std::string> 	&getInviteList();
+		
 		void						setOperator(std::string channelOperator) ;
 		void						setChannelUser(user& Client);
 		void						setKeyword(std::string keyword);
@@ -41,7 +42,8 @@ class channel {
 
 		void						display_operators(std::vector<std::string> channelOperator);
 		void						display_users(std::vector<user> channelUser);
-
+//INVITE
+		bool						isInvited(std::string name);
 
 //MODE
 		bool						search_mode(char mode);
@@ -63,6 +65,7 @@ class channel {
 	private:
 		std::string					_channelName;
 		std::vector<user>			_channelUser;
+		std::vector<std::string>  	_invitedUser;
 		std::vector<std::string>	_channelOperator;
 		std::string					_topic;
 		std::string					_keyword;
