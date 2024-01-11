@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:20:19 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:23:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 		return USR_IN_CHANNEL;
 	if (Channel.search_mode('l') == true && Channel.isFull(Server, Client) == true)
 		return CHANNELISFULL;
-	if (Channel.search_mode('i') == true && Channel.isInvited(Server, Client) == false)
+	if (Channel.search_mode('i') == true && Channel.isInvited(Client.getUsername()) == false)
 		return INVITEONLYCHAN;
 	if (Channel.search_mode('k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
 		return	BADCHANNELKEY;

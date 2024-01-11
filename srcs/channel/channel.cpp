@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:19:06 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:23:02 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,14 +208,6 @@ bool	channel::isFull(server &Server, user &Client) {
 	(void)Server;
 	(void)Client;
 	std::cout << "IS FULL" << std::endl;
-	return true;
-}
-
-bool	channel::isInvited(server &Server, user &Client) {
-
-	(void)Server;
-	(void)Client;
-	std::cout << "IS INVITED" << std::endl;
 	return true;
 }
 

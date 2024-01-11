@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:19:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:27:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 				+ it->second.getChannelName() + " by " + Client.getNickname() + ".";
 				
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", message, it->second.getChannelName());
-				it->second.getInviteList().push_back(Client.getUsername());
+				it->second.getInviteList().push_back(Server.getClient(argument[1]).getUsername());
 				Server.sendMsgToChannel(Client, Server, "INVITE" , Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", "You are now on the invite list of " + it->second.getChannelName(), it->second.getChannelName());
 				return;
