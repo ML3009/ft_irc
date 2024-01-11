@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/10 12:17:53 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:10:36 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,13 @@ extern bool					handleSignal;
 #define INVITEONLYCHAN 2
 #define BADCHANNELKEY 3
 #define ISVALIDUSER 4
+
+#define MODE_I 0
+#define MODE_T 1
+#define MODE_O 2
+#define MODE_K 3
+#define MODE_L 4
+#define UNKNOW_MODE 5
 
 #define TOPIC_NEED_NOOP 0
 #define TOPIC_NEED_OP 1

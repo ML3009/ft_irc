@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:17:19 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 14:27:58 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,13 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 	if (Channel.search_mode('k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
 		return	BADCHANNELKEY;
 	return ISVALIDUSER;
-
-// l depassement limite utilisateur
-// i invite only
-// k regarder mdp
-// t TOPIC : est ce que tt le monde peut le changer ou pas.
-
-// o donner retirer le privilege de loperateur cnal
-
 }
 
 void	UserJoinChannel(server &Server, user &Client, channel &Channel) {
 
 		Channel.setChannelUser(Client);
 		Server.sendMsgToUser(Client, Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone");
+		Server.sendMsgToChannel(Client, Server, "WELCOME" , Client.getNickname() + " join the channel. Be nice to him", Channel.getChannelName());
 }
 
 std::vector<std::string> splitCmdJoin(std::string buffer){

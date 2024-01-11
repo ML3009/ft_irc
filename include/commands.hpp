@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 12:16:42 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 16:23:31 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ class commands {
 	int	parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argument);
 	int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std::string> key_tmp, int pos);
 	void	UserJoinChannel(server &Server, user &Client, channel &Channel);
-	std::vector<std::string>	splitCmdJoin(std::string buffer);;
+	std::vector<std::string>	splitCmdJoin(std::string buffer);
+
+	// std::vector<std::string>	splitCmdMode(std::vector<std::string> buffer, int pos);
+	int isValidArgMod(server &Server, user &Client, channel &Channel, char mod);
 
 
 #define COMMANDS_DC "[+] [Default] Constructor called for COMMANDS CLASS"

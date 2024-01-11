@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/10 14:18:40 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:27:07 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,25 @@ void	channel::setOperator(std::string channelOperator) {
 void	channel::setMode(std::string mode) {
 
 	if (mode.find_first_not_of("itkol") != std::string::npos)
-		return std::cout << "Unknow mod" << std::endl, void();
+		return;
 	for (int i = 0; mode[i]; ++i)
 		_mode.insert(mode[i]);
 	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++)
 		std::cout << *it << std::endl;
 	return;
+}
+
+
+bool	channel::isValidMode(server &Server, user &Client, std::vector<std::string>& argument, std::string mode) {
+
+	int i = 0;
+	(void)argument;
+	if (mode.find_first_not_of("itkol") != std::string::npos)
+		return Server.sendMsg(Client, Server, "472", "", ""), false;
+	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++, ++i)
+		if (*it == mode[i])
+			return std::cout << "Error : Is already set" << std::endl, false;
+	return true;
 }
 
 
