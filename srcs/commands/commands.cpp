@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 16:27:22 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:19:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 							break;
 						case ISVALIDUSER:
 							UserJoinChannel(Server, Client, it->second);
-							
+							break;
 					}
 				}
 			}
@@ -383,16 +383,73 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 
 void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "MODE" << std::endl;
+	std::vector<std::string> arg_mod;
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
+	if (count < 3 || (argument[2][0] != '+' && argument[2][0] != '-'))
+		return Server.sendMsg(Client, Server, "461", "", ""), void();
+	char sign = argument[2][0];
+	if (count > 3)
+		std::copy(argument.begin() + 3, argument.end(), std::back_inserter(arg_mod));
+	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+		if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client) == true) {
+			for (int i = 1; argument[2][i]; ++i){
+				int ValidMod = isValidArgMod(Server, Client, it->second, argument[2][i]);
+				switch(ValidMod) {
+					case MODE_I:
+						if (sign == '+')
+							it->second.setMode(std::string(1, argument[2][i]));
+						else if (sign == '-')
+							it->second.unsetMode(std::string(1, argument[2][i]));
+						break;
+					case MODE_T:
+						if (sign == '+')
+							it->second.setMode(std::string(1, argument[2][i]));
+						else if (sign == '-')
+							it->second.unsetMode(std::string(1, argument[2][i]));
+						break;
+					case MODE_O:
+						if (sign == '+' && !arg_mod.empty()) {
+							it->second.setMode(std::string(1, argument[2][i]));
+							arg_mod.erase(arg_mod.begin());
+						}
+						else if (sign == '-' && !arg_mod.empty()) {
+								it->second.unsetMode(std::string(1, argument[2][i]));
+								arg_mod.erase(arg_mod.begin());
+						}
+						break;
+					case MODE_K:
+						if (sign == '+' && !arg_mod.empty()) {
+							it->second.setMode(std::string(1, argument[2][i]));
+							it->second.setKeyword(arg_mod[0]);
+							arg_mod.erase(arg_mod.begin());
+						}
+						else if (sign == '-')
+							it->second.unsetMode(std::string(1, argument[2][i]));
+						break;
+					case MODE_L:
+						if (sign == '+' && !arg_mod.empty()) {
+							it->second.setMode(std::string(1, argument[2][i]));
+							arg_mod.erase(arg_mod.begin());
+						}
+						else if (sign == '-')
+							it->second.unsetMode(std::string(1, argument[2][i]));
+						break;
+					case UNKNOW_MODE:
+						Server.sendMsg(Client, Server, "472", "", "");
+						break;
 
-	// depassement limite utilisateur
-// utilisateur non banni
-//invite only
-// regarder mdp
-// TOPIC : est ce que tt le monde peut le changer ou pas.
+				}
+			}
+		}
+	}
+
+// l depassement limite utilisateur
+// i invite only
+// k regarder mdp
+// t TOPIC : est ce que tt le monde peut le changer ou pas.
+
+// o donner retirer le privilege de loperateur cnal
 
 	return;
 }
@@ -455,7 +512,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 }
 
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){
-	
+
 	int count = 0;
 	std::ostringstream oss;
 
@@ -470,7 +527,7 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 					oss << ita->second.getChannelUser().size();
 					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername() + "\n"; 
+						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername() + "\n";
 					}
 					Server.sendMsg(Client, Server,"NAMES",msg ,"");
 					oss.str("");
@@ -485,13 +542,13 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 					oss << ita->second.getChannelUser().size();
 					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername()+ "\n"; 
+						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername()+ "\n";
 					}
 					return Server.sendMsg(Client, Server,"NAMES",msg ,"");
 				}
 			}
 			return Server.sendMsg(Client, Server, "403", "", "");
-		
+
 		default:
 			Server.sendMsg(Client, Server, "461", "", "");
 	}

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 15:59:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:20:19 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,6 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 	if (Channel.search_mode('k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
 		return	BADCHANNELKEY;
 	return ISVALIDUSER;
-
-// l depassement limite utilisateur
-// i invite only
-// k regarder mdp
-// t TOPIC : est ce que tt le monde peut le changer ou pas.
-
-// o donner retirer le privilege de loperateur cnal
-
 }
 
 void	UserJoinChannel(server &Server, user &Client, channel &Channel) {

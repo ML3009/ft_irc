@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 10:33:09 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:18:31 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ class channel {
 		bool						isInvited(server &Server, user &Client);
 		bool						isValidPass(server &Server, user &Client, std::vector<std::string> key_tmp, int pos);
 		int							parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argument);
+		bool						isValidMode(server &Server, user &Client, std::vector<std::string>& argument, std::string mode);
 
 
 //operator
