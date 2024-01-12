@@ -58,7 +58,7 @@ class commands {
 	std::vector<std::string>	splitCmdJoin(std::string buffer);
 
 	// std::vector<std::string>	splitCmdMode(std::vector<std::string> buffer, int pos);
-	int isValidArgMod(server &Server, user &Client, channel &Channel, char mod);
+	int isValidArgMod(char mod);
 
 
 #define COMMANDS_DC "[+] [Default] Constructor called for COMMANDS CLASS"

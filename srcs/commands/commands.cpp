@@ -295,7 +295,7 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 				return Server.sendMsg(Client, Server, "441", "", argument[2]);
 			if  (it->second.isAlreadyinChannel(Server.getClient(argument[2])))
 				return Server.sendMsg(Client, Server, "441", "", argument[2]);
-			if  (it->second.isOperator(Client))
+			if  (it->second.isOperator(Client.getUsername()))
 			{
 				std::string message;
 				message += "You have been kicked from " 
@@ -392,9 +392,9 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	if (count > 3)
 		std::copy(argument.begin() + 3, argument.end(), std::back_inserter(arg_mod));
 	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
-		if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client) == true) {
+		if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == true) {
 			for (int i = 1; argument[2][i]; ++i){
-				int ValidMod = isValidArgMod(Server, Client, it->second, argument[2][i]);
+				int ValidMod = isValidArgMod(argument[2][i]);
 				switch(ValidMod) {
 					case MODE_I:
 						if (sign == '+')
@@ -410,6 +410,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 						break;
 					case MODE_O:
 						if (sign == '+' && !arg_mod.empty()) {
+							//if (isOperator())
 							it->second.setMode(std::string(1, argument[2][i]));
 							arg_mod.erase(arg_mod.begin());
 						}

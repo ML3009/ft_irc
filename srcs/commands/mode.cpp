@@ -21,22 +21,13 @@
 // 	return tmp_buffer;
 // }
 
-int isValidArgMod(server &Server, user &Client, channel &Channel, char mod) {
+int isValidArgMod(char mod) {
+	
+	char ptr_mod[5] = {'i', 't', 'o', 'k', 'l'};
 
-	(void)Client;
-	(void)Server;
-	(void)Channel;
-	std::cout << "MOD: " << mod << std::endl;
-
-	if (mod == 'i')
-		return MODE_I;
-	if (mod == 't')
-		return MODE_T;
-	if (mod == 'o')
-		return MODE_O;
-	if (mod == 'k')
-		return MODE_K;
-	if (mod == 'l')
-		return MODE_L;
+	for (int i = 0; i < 5; ++i) {
+		if (mod == ptr_mod[i])
+			return i;
+	}
 	return UNKNOW_MODE;
 }

@@ -51,7 +51,7 @@ class channel {
 
 
 		bool						isAlreadyinChannel(user &Client);
-		bool						isOperator(user &Client);
+		bool						isOperator(std::string usernameClient);
 		int 						getTopicStatus(channel &canal, user &client, server &server);
 		bool						isFull(server &Server, user &Client);
 		bool						isInvited(server &Server, user &Client);

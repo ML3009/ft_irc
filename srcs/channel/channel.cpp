@@ -124,9 +124,9 @@ bool	channel::isInvited(std::string name){
 	return false;
 }
 
-bool	channel::isOperator(user &Client){
+bool	channel::isOperator(std::string usernameClient){
 	for (std::vector<std::string>::iterator it = _channelOperator.begin(); it!= _channelOperator.end(); ++it)
-		if (*it == Client.getUsername())
+		if (*it == usernameClient)
 			return true;
 	return false;
 }
@@ -147,7 +147,7 @@ int		channel::getTopicStatus(channel &canal, user &client, server &server){
 	for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it){
 		if (it->getfd() == client.getfd()){
 			// if need op
-			if (canal.isOperator(client))
+			if (canal.isOperator(client.getUsername()))
 				return TOPIC_NEED_OP;
 			else
 				return TOPIC_NEED_NOOP;
