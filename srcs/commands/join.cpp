@@ -54,7 +54,7 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 		return CHANNELISFULL;
 	if (Channel.search_mode('i') == true && Channel.isInvited(Client.getUsername()) == false)
 		return INVITEONLYCHAN;
-	if (Channel.search_mode('k') == true && Channel.isValidPass(Server, Client, key_tmp, pos) == false)
+	if (Channel.search_mode('k') == true && Channel.isValidPass(key_tmp, pos) == false)
 		return	BADCHANNELKEY;
 	return ISVALIDUSER;
 }

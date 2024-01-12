@@ -16,22 +16,6 @@ bool handleSignal	= false;
 int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= LOGFILE;
-//std::map<std::string, channel> channelMap;
-
-//std::map<std::string channel, std::vector<channel> > channelMap;
-
-//Channel {
-
-// 	public:
-// 		getUsername
-// 		display user
-
-// 	private :
-
-// 	std::vector<user> user;
-// }
-
-
 
 int main(int ac, char **av){
 	std::remove("logs.txt");

@@ -410,12 +410,14 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 						break;
 					case MODE_O:
 						if (sign == '+' && !arg_mod.empty()) {
-							//if (isOperator())
-							it->second.setMode(std::string(1, argument[2][i]));
-							arg_mod.erase(arg_mod.begin());
+							if (Server.userExist(arg_mod[0]) == true && it->second.isOperator(arg_mod[0]) == false){
+								it->second.setOperator(arg_mod[0]);
+								arg_mod.erase(arg_mod.begin());
+							}
 						}
 						else if (sign == '-' && !arg_mod.empty()) {
-								it->second.unsetMode(std::string(1, argument[2][i]));
+							if (Server.userExist(arg_mod[0]) == true && it->second.isOperator(arg_mod[0]) == true)
+								it->second.unsetOperator(arg_mod[0]);
 								arg_mod.erase(arg_mod.begin());
 						}
 						break;
@@ -427,14 +429,17 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 						}
 						else if (sign == '-')
 							it->second.unsetMode(std::string(1, argument[2][i]));
+							it->second.unsetKeyword();
 						break;
 					case MODE_L:
-						if (sign == '+' && !arg_mod.empty()) {
+						if (sign == '+' && !arg_mod.empty() && it->second.isValidLimit(arg_mod[0]) == true) {
 							it->second.setMode(std::string(1, argument[2][i]));
+							it->second.setLimit(arg_mod[0]);
 							arg_mod.erase(arg_mod.begin());
 						}
 						else if (sign == '-')
 							it->second.unsetMode(std::string(1, argument[2][i]));
+							it->second.unsetLimit();
 						break;
 					case UNKNOW_MODE:
 						Server.sendMsg(Client, Server, "472", "", "");
@@ -442,6 +447,10 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 
 				}
 			}
+		} else if (argument[1] == it->second.getChannelName() && it->second.isAlreadyinChannel(Client) == false){
+			return Server.sendMsg(Client, Server, "442", "", it->second.getChannelName()), void();
+		} else if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == false) {
+			return Server.sendMsg(Client, Server, "482", "", it->second.getChannelName()), void();
 		}
 	}
 

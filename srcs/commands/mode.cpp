@@ -12,15 +12,6 @@
 
 #include "commands.hpp"
 
-// std::vector<std::string> splitCmdMode(std::vector<std::string> buffer, int pos){
-// 	std::vector<std::string> tmp_buffer;
-// 	for (unsigned long i = pos; i != buffer.size(); ++i) {
-// 		std::cout << "buffer[i]: " << buffer[i] << std::endl;
-// 		tmp_buffer.push_back(buffer[i]);
-// 	}
-// 	return tmp_buffer;
-// }
-
 int isValidArgMod(char mod) {
 	
 	char ptr_mod[5] = {'i', 't', 'o', 'k', 'l'};

@@ -199,7 +199,7 @@ void server::disconnect_client(user &client){
 bool server::userExist(std::string name){
 	for (std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); ++it)
 	{
-		if (it->second.getNickname() == name)
+		if (it->second.getUsername() == name)
 			return true;
 	}
 	return false;

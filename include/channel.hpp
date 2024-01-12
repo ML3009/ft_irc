@@ -31,12 +31,18 @@ class channel {
 		std::string&				getKeyword();
 		std::set<char>				&getMode();
 		std::vector<std::string> 	&getInviteList();
+		std::string					&getLimit();
 		
 		void						setOperator(std::string channelOperator) ;
 		void						setChannelUser(user& Client);
 		void						setKeyword(std::string keyword);
 		void						setMode(std::string mode);
+		void						setLimit(std::string limit);
+
 		void						unsetMode(std::string mode);
+		void						unsetOperator(std::string& channelOperator);
+		void						unsetKeyword();
+		void						unsetLimit();
 
 
 
@@ -55,10 +61,10 @@ class channel {
 		int 						getTopicStatus(channel &canal, user &client, server &server);
 		bool						isFull(server &Server, user &Client);
 		bool						isInvited(server &Server, user &Client);
-		bool						isValidPass(server &Server, user &Client, std::vector<std::string> key_tmp, int pos);
+		bool						isValidPass(std::vector<std::string> key_tmp, int pos);
 		int							parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argument);
 		bool						isValidMode(server &Server, user &Client, std::vector<std::string>& argument, std::string mode);
-
+		bool						isValidLimit(std::string limit);
 
 //operator
 
@@ -71,6 +77,7 @@ class channel {
 		std::string					_topic;
 		std::string					_keyword;
 		std::set<char>				_mode;
+		long						_limit;
 
 
 };
