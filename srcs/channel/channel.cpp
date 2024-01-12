@@ -112,6 +112,13 @@ void	channel::setChannelUser(user& Client) {
 
 }
 
+void	channel::unsetChannelUser(user& Client){
+
+	_channelUser.erase(std::remove(_channelUser.begin(), _channelUser.end(), Client),
+		 _channelUser.end());
+	return;
+}
+
 void	channel::setKeyword(std::string keyword) {
 
 	_keyword = keyword;

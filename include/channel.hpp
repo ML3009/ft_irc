@@ -43,6 +43,7 @@ class channel {
 		void						unsetOperator(std::string& channelOperator);
 		void						unsetKeyword();
 		void						unsetLimit();
+		void						unsetChannelUser(user& Client);
 
 
 

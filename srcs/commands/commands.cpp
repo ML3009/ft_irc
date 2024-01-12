@@ -273,11 +273,37 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "PART = quitter le channel" << std::endl;
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++); 
+	if (count != 2)
+		return Server.sendMsg(Client, Server, "461", "", "");
+	std::vector<std::string> channel_tmp = splitCmdJoin(argument[1]);
+	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
 
+	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
+		if (!Server.getChannelMap().empty()) {
+			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
+				if (it->second.getChannelName() == channel_tmp[i]) {
+					if(it->second.isAlreadyinChannel(Client) == true) {
+						it->second.unsetChannelUser(Client);
+						Server.sendMsg(Client, Server, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
+						Server.sendMsgToChannel(Client, Server, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+						if (it->second.getChannelUser().empty()) {
+							channelsToRemove.push_back(it);
+						}
+							
+					} else if (channel_tmp[i] == it->second.getChannelName() && it->second.isAlreadyinChannel(Client) == false) {
+						Server.sendMsg(Client, Server, "442", "", it->second.getChannelName()), void();
+					}
+				}
+			}
+		}
+		if (Server.channelExist(channel_tmp[i]) == false)
+			Server.sendMsg(Client, Server, "403", "", channel_tmp[i]);
+	}
+	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it) {
+    	Server.getChannelMap().erase(*it);
+	}
 	return;
 }
 
@@ -441,7 +467,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 							it->second.unsetMode(std::string(1, argument[2][i]));
 							it->second.unsetLimit();
 						break;
-					case UNKNOW_MODE:
+					default:
 						Server.sendMsg(Client, Server, "472", "", "");
 						break;
 
@@ -453,6 +479,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 			return Server.sendMsg(Client, Server, "482", "", it->second.getChannelName()), void();
 		}
 	}
+	//msg si channel non trouve ??? 
 
 // l depassement limite utilisateur
 // i invite only

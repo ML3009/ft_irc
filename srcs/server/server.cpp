@@ -204,6 +204,18 @@ bool server::userExist(std::string name){
 	}
 	return false;
 }
+
+bool server::channelExist(std::string channelName){
+	
+	if (!_channelMap.empty()) {
+		for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
+			if (it->second.getChannelName() == channelName)
+				return true;
+		}
+	}
+	return false;
+}
+
 void server::closeServerSocket() {close(_pollFD[0].fd);}
 
 void server::timeout_client(int fd){

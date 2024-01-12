@@ -35,6 +35,7 @@ class server{
 			void closeServerSocket();
 			void timeout_client(int fd);
 			bool LastPing(user &client);
+			bool channelExist(std::string channelName);
 			bool userExist(std::string name);
 			void sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel);
 			void sendrawMsg(user &client, server &server, std::string message);
