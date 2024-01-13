@@ -17,15 +17,11 @@
 channel::channel(){
 	_channelName = "";
 	_limit = 0;
-	//_channelUser = "";
-	//_channelOperator = "";
 }
 
 channel::channel(std::string channelName) {
 	_channelName = channelName;
 	_limit = 0;
-	//_channelUser = "";
-	//_channelOperator = "";
 }
 
 channel::channel(const channel& rhs){
@@ -39,8 +35,8 @@ channel& channel::operator=(const channel& rhs){
 		_channelOperator = rhs._channelOperator;
 		_mode = rhs._mode;
 		_keyword = rhs._keyword;
-		_invitedUser = rhs._invitedUser;
 		_limit = rhs._limit;
+		_invitedUser = rhs._invitedUser;
 	}
 	return *this;
 }
@@ -59,6 +55,7 @@ std::vector<user> &channel::getChannelUser() { return _channelUser;}
 std::vector<std::string> channel::getChannelOperators() const {	return _channelOperator;}
 std::set<char> &channel::getMode() {return _mode;}
 std::vector<std::string> &channel::getInviteList(){return _invitedUser;}
+long	channel::getLimit(){ return _limit;}
 
 void	channel::setOperator(std::string channelOperator) {
 	_channelOperator.push_back(channelOperator);
@@ -109,7 +106,6 @@ void	channel::unsetMode(std::string mode) {
 void	channel::setChannelUser(user& Client) {
 	_channelUser.push_back(Client);
 	return;
-
 }
 
 void	channel::unsetChannelUser(user& Client){
@@ -152,11 +148,13 @@ void	channel::setLimit(std::string limit) {
 
 	const char* limit_tmp = limit.c_str();
 	_limit = strtol(limit_tmp, NULL, 10);
+	std::cout << _limit << std::endl;
 }
 
 void	channel::unsetLimit() {
 	_limit = 0;
 }
+
 
 /*--------------- Function -------------- */
 bool	channel::isInvited(std::string name){
@@ -253,6 +251,7 @@ bool	channel::isFull(server &Server, user &Client) {
 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it, ++nbClient);
 	if (nbClient >= _limit && _limit != 0)
 		return true;
+	std::cout << "nbClient: " << nbClient << "_limit: " << _limit << std::endl;
 	return false;
 }
 

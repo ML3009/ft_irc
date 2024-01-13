@@ -48,6 +48,7 @@ int	parseChannelKeyword(server &Server, user &Client, std::vector<std::string>& 
 }
 
 int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std::string> key_tmp, int pos) {
+	std::cout << "LIMIT IN VALID USER: " << Channel.getLimit() << std::endl;
 	if (Channel.isAlreadyinChannel(Client) == true)
 		return USR_IN_CHANNEL;
 	if (Channel.search_mode('l') == true && Channel.isFull(Server, Client) == true)

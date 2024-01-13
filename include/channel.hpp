@@ -31,7 +31,7 @@ class channel {
 		std::string&				getKeyword();
 		std::set<char>				&getMode();
 		std::vector<std::string> 	&getInviteList();
-		std::string					&getLimit();
+		long						getLimit();
 		
 		void						setOperator(std::string channelOperator) ;
 		void						setChannelUser(user& Client);
