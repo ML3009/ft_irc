@@ -141,6 +141,10 @@ bool	channel::isValidLimit(std::string limit) {
 		return false;
 	if (result == 0)
 		return false;
+	unsigned long	nbClient = 0;
+	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it, ++nbClient);
+	if (result < nbClient) 
+		return false;
 	return true;
 }
 
@@ -251,7 +255,6 @@ bool	channel::isFull(server &Server, user &Client) {
 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it, ++nbClient);
 	if (nbClient >= _limit && _limit != 0)
 		return true;
-	std::cout << "nbClient: " << nbClient << "_limit: " << _limit << std::endl;
 	return false;
 }
 

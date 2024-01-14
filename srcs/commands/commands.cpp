@@ -158,7 +158,6 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 
 void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& argument){
 
-	(void)Server;
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count < 5) {
@@ -183,16 +182,6 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 	}
 	Client.setUsername(argument[1]);
 	displayWelcome(Server, Client);
-	return;
-}
-
-void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& argument){
-
-	(void)Server;
-	(void)Client;
-	(void)argument;
-	std::cout << "QUIT" << std::endl;
-
 	return;
 }
 
@@ -225,7 +214,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 							Server.sendMsg(Client, Server, "ERROR", Client.getUsername() + " is already in " + it->second.getChannelName(), "");
 							break;
 						case CHANNELISFULL:
-							Server.sendMsg(Client, Server, "ERROR", it->second.getChannelName() + "is full","");
+							Server.sendMsg(Client, Server, "ERROR", it->second.getChannelName() + " is full","");
 							break;
 						case INVITEONLYCHAN:
 							Server.sendMsg(Client, Server, "473", "", it->second.getChannelName());
@@ -292,6 +281,47 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it) {
     	Server.getChannelMap().erase(*it);
 	}
+	return;
+}
+
+void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& argument){
+
+	int count = 0;
+	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++); 
+	std::string msg;
+	if (count > 1 && argument[1][0] != ':')
+		return Server.sendMsg(Client, Server, "461", "", "");
+	if (argument[1][0] == ':') {
+		for (unsigned long i = 1; i < argument.size(); i++) {
+			msg += argument[i];
+			msg += " ";
+		}
+	}
+	else
+		msg += argument[1];
+
+	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
+	if (!Server.getChannelMap().empty()) {
+		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
+			if (it->second.isAlreadyinChannel(Client) == true) {
+				it->second.unsetChannelUser(Client);
+				Server.sendMsg(Client, Server, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
+				if (count > 1)
+					Server.sendMsgToChannel(Client, Server, Client.getNickname(), " QUIT :" + msg, it->second.getChannelName());
+				else
+					Server.sendMsgToChannel(Client, Server, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+
+				if (it->second.getChannelUser().empty()) {
+						channelsToRemove.push_back(it);
+				}			
+			}
+		}
+	}	
+	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it) {
+    	Server.getChannelMap().erase(*it);
+	}
+	Server.sendMsg(Client, Server, "QUIT", "Leaving the server. Goodbye!", "");
+	Server.disconnect_client(Client);
 	return;
 }
 
@@ -454,6 +484,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 								arg_mod.erase(arg_mod.begin());
 								break;
 							}
+							break;
 						}
 						else if (sign == '-')
 							it->second.unsetMode(std::string(1, argument[2][i]));
