@@ -28,6 +28,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <limits>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>

@@ -199,11 +199,23 @@ void server::disconnect_client(user &client){
 bool server::userExist(std::string name){
 	for (std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); ++it)
 	{
-		if (it->second.getNickname() == name)
+		if (it->second.getUsername() == name)
 			return true;
 	}
 	return false;
 }
+
+bool server::channelExist(std::string channelName){
+	
+	if (!_channelMap.empty()) {
+		for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
+			if (it->second.getChannelName() == channelName)
+				return true;
+		}
+	}
+	return false;
+}
+
 void server::closeServerSocket() {close(_pollFD[0].fd);}
 
 void server::timeout_client(int fd){
