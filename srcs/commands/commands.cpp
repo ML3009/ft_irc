@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:27:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/11 17:31:58 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 
 commands::commands(){
 
-	cmdMap["/INVITE"] = &commands::cmdINVITE;
-	cmdMap["/JOIN"] = &commands::cmdJOIN;
-	cmdMap["/KICK"] = &commands::cmdKICK;
-	cmdMap["/MODE"] = &commands::cmdMODE;
-	cmdMap["/NICK"] = &commands::cmdNICK;
-	cmdMap["/PART"] = &commands::cmdPART;
-	cmdMap["/PASS"] = &commands::cmdPASS;
-	cmdMap["/NAMES"] = &commands::cmdNAMES;
-	cmdMap["/PRIVMSG"] = &commands::cmdPRIVMSG;
-	cmdMap["/QUIT"] = &commands::cmdQUIT;
-	cmdMap["/TOPIC"] = &commands::cmdTOPIC;
-	cmdMap["/USER"] = &commands::cmdUSER;
-	cmdMap["@bot"] = &commands::cmdBOT;
+	cmdMap["/INVITE"] = &commands::cmdINVITE; // en cours
+	cmdMap["/JOIN"] = &commands::cmdJOIN; // en cours
+	cmdMap["/KICK"] = &commands::cmdKICK; // bug
+	cmdMap["/MODE"] = &commands::cmdMODE; // en cours
+	cmdMap["/NICK"] = &commands::cmdNICK; // ok
+	cmdMap["/PART"] = &commands::cmdPART; // a faire
+	cmdMap["/PASS"] = &commands::cmdPASS; // ok 
+	cmdMap["/NAMES"] = &commands::cmdNAMES; // ok
+	cmdMap["/PRIVMSG"] = &commands::cmdPRIVMSG; // ok
+	cmdMap["/QUIT"] = &commands::cmdQUIT; // a faire
+	cmdMap["/TOPIC"] = &commands::cmdTOPIC; // en cours
+	cmdMap["/USER"] = &commands::cmdUSER; // ok
+	cmdMap["@bot"] = &commands::cmdBOT; // ok mais modif ideal
 }
 
 commands::commands(const commands& rhs){
