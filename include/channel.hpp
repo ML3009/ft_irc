@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:19 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:18:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/15 16:36:52 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ class channel {
 		std::set<char>				&getMode();
 		std::vector<std::string> 	&getInviteList();
 		long						getLimit();
-		
+		std::string& 				getTopic();
+
 		void						setOperator(std::string channelOperator) ;
 		void						setChannelUser(user& Client);
 		void						setKeyword(std::string keyword);
 		void						setMode(std::string mode);
 		void						setLimit(std::string limit);
+		void						setTopic(std::string topic);
 
 		void						unsetMode(std::string mode);
 		void						unsetOperator(std::string& channelOperator);
