@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/15 10:32:14 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:47:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,8 +203,9 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 			return;
 	}
 
-	int	channelValidExist = 0;
+	int	channelValidExist = 5;
 	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
+		std::cout << "CHANEL TMP " <<  channel_tmp.size() << std::endl;
 		if (!Server.getChannelMap().empty()) {
 			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 				if (channel_tmp[i] == it->second.getChannelName()) {
@@ -231,7 +232,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 				}
 			}
 		}
-		if (channelValidExist == 0) {
+		if (channelValidExist == 5) {
 			channel Channel(channel_tmp[i]);
 			Channel.setChannelUser(Client);
 			Channel.setOperator(Client.getUsername());
@@ -262,9 +263,9 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 				if (it->second.getChannelName() == channel_tmp[i]) {
 					if(it->second.isAlreadyinChannel(Client) == true) {
-						it->second.unsetChannelUser(Client);
 						Server.sendMsg(Client, Server, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
 						Server.sendMsgToChannel(Client, Server, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+						it->second.unsetChannelUser(Client);
 						if (it->second.getChannelUser().empty()) {
 							channelsToRemove.push_back(it);
 						}
@@ -327,17 +328,16 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 
+	// 0 /KICK | 1 #channel | 2 user
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count != 3)
 		return Server.sendMsg(Client, Server, "461", "", "");
-	if (!Server.userExist(argument[1]))
-		return Server.sendMsg(Client, Server, "401", "", argument[1]);
 	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 		if (it->first == argument[1]){
 			if (!(it->second.isAlreadyinChannel(Client)))
 				return Server.sendMsg(Client, Server, "441", "", argument[2]);
-			if  (it->second.isAlreadyinChannel(Server.getClient(argument[2])))
+			if  (!(it->second.isAlreadyinChannel(Server.getClient(argument[2]))))
 				return Server.sendMsg(Client, Server, "441", "", argument[2]);
 			if  (it->second.isOperator(Client.getUsername()))
 			{
@@ -348,7 +348,8 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 				std::vector<user>::iterator ita = std::find(it->second.getChannelUser().begin(), it->second.getChannelUser().end(), Server.getClient(argument[2]));
 				it->second.getChannelUser().erase(ita);
 				Server.sendMsg(Server.getClient(argument[2]), Server, "KICK", message, it->second.getChannelName());
-				Server.sendMsgToChannel(Client, Server, "KICK" , Client.getNickname() + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				Server.sendMsg(Client, Server, "KICK", argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				Server.sendMsgToChannel(Client, Server, "KICK" , argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
 				return;
 			}
 			else
