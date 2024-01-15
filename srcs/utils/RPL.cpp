@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/11 11:42:02 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/15 16:34:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,10 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
 
 void displayWelcome(server &server, user &client){
 
-	if (send(client.getfd(), RPL_WELCOME(server, client).c_str(), RPL_WELCOME(server, client).length(), 0) == -1 ||
-    	send(client.getfd(), RPL_YOURHOST(server, client).c_str(), RPL_YOURHOST(server, client).length(), 0) == -1 ||
-        send(client.getfd(), RPL_CREATED(server, client).c_str(), RPL_CREATED(server, client).length(), 0) == -1 ||
-    	send(client.getfd(), RPL_MYINFO(server, client).c_str(), RPL_MYINFO(server, client).length(), 0) == -1)
+	if (send(client.getfd(), RPL_WELCOME(server, client).c_str(), RPL_WELCOME(server, client).size(), 0) == -1 ||
+    	send(client.getfd(), RPL_YOURHOST(server, client).c_str(), RPL_YOURHOST(server, client).size(), 0) == -1 ||
+        send(client.getfd(), RPL_CREATED(server, client).c_str(), RPL_CREATED(server, client).size(), 0) == -1 ||
+    	send(client.getfd(), RPL_MYINFO(server, client).c_str(), RPL_MYINFO(server, client).size(), 0) == -1)
 		std::perror("send:");
 }
 
@@ -156,16 +156,22 @@ std::string RPL_YOURHOST(server &server, user &client){
 }
 
 std::string RPL_CREATED(server &server, user &client) {
-	(void)server;
-	(void)client;
+    (void)server;
+    (void)client;
     std::time_t now = std::time(NULL);
     std::tm* localTime = std::localtime(&now);
 
-    char buffer[80];
-    std::strftime(buffer, sizeof(buffer), "\e[0;34mCe serveur a été créé le \e[0m\e[0;36m%d %B %Y à %H:%M:%S.\n\e[0m", localTime);
+    if (!localTime) {
+        return "Erreur lors de la récupération du temps.";
+    }
 
-    return buffer;
+    char buffer[512];
+    std::strftime(buffer, sizeof(buffer), "\033[0;34mCe serveur a été créé le \033[0m\033[0;36m%d %B %Y à %H:%M:%S.\n\033[0m", localTime);
+
+    return std::string(buffer);
 }
+
+
 
 std::string RPL_MYINFO(server &server, user &client){
 	(void)client;
