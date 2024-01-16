@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 16:26:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 13:45:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ server::server(){
 	_userCount = 0;
 	_upTime = clock();
 	_ID = "IRC";
-	_maxtimeout = 10000;
+	_maxtimeout = 2000000;
 
 	display_constructor(SERVER_DC);
 }
@@ -31,8 +31,8 @@ server::server(int port, std::string password){
 	_port = port;
 	_password = password;
 	_userCount = 0;
-	_upTime = clock();
-	_maxtimeout = 10000;
+	_upTime = time(NULL);
+	_maxtimeout = 15;
 
 	display_constructor(SERVER_PC);
 
@@ -131,13 +131,14 @@ void server::init_server(){
 void server::run_server(){
 
 	debug("run_server", BEGIN);
-	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
+	if ((poll(&_pollFD[0], _pollFD.size(), 10000) == -1))
+	{
+		if (handleSignal == false){	
+			std::perror("poll");
+			throw pollException();
+		}
+	}
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
-	if (_userCount > 0)
-		for(std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
-			if (LastPing(it->second) == TIMEOUT)
-				return timeout_client(it->first);
-
 	debug("run_server", END);
 
 }
@@ -176,24 +177,35 @@ void server::getClientMessage(){
 			int bytes = recv(_clientMap[it->fd].getfd(), buffer, 1024, 0);
 			if (bytes <= 0)
 			{
+				memset(buffer, 0, 512);
 				disconnect_client(_clientMap[it->fd]);
-				it = _pollFD.erase(it);
 				return;
 			}
 			else{
 				buffer[bytes] = '\0';
 				_clientMap[it->fd].parseClientMessage(*this, buffer);
+				memset(buffer, 0, 512);
+				if (_clientMap[it->fd].getStatus() == DISCONNECTED){
+					disconnect_client(_clientMap[it->fd]);
+					return;
+				}
 			}
 		}
 	}
 	debug("getClientMessage", END);
 }
 
+
 void server::disconnect_client(user &client){
+	std::vector<pollfd>::iterator it = std::find_if(_pollFD.begin(), _pollFD.end(), IsClientFDPredicate(client.getfd()));
+	if (it != _pollFD.end()) {_pollFD.erase(it);}
 	close(client.getfd());
-	_clientMap.erase(client.getfd());
+	std::map<int, user>::iterator ita = _clientMap.find(client.getfd());
+		if (ita != _clientMap.end()){_clientMap.erase(ita);}
+	
 	_userCount--;
-	std::cout << "\e[0;33m" << "[Disconnected]"  << " \e[0m" << std::endl;
+	if (_userCount == 0)
+		_clientMap.clear();
 }
 
 bool server::userExist(std::string name){
@@ -218,18 +230,31 @@ bool server::channelExist(std::string channelName){
 
 void server::closeServerSocket() {close(_pollFD[0].fd);}
 
-void server::timeout_client(int fd){
-	disconnect_client(_clientMap[fd]);
-	std::cout << "\e[0;36m" << " user has been kick for [ AFK ]" << " \e[0m" << std::endl;
-	// std::vector<pollfd>::iterator it;
-	// for (it = _pollFD.begin(); it != _pollFD.end(); it++)
-	// 	if (it->fd == fd)
-	// 		it = _pollFD.erase(it);
+void server::timeout_client(user &client){
+	sendMsg(client, *this, "QUIT", "You have been disconnected by the server for being AFK", "");
+	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
+	if (!getChannelMap().empty()) {
+		for (std::map<std::string, channel>::iterator it = getChannelMap().begin(); it != getChannelMap().end(); ++it){
+			if (it->second.isAlreadyinChannel(client) == true) {
+				it->second.unsetChannelUser(client);
+				sendMsg(client, *this, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
+				sendMsgToChannel(client, *this, "LEAVE", client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+
+				if (it->second.getChannelUser().empty()) {
+						channelsToRemove.push_back(it);
+				}
+			}
+		}
+	}
+	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it) {
+    	getChannelMap().erase(*it);
+	}
+	sendMsg(client, *this, "QUIT", "Leaving the server. Goodbye!", "");
+	disconnect_client(client);
 }
 
 bool server::LastPing(user &client){
-	clock_t actual = clock();
-	//std::cout << "client [" << client.getfd() << "] | " << actual - client.getLastPing() << std::endl;
+	time_t actual = time(NULL);
 	if (actual - client.getLastPing() > _maxtimeout)
 		return TIMEOUT;
 	return TIMEIN;

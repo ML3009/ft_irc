@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/11 12:08:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 11:26:41 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ public :
 			std::string 		getRealname() const;
 			std::string         getBuffer() const;
 			std::string			getPassword() const;
-			clock_t		 		getLastPing() const;
+			time_t		 		getLastPing() const;
+			bool                getStatus() const;
 
+			void				setStatus(bool status);
 			void				setPassword(std::string password);
 			void				setNickname(std::string nickname);
 			void				setUsername(std::string username);
@@ -64,11 +66,15 @@ private :
 			std::string         _buffer;
 			std::string         _password;
 			int                 _fd;
-			clock_t				_last_ping;
+			time_t				_last_ping;
+			bool				_status;
 
 
 
 };
+
+#define CONNECTED true
+#define DISCONNECTED false
 
 
 #define USER_DC "[+] [Default] Constructor called for USER CLASS"

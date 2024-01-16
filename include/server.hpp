@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/10 16:18:38 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/15 15:18:19 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class server{
 			void getClientMessage(void);
 			void disconnect_client(user &client);
 			void closeServerSocket();
-			void timeout_client(int fd);
+			void timeout_client(user &client);
 			bool LastPing(user &client);
 			bool channelExist(std::string channelName);
 			bool userExist(std::string name);
@@ -67,8 +67,8 @@ class server{
 			std::string			_password;
 			std::string			_ID;
 			std::vector<pollfd>	_pollFD;
-			clock_t				_upTime;
-			clock_t				_maxtimeout;
+			time_t				_upTime;
+			time_t				_maxtimeout;
 			bot					_bot;
 			std::map<int, user> 	_clientMap;
 			std::map<std::string, channel> _channelMap;

@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/15 17:03:32 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/16 14:04:32 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 
 commands::commands(){
 
-	cmdMap["/INVITE"] = &commands::cmdINVITE; // en cours
-	cmdMap["/JOIN"] = &commands::cmdJOIN; // en cours
-	cmdMap["/KICK"] = &commands::cmdKICK; // bug
-	cmdMap["/MODE"] = &commands::cmdMODE; // en cours
+	cmdMap["/INVITE"] = &commands::cmdINVITE; // ok
+	cmdMap["/JOIN"] = &commands::cmdJOIN; // ok
+	cmdMap["/KICK"] = &commands::cmdKICK; // ok
+	cmdMap["/MODE"] = &commands::cmdMODE; // ok
 	cmdMap["/NICK"] = &commands::cmdNICK; // ok
-	cmdMap["/PART"] = &commands::cmdPART; // a faire
+	cmdMap["/PART"] = &commands::cmdPART; // ok
 	cmdMap["/PASS"] = &commands::cmdPASS; // ok
 	cmdMap["/NAMES"] = &commands::cmdNAMES; // ok
 	cmdMap["/PRIVMSG"] = &commands::cmdPRIVMSG; // ok
@@ -292,15 +292,14 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 	std::string msg;
 	if (count > 1 && argument[1][0] != ':')
 		return Server.sendMsg(Client, Server, "461", "", "");
-	if (argument[1][0] == ':') {
-		for (unsigned long i = 1; i < argument.size(); i++) {
-			msg += argument[i];
-			msg += " ";
+	if (count > 1){
+		if (argument[1][0] == ':') {
+			for (unsigned long i = 1; i < argument.size(); i++)
+				msg += argument[i] + " ";
 		}
+		else
+			msg += argument[1];
 	}
-	else
-		msg += argument[1];
-
 	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
 	if (!Server.getChannelMap().empty()) {
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
@@ -322,13 +321,12 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
     	Server.getChannelMap().erase(*it);
 	}
 	Server.sendMsg(Client, Server, "QUIT", "Leaving the server. Goodbye!", "");
-	Server.disconnect_client(Client);
+	Client.setStatus(DISCONNECTED);
 	return;
 }
 
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 
-	// 0 /KICK | 1 #channel | 2 user
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count != 3)

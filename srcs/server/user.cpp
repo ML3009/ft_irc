@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/11 12:08:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 11:26:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ user::user(int fd){
 	_buffer = "";
 	_password = "";
 	_hostname = "127.0.0.1";
-	_last_ping = clock();
+	_last_ping = time(NULL);
+	_status = CONNECTED;
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
@@ -46,6 +47,7 @@ user&	user::operator=(const user& rhs){
 		_password = rhs._password;
 		_hostname = rhs._hostname;
 		_last_ping = rhs._last_ping;
+		_status = rhs._status;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -67,7 +69,14 @@ std::string user::getRealname() const{return _realname;}
 std::string user::getBuffer() const{return _buffer;}
 std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
-clock_t		user::getLastPing() const{return _last_ping;}
+time_t		user::getLastPing() const{return _last_ping;}
+bool		user::getStatus() const{return _status;}
+
+
+void	user::setStatus(bool status) {
+	_status = status;
+	return;
+}
 
 void	user::setPassword(std::string password) {
 	_password = password;
