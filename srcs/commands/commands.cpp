@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/16 12:49:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 13:52:15 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,36 +391,52 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
+
 	int count = 0;
-	std::string message;
+	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count < 2 || (count > 3 && argument[2][0] != ':'))
 		return Server.sendMsg(Client, Server, "461", "", "");
-	if (count == 2){
-		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
-			if (it->first == argument[1])
-			{
-				std::vector<user> userlist = it->second.getChannelUser();
-				for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it){
-					if (it->getfd() == Client.getfd()){
-						Server.sendMsg(Client, Server, "331", "", argument[1]);
-					}
-				}
-				Server.sendMsg(Client, Server, "441", "", argument[1]);
+	if (count > 3) {
+		if (argument[2][0] == ':') {
+			for (unsigned long i = 2; i < argument.size(); i++) {
+				msg += argument[i];
+				msg += " ";
 			}
 		}
-		return Server.sendMsg(Client, Server, "403", "", argument[1]);
+		else
+			msg += argument[2];
 	}
-	// else{
-	// 	for (std::map<std::string, channel>::iterator ita = Server.getChannelMap().begin(); ita != Server.getChannelMap().end(); ++ita) {
-	// 		if (ita->first == argument[1])
-	// 		{
-
-	// 		}
-	// 	}
-	// 	return Server.sendMsg(Client, Server, "403", "", argument[1]);
-	// }
-
+	if (!Server.getChannelMap().empty()) {
+		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
+			if (it->second.getChannelName() == argument[1]) {
+				if (it->second.isAlreadyinChannel(Client) == true) {
+					if (count > 3) {
+						if (it->second.search_mode('t') == true) {
+							if (it->second.isOperator(Client.getUsername()) == true) {
+								it->second.setTopic(msg);
+								Server.sendMsg(Client, Server, "TOPIC", "You have been created a new topic on " + it->second.getChannelName(), "");
+								Server.sendMsgToChannel(Client, Server, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+							} else
+								return Server.sendMsg(Client, Server, "482", "", argument[2]);
+						} else {
+							it->second.setTopic(msg);
+							Server.sendMsg(Client, Server, "332", "", msg);
+							Server.sendMsgToChannel(Client, Server, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+						}
+					} else {
+							if (!it->second.getTopic().empty())
+								Server.sendMsg(Client, Server, "332", "", it->second.getTopic());
+							else
+								Server.sendMsg(Client, Server, "331", "", argument[1]); // NOTOPIC
+					}
+				} else
+					return Server.sendMsg(Client, Server, "441", "", argument[1]); // USER NOT ON CHANNEL
+			}
+			if (Server.channelExist(argument[1]) == false)
+				Server.sendMsg(Client, Server, "403", "", argument[1]); // NO CHANNEL
+		}
+	}
 	return;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/11 17:23:02 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/15 16:36:41 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ channel& channel::operator=(const channel& rhs){
 		_keyword = rhs._keyword;
 		_limit = rhs._limit;
 		_invitedUser = rhs._invitedUser;
+		_topic = rhs._topic;
 	}
 	return *this;
 }
@@ -56,6 +57,15 @@ std::vector<std::string> channel::getChannelOperators() const {	return _channelO
 std::set<char> &channel::getMode() {return _mode;}
 std::vector<std::string> &channel::getInviteList(){return _invitedUser;}
 long	channel::getLimit(){ return _limit;}
+std::string& channel::getTopic() {return _topic;}
+
+
+void	channel::setTopic(std::string topic) {
+	_topic = topic;
+	return;
+}
+
+
 
 void	channel::setOperator(std::string channelOperator) {
 	_channelOperator.push_back(channelOperator);
@@ -127,7 +137,7 @@ void	channel::unsetKeyword() {
 }
 
 bool	channel::isValidLimit(std::string limit) {
-	
+
 	if (limit.find_first_not_of("0123456789") != std::string::npos)
 		return false;
 	if (limit.size() > 10)
@@ -143,7 +153,7 @@ bool	channel::isValidLimit(std::string limit) {
 		return false;
 	unsigned long	nbClient = 0;
 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it, ++nbClient);
-	if (result < nbClient) 
+	if (result < nbClient)
 		return false;
 	return true;
 }
