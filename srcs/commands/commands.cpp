@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/15 14:52:44 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 12:49:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,7 +321,7 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
     	Server.getChannelMap().erase(*it);
 	}
 	Server.sendMsg(Client, Server, "QUIT", "Leaving the server. Goodbye!", "");
-	Server.disconnect_client(Client);
+	Client.setStatus(DISCONNECTED);
 	return;
 }
 

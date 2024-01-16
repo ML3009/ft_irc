@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/11 10:24:30 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 10:38:12 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ std::string					displayRPL(server &server, user &client, std::string RPL, std::s
 void 						displayWelcome(server &server, user &client);
 std::string					printOP(std::string user, channel &channel);
 int 						response(int clientSocket);
+bool						IsClientFD(const pollfd& pfd, int clientFD);
 
 
 
@@ -85,3 +86,12 @@ std::string RPL_PRIVMSG(const std::string& message);
 std::string HI_BOT(const std::string& message);
 
 
+struct IsClientFDPredicate {
+    int clientFD;
+
+    IsClientFDPredicate(int fd) : clientFD(fd) {}
+
+    bool operator()(const pollfd& pfd) const {
+        return pfd.fd == clientFD;
+    }
+};

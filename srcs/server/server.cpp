@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/15 17:32:30 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 13:45:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,14 @@ void server::init_server(){
 void server::run_server(){
 
 	debug("run_server", BEGIN);
-	!(poll(&_pollFD[0], _pollFD.size(), 10000) == -1) ? void() : (std::perror("poll"), throw pollException());
+	if ((poll(&_pollFD[0], _pollFD.size(), 10000) == -1))
+	{
+		if (handleSignal == false){	
+			std::perror("poll");
+			throw pollException();
+		}
+	}
 	(_pollFD[0].revents == POLLIN) ? getNewClient() : getClientMessage();
-	// if (_userCount > 0)
-	// 	for(std::map<int, user>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
-	// 		if (LastPing(it->second) == TIMEOUT)
-	// 			return timeout_client(it->second);
-
 	debug("run_server", END);
 
 }
@@ -183,34 +184,28 @@ void server::getClientMessage(){
 			else{
 				buffer[bytes] = '\0';
 				_clientMap[it->fd].parseClientMessage(*this, buffer);
+				memset(buffer, 0, 512);
+				if (_clientMap[it->fd].getStatus() == DISCONNECTED){
+					disconnect_client(_clientMap[it->fd]);
+					return;
+				}
 			}
 		}
 	}
 	debug("getClientMessage", END);
 }
 
+
 void server::disconnect_client(user &client){
-   std::map<int, user>::iterator it = _clientMap.find(client.getfd());
-    if (it != _clientMap.end())
-        _clientMap.erase(it);
-	_pollFD.erase(std::remove(_pollFD.begin(), _pollFD.end(), _pollFD),_pollFD.end()); // avec le pollFd du client 
-    _userCount--;
+	std::vector<pollfd>::iterator it = std::find_if(_pollFD.begin(), _pollFD.end(), IsClientFDPredicate(client.getfd()));
+	if (it != _pollFD.end()) {_pollFD.erase(it);}
 	close(client.getfd());
-
-// 	// Définir un type de pointeur de fonction pour le prédicat
-// typedef bool (*PredicateType)(const pollfd&);
-
-// // Fonction qui correspond au prédicat recherché
-// bool IsClientFD(const pollfd& pfd, int clientFD) {
-//     return pfd.fd == clientFD;
-// }
-
-// // Utiliser le pointeur de fonction
-// PredicateType predicate = IsClientFD;
-
-// // Utiliser std::remove_if avec la fonction comme prédicat
-// _pollFD.erase(std::remove_if(_pollFD.begin(), _pollFD.end(), std::bind2nd(std::ptr_fun(predicate), clientFD)), _pollFD.end());
-
+	std::map<int, user>::iterator ita = _clientMap.find(client.getfd());
+		if (ita != _clientMap.end()){_clientMap.erase(ita);}
+	
+	_userCount--;
+	if (_userCount == 0)
+		_clientMap.clear();
 }
 
 bool server::userExist(std::string name){
