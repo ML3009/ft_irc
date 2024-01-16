@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/15 16:50:39 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:03:32 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -393,7 +393,6 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
-
 	int count = 0;
 	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
@@ -520,9 +519,9 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 			return Server.sendMsg(Client, Server, "442", "", it->second.getChannelName()), void();
 		} else if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == false) {
 			return Server.sendMsg(Client, Server, "482", "", it->second.getChannelName()), void();
-		}
+		} else if (Server.channelExist(argument[1]) == false)
+			return Server.sendMsg(Client, Server, "403", "", argument[1]);
 	}
-	//msg si channel non trouve ???
 	return;
 }
 
