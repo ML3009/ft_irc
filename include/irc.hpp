@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/17 11:35:06 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:05:55 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,16 @@ extern bool					handleSignal;
 #define PASS 0 //authentifier
 #define NICK 1 //nickname
 #define USER 2 //user
-#define QUIT 3 //quit
+#define CAP_LS 3 //irssi
+#define QUIT 4 //quit
 
-#define JOIN 4 //rejoindre un channel
-#define PART 5 //quitter un channel
-#define KICK 6
-#define INVITE 7
-#define TOPIC 8
-#define MODE 9
-#define PRIVMSG 10
+#define JOIN 5 //rejoindre un channel
+#define PART 6 //quitter un channel
+#define KICK 7
+#define INVITE 8
+#define TOPIC 9
+#define MODE 10
+#define PRIVMSG 11
 
 #define USR_IN_CHANNEL 0
 #define CHANNELISFULL 1

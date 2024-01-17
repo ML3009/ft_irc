@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/15 16:36:41 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/17 10:12:10 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,15 +245,10 @@ std::string	channel::display_mode(){
 }
 
 bool	channel::isAlreadyinChannel(user &Client) {
-	std::cout << "SEARCHING FOR " << Client.getUsername() << std::endl;
 	for (std::vector<user>::iterator it = _channelUser.begin(); it != _channelUser.end(); ++it) {
 		if (it->getUsername() == Client.getUsername())
-		{
-			std::cout << "IN" << std::endl;
 			return true;
-		}
 	}
-	std::cout << "IN" << std::endl;
 	return false;
 }
 

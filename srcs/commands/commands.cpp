@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 10:30:21 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:06:41 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,25 @@
 
 commands::commands(){
 
-	cmdMap["/INVITE"] = &commands::cmdINVITE; // ok
-	cmdMap["/JOIN"] = &commands::cmdJOIN; // ok
-	cmdMap["/KICK"] = &commands::cmdKICK; // ok
-	cmdMap["/MODE"] = &commands::cmdMODE; // ok
-	cmdMap["/NICK"] = &commands::cmdNICK; // ok
-	cmdMap["/PART"] = &commands::cmdPART; // ok
-	cmdMap["/PASS"] = &commands::cmdPASS; // ok
-	cmdMap["/NAMES"] = &commands::cmdNAMES; // ok
-	cmdMap["/PRIVMSG"] = &commands::cmdPRIVMSG; // ok
-	cmdMap["/QUIT"] = &commands::cmdQUIT; // a faire
-	cmdMap["/TOPIC"] = &commands::cmdTOPIC; // en cours
-	cmdMap["/USER"] = &commands::cmdUSER; // ok
+	cmdMap["CAP LS"] = &commands::cmdCAPLS;
+	cmdMap["INVITE"] = &commands::cmdINVITE; // ok
+	cmdMap["JOIN"] = &commands::cmdJOIN; // ok
+	cmdMap["KICK"] = &commands::cmdKICK; // ok
+	cmdMap["MODE"] = &commands::cmdMODE; // ok
+	cmdMap["NICK"] = &commands::cmdNICK; // ok
+	cmdMap["PART"] = &commands::cmdPART; // ok
+	cmdMap["PASS"] = &commands::cmdPASS; // ok
+	cmdMap["NAMES"] = &commands::cmdNAMES; // ok
+	cmdMap["PRIVMSG"] = &commands::cmdPRIVMSG; // ok
+	cmdMap["QUIT"] = &commands::cmdQUIT; // a faire
+	cmdMap["TOPIC"] = &commands::cmdTOPIC; // en cours
+	cmdMap["USER"] = &commands::cmdUSER;//ok
 	cmdMap["@bot"] = &commands::cmdBOT; // ok mais modif ideal
 }
 
 commands::commands(const commands& rhs){
 	*this = rhs;
-	display_constructor(COMMANDS_CC);
-
+	return;
 }
 
 commands& commands::operator=(const commands& rhs){
@@ -74,6 +74,12 @@ void	commands::getCommand(server& Server, user& Client, std::vector<std::string>
 void	commands::getAuthentified(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getAuthentified", BEGIN);
+	if ((!argument.empty() && argument.size() > 1)) {
+		if (argument[0] == "CAP" && argument[1] == "LS") {
+			argument[0] = "CAP LS";
+			argument.erase(argument.begin() + 1); // cas erreur a regarder qd cap ls deja ecrit
+		}
+	}
     if (!argument.empty()) {
 		int cmd = isCmdAuthentified(Client, argument[0]);
 		switch (cmd) {
@@ -85,6 +91,9 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				break;
 			case USER:
 				getCommand(Server, Client, argument);
+				break;
+			case CAP_LS:
+				getCommand(Server,Client, argument);
 				break;
 			default:
 				Server.sendrawMsg(Client, Server, "\033[0;33m[ You are not connected to the server ]\033[0m");
@@ -104,12 +113,14 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 
 int	commands::isCmdAuthentified(user& Client, std::string argument){
 	if (!argument.empty()) {
-		if (Client.getPassword().empty() && argument == "/PASS")
+		if (argument == "CAP LS")
+			return 3;
+		if (Client.getPassword().empty() && argument == "PASS")
 			return 0;
 		else if (!Client.getPassword().empty()){
-			if (Client.getNickname().empty() && argument == "/NICK")
+			if (Client.getNickname().empty() && argument == "NICK")
 				return 1;
-			if (!Client.getNickname().empty() && argument == "/USER")
+			if (!Client.getNickname().empty() && argument == "USER")
 				return 2;
 		}
 	}
@@ -118,6 +129,35 @@ int	commands::isCmdAuthentified(user& Client, std::string argument){
 
 
 /*--------------- Function -------------- */
+
+
+
+void	commands::cmdCAPLS(server& Server, user& Client, std::vector<std::string>& argument) {
+
+	std::vector<std::string> pass;
+	std::vector<std::string> nick;
+	std::vector<std::string> user;
+
+	if (argument.size() < 9)
+		return Server.sendMsg(Client, Server, "461", "", "");
+	if (argument[1] == "PASS") {
+		pass.push_back(argument[1]);
+		pass.push_back(argument[2]);
+		cmdPASS(Server, Client, pass);
+	}
+	if (argument[3] == "NICK") {
+		nick.push_back(argument[3]);
+		nick.push_back(argument[4]);
+		cmdNICK(Server, Client, nick);
+	}
+	if (argument[5] == "USER") {
+		for (int i = 5; (unsigned long)i < argument.size(); ++i) {
+			user.push_back(argument[i]);
+		}
+		cmdUSER(Server, Client, user);
+	}
+	return;
+}
 
 void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& argument){
 
@@ -205,7 +245,6 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 
 	int	channelValidExist = 5;
 	for (unsigned long i = 0; i < channel_tmp.size(); ++i) {
-		std::cout << "CHANEL TMP " <<  channel_tmp.size() << std::endl;
 		if (!Server.getChannelMap().empty()) {
 			for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 				if (channel_tmp[i] == it->second.getChannelName()) {
@@ -298,19 +337,18 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 				msg += argument[i] + " ";
 		}
 		else
-			msg += argument[1];	
+			msg += argument[1];
 	}
 	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
 	if (!Server.getChannelMap().empty()) {
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.isAlreadyinChannel(Client) == true) {
-				it->second.unsetChannelUser(Client);
-				Server.sendMsg(Client, Server, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
 				if (count > 1)
-					Server.sendMsgToChannel(Client, Server, Client.getNickname(), " QUIT :" + msg, it->second.getChannelName());
+					Server.sendMsgToChannel(Client, Server, "QUIT_MSG" ,  msg, it->second.getChannelName());
 				else
-					Server.sendMsgToChannel(Client, Server, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
-
+					Server.sendMsgToChannel(Client, Server, "QUIT", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+				it->second.unsetChannelUser(Client);
+				Server.sendMsg(Client, Server, "QUIT", "You have left the channel " + it->second.getChannelName(), "");
 				if (it->second.getChannelUser().empty()) {
 						channelsToRemove.push_back(it);
 				}
@@ -391,7 +429,6 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
-
 	int count = 0;
 	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
@@ -411,7 +448,7 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.getChannelName() == argument[1]) {
 				if (it->second.isAlreadyinChannel(Client) == true) {
-					if (count > 3) {
+					if (count > 2) {
 						if (it->second.search_mode('t') == true) {
 							if (it->second.isOperator(Client.getUsername()) == true) {
 								it->second.setTopic(msg);
@@ -421,20 +458,20 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 								return Server.sendMsg(Client, Server, "482", "", argument[2]);
 						} else {
 							it->second.setTopic(msg);
-							Server.sendMsg(Client, Server, "332", "", msg);
+							Server.sendMsg(Client, Server, "332", it->second.getChannelName() + msg , "");
 							Server.sendMsgToChannel(Client, Server, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
 						}
 					} else {
 							if (!it->second.getTopic().empty())
-								Server.sendMsg(Client, Server, "332", "", it->second.getTopic());
+								Server.sendMsg(Client, Server, "332", it->second.getChannelName() + it->second.getTopic(), "");
 							else
-								Server.sendMsg(Client, Server, "331", "", argument[1]); // NOTOPIC
+								Server.sendMsg(Client, Server, "331", "", argument[1]);
 					}
 				} else
-					return Server.sendMsg(Client, Server, "441", "", argument[1]); // USER NOT ON CHANNEL
+					return Server.sendMsg(Client, Server, "441", "", argument[1]);
 			}
 			if (Server.channelExist(argument[1]) == false)
-				Server.sendMsg(Client, Server, "403", "", argument[1]); // NO CHANNEL
+				Server.sendMsg(Client, Server, "403", "", argument[1]);
 		}
 	}
 	return;
@@ -518,9 +555,9 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 			return Server.sendMsg(Client, Server, "442", "", it->second.getChannelName()), void();
 		} else if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == false) {
 			return Server.sendMsg(Client, Server, "482", "", it->second.getChannelName()), void();
-		}
+		} else if (Server.channelExist(argument[1]) == false)
+			return Server.sendMsg(Client, Server, "403", "", argument[1]);
 	}
-	//msg si channel non trouve ???
 	return;
 }
 

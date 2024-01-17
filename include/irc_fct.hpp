@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 15:32:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:05:43 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ std::string RPL_LIST(server& server, user& client, const std::string& channel, c
 std::string RPL_LISTEND(server& server, user& client) ;
 std::string RPL_CHANNELMODEIS(server& server, user& client, const std::string& channel, const std::string& mode) ;
 std::string RPL_NOTOPIC(server& server, user& client, const std::string& channel) ;
-std::string RPL_TOPIC(server& server, user& client, const std::string& channel, const std::string& topic) ;
 std::string RPL_NAMREPLY(server& server, user& client, const std::string& channel, const std::string& users) ;
 std::string RPL_ENDOFNAMES(server& server, user& client, const std::string& channel) ;
 std::string ERR_NOSUCHNICK(server& server, user& client); // 401

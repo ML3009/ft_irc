@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:03:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:07:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void server::run_server(){
 	debug("run_server", BEGIN);
 	if ((poll(&_pollFD[0], _pollFD.size(), 10000) == -1))
 	{
-		if (handleSignal == false){	
+		if (handleSignal == false){
 			std::perror("poll");
 			throw pollException();
 		}
@@ -205,7 +205,7 @@ void server::disconnect_client(user &client){
 	close(client.getfd());
 	std::map<int, user>::iterator ita = _clientMap.find(client.getfd());
 		if (ita != _clientMap.end()){_clientMap.erase(ita);}
-	
+
 	_userCount--;
 	if (_userCount == 0)
 		_clientMap.clear();
@@ -221,7 +221,7 @@ bool server::userExist(std::string name){
 }
 
 bool server::channelExist(std::string channelName){
-	
+
 	if (!_channelMap.empty()) {
 		for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
 			if (it->second.getChannelName() == channelName)
@@ -286,7 +286,7 @@ void server::sendrawMsg(user &client, server &server, std::string message){
 				<< msg << "\n"
 				<< "-------------------------" << std::endl;
 }
-		
+
 void server::sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal) {
     std::ostringstream oss;
 	for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
