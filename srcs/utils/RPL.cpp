@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/15 16:34:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 11:59:44 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
             return RPL_CHANNELMODEIS(server, client, channel, "mode");
         case 331:
             return RPL_NOTOPIC(server, client, channel);
-        case 332:
-            return RPL_TOPIC(server, client, channel, "topic");
         case 353:
             return RPL_NAMREPLY(server, client, channel, "user");
         case 366:
@@ -147,7 +145,8 @@ void displayWelcome(server &server, user &client){
 std::string RPL_WELCOME(server &server, user &client){
 	(void)server;
 	(void)client;
-	return "\e[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\n\e[0m";
+	//return "\e[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\n\e[0m";
+    return "001 " + client.getNickname() + " :Bienvenue sur le serveur IRC !";
 }
 
 std::string RPL_YOURHOST(server &server, user &client){
@@ -215,12 +214,6 @@ std::string RPL_NOTOPIC(server& server, user& client, const std::string& channel
     (void)server;
     (void)client;
     return RED + channel + " :No topic is set" + COLOR_RESET;
-}
-
-std::string RPL_TOPIC(server& server, user& client, const std::string& channel, const std::string& topic) {
-    (void)server;
-    (void)client;
-    return "332  " + channel + " :" + topic;
 }
 
 
