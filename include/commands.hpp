@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 11:27:47 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/17 15:15:28 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ class commands {
 	void	getAuthentified(server& Server, user& Client, std::vector<std::string>& argument);
 	int		isCmdAuthentified(user& Client, std::string argument);
 
-	void	cmdCAPLS(server& Server, user& Client, std::vector<std::string>& argument);
 	void	cmdPASS(server& Server, user& Client, std::vector<std::string>& argument);
 	void	cmdNICK(server& Server, user& Client, std::vector<std::string>& argument);
 	void	cmdUSER(server& Server, user& Client, std::vector<std::string>& argument);

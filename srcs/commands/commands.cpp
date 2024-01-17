@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 15:06:41 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:14:55 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 commands::commands(){
 
-	cmdMap["CAP LS"] = &commands::cmdCAPLS;
 	cmdMap["INVITE"] = &commands::cmdINVITE; // ok
 	cmdMap["JOIN"] = &commands::cmdJOIN; // ok
 	cmdMap["KICK"] = &commands::cmdKICK; // ok
@@ -93,7 +92,7 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				getCommand(Server, Client, argument);
 				break;
 			case CAP_LS:
-				getCommand(Server,Client, argument);
+				return;
 				break;
 			default:
 				Server.sendrawMsg(Client, Server, "\033[0;33m[ You are not connected to the server ]\033[0m");
@@ -131,33 +130,6 @@ int	commands::isCmdAuthentified(user& Client, std::string argument){
 /*--------------- Function -------------- */
 
 
-
-void	commands::cmdCAPLS(server& Server, user& Client, std::vector<std::string>& argument) {
-
-	std::vector<std::string> pass;
-	std::vector<std::string> nick;
-	std::vector<std::string> user;
-
-	if (argument.size() < 9)
-		return Server.sendMsg(Client, Server, "461", "", "");
-	if (argument[1] == "PASS") {
-		pass.push_back(argument[1]);
-		pass.push_back(argument[2]);
-		cmdPASS(Server, Client, pass);
-	}
-	if (argument[3] == "NICK") {
-		nick.push_back(argument[3]);
-		nick.push_back(argument[4]);
-		cmdNICK(Server, Client, nick);
-	}
-	if (argument[5] == "USER") {
-		for (int i = 5; (unsigned long)i < argument.size(); ++i) {
-			user.push_back(argument[i]);
-		}
-		cmdUSER(Server, Client, user);
-	}
-	return;
-}
 
 void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& argument){
 
