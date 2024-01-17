@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 13:45:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:03:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void server::getClientMessage(){
 		if (it->revents == POLLIN)
 		{
 			char buffer[512];
-			int bytes = recv(_clientMap[it->fd].getfd(), buffer, 1024, 0);
+			int bytes = recv(_clientMap[it->fd].getfd(), buffer, 512, 0);
 			if (bytes <= 0)
 			{
 				memset(buffer, 0, 512);
@@ -183,7 +183,10 @@ void server::getClientMessage(){
 			}
 			else{
 				buffer[bytes] = '\0';
-				_clientMap[it->fd].parseClientMessage(*this, buffer);
+				std::cout << "BUFFER [" << buffer << "]" << std::endl; 
+				_clientMap[it->fd].appendToBuffer(buffer);
+				std::cout << "BUFFER " << _clientMap[it->fd].getBuffer() << std::endl;
+				_clientMap[it->fd].receive(*this);
 				memset(buffer, 0, 512);
 				if (_clientMap[it->fd].getStatus() == DISCONNECTED){
 					disconnect_client(_clientMap[it->fd]);
@@ -262,12 +265,10 @@ bool server::LastPing(user &client){
 
 void server::sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel){
 	std::string msg;
-	(void)server;
-	msg = "\e[0m:\e[0;33m" + getID()
-		+ "\e[0m \e[0;32m" + RPL
-		+ "\e[0m \e[0;34m" + client.getNickname()
-		+ "\e[0m :" + displayRPL(server, client, RPL, message, channel)
-		+ "\r\n";
+	msg = "\033[0m:\033[0;33m" + getID()
+		+ "\033[0m \033[0;32m" + RPL
+		+ "\033[0m \033[0;34m" + client.getNickname()
+		+ "\033[0m :" + displayRPL(server, client, RPL, message, channel) + "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
@@ -300,13 +301,13 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 						oss.str("");
 						oss.clear();
 						oss << client.getfd();
-						std::string msg = "\e[0m:\e[0;35m"
-										+ client.getNickname() + "\e[0m!\e[0;35m"
-										+ oss.str() + "\e[0m@\e[0;33m"
-										+ server.getID() + "\e[0m \e[0;32m"
-										+ RPL + "\e[0m \e[0;34m"
-										+ canal + "\e[0m | \e[0;34m"
-										+ it->getNickname() + "\e[0m :"
+						std::string msg = "\033[0m:\033[0;35m"
+										+ client.getNickname() + "\033[0m!\033[0;35m"
+										+ oss.str() + "\033[0m@\033[0;33m"
+										+ server.getID() + "\033[0m \033[0;32m"
+										+ RPL + "\033[0m \033[0;34m"
+										+ canal + "\033[0m | \033[0;34m"
+										+ it->getNickname() + "\033[0m :"
 										+ displayRPL(server, client, RPL, message, canal) + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
@@ -326,12 +327,12 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
    	std::ostringstream oss;
     oss << client.getfd();
-    std::string msg = "\e[0m:\e[0;35m"
-                    + client.getNickname() + "\e[0m!\e[0;35m"
-                    + oss.str() + "\e[0m@\e[0;33m"
-                    + server.getID() + "\e[0m \e[0;32m"
-                    + RPL + "\e[0m \e[0;34m"
-                    + dest.getNickname() + "\e[0m :"
+    std::string msg = "\033[0m:\033[0;35m"
+                    + client.getNickname() + "\033[0m!\033[0;35m"
+                    + oss.str() + "\033[0m@\033[0;33m"
+                    + server.getID() + "\033[0m \033[0;32m"
+                    + RPL + "\033[0m \033[0;34m"
+                    + dest.getNickname() + "\033[0m :"
                     + displayRPL(server, client, RPL, message, "") + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
@@ -341,12 +342,12 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
 }
 
 void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string message) {
-	std::string msg = "\e[0m:\e[0;35m"
-                    + bot.getName() + "\e[0m!\e[0;35m"
-                    + "BOT\e[0m@\e[0;33m"
-                    + server.getID() + "\e[0m \e[0;32m"
-                    + "PRIVMSG \e[0m \e[0;34m"
-                    + dest.getNickname() + "\e[0m :"
+	std::string msg = "\033[0m:\033[0;35m"
+                    + bot.getName() + "\033[0m!\033[0;35m"
+                    + "BOT\033[0m@\033[0;33m"
+                    + server.getID() + "\033[0m \033[0;32m"
+                    + "PRIVMSG \033[0m \033[0;34m"
+                    + dest.getNickname() + "\033[0m :"
                     + displayRPL(server, dest, "HI_BOT", message, "") + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");

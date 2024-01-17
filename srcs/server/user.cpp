@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 11:26:21 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 14:59:50 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,22 +101,15 @@ void	user::setRealname(std::string realname) {
 
 
 /*--------------- Function -------------- */
+void user::clearBuffer() {_buffer.clear();}
 
-void user::parseClientMessage(server &Server, const std::string &buffer){
+void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
-	addData(buffer);
-	if (completeCommand(_buffer, 1) == COMPLETE)
-	{
-		std::vector<std::string> argument = splitArgs(_buffer);
-		_buffer.clear();
-		commands cmd;
-		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
-		argument.clear();
-		if (!argument.empty())
-			std::cout << "NOT EMPTY" << std::endl;
-	}
-	else
-		std::cout << "\n[Recieving a non-complete message, saving in buffer]\x1b[0m" << std::endl;
+	std::cout << "done" << std::endl;
+	std::vector<std::string> argument = splitArgs(comd);
+	commands cmd;
+	isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
+	argument.clear();
 	debug("parseClientMessage", END);
 	return;
 }
@@ -128,18 +121,32 @@ bool	user::isAuthentified(void) {
 	return true;
 }
 
-void user::addData(const std::string &buffer){
+void user::appendToBuffer(const char *buffer){
 	debug("addData", BEGIN);
-	if (completeCommand(buffer, 0) == COMPLETE)
-		_buffer += buffer;
-	else
-	{
-		size_t i = -1;
-		while (++i < buffer.length() && (buffer[i] != '\r' && buffer[i] != '\n'&& buffer[i] != '\0'))
-			_buffer += buffer[i];
-	}
+	_buffer += buffer;
 	debug("addData", END);
 	return;
 }
 
+void user::receive(server &server){
+	std::cout << "TEST" << std::endl;
+
+	if (_buffer.find("\n") == std::string::npos)
+		return;
+	std::cout << "TEST1" << std::endl;
+	size_t pos = _buffer.find("\r\n");
+	if (pos == std::string::npos)
+		pos = _buffer.find("\n");
+	std::cout << "TEST2" << std::endl;
+	while (pos != std::string::npos){
+		std::string	line = _buffer.substr(0, pos);
+		if (line.size())
+			parseClientMessage(server, line);
+		_buffer.erase(0, _buffer.find("\n") + 1);
+		pos = _buffer.find("\r\n");
+		if (pos == std::string::npos)
+			pos = _buffer.find("\n");
+	}
+	
+}
 /*--------------- Exception ------------- */

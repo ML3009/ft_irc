@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/11 17:18:58 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 11:35:06 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <csignal>
 #include <ctime>
 #include <cerrno>
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -114,12 +115,12 @@ extern bool					handleSignal;
 #define pvm_CHANNEL 1
 #define pvm_USER    2
 
-#define BLK "\e[0;30m"
-#define RED "\e[0;31m"
-#define GRN "\e[0;32m"
-#define YEL "\e[0;33m"
-#define BLU "\e[0;34m"
-#define MAG "\e[0;35m"
-#define CYN "\e[0;36m"
-#define WHT "\e[0;37m"
-#define COLOR_RESET "\e[0m"
+#define BLK "\033[0;30m"
+#define RED "\033[0;31m"
+#define GRN "\033[0;32m"
+#define YEL "\033[0;33m"
+#define BLU "\033[0;34m"
+#define MAG "\033[0;35m"
+#define CYN "\033[0;36m"
+#define WHT "\033[0;37m"
+#define COLOR_RESET "\033[0m"

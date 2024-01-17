@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:43 by purple            #+#    #+#             */
-/*   Updated: 2024/01/03 12:50:15 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 10:30:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,19 @@ void debug(std::string msg, int type){
     (logfile.is_open()) ? void() : (std::perror("open"), throw openException());
 
     if (type == BEGIN && LOG == STDOUT)
-        std::cout << "--> \e[0;35m [ Entering ] Function : " << msg << "\e[0m" << std::endl;
+        std::cout << "--> \033[0;35m [ Entering ] Function : " << msg << "\033[0m" << std::endl;
     else if (type == END && LOG == STDOUT)
-        std::cout << "<-- \e[0;36m [ Leaving ]  Function : " << msg << " \e[0m" << std::endl;
+        std::cout << "<-- \033[0;36m [ Leaving ]  Function : " << msg << " \033[0m" << std::endl;
     else if (type == BEGIN && LOG == LOGFILE)
         logfile << "--> [ Entering ] Function : " << msg << std::endl;
     else if (type == END && LOG == LOGFILE)
         logfile << "<-- [ Leaving ]  Function : " << msg << std::endl;
     else if (LOG == LOGFILE){
-        std::cout << "\e[0;33m DEBUG HERE : " << msg << " \e[0m" << std::endl;
+        std::cout << "\033[0;33m DEBUG HERE : " << msg << " \033[0m" << std::endl;
         logfile   << "DEBUG HERE : " << msg << std::endl;
     }
     else
-        std::cout << "\e[0;33m DEBUG HERE : " << msg << " \e[0m" << std::endl;
+        std::cout << "\033[0;33m DEBUG HERE : " << msg << " \033[0m" << std::endl;
     logfile.close();
         
 }

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/15 16:34:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 13:44:48 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,22 +137,22 @@ std::string displayRPL(server &server, user &client, std::string RPL, std::strin
 
 void displayWelcome(server &server, user &client){
 
-	if (send(client.getfd(), RPL_WELCOME(server, client).c_str(), RPL_WELCOME(server, client).size(), 0) == -1 ||
-    	send(client.getfd(), RPL_YOURHOST(server, client).c_str(), RPL_YOURHOST(server, client).size(), 0) == -1 ||
-        send(client.getfd(), RPL_CREATED(server, client).c_str(), RPL_CREATED(server, client).size(), 0) == -1 ||
-    	send(client.getfd(), RPL_MYINFO(server, client).c_str(), RPL_MYINFO(server, client).size(), 0) == -1)
+	if (write(client.getfd(), RPL_WELCOME(server, client).c_str(), RPL_WELCOME(server, client).length()) == -1 ||
+    	write(client.getfd(), RPL_YOURHOST(server, client).c_str(), RPL_YOURHOST(server, client).length()) == -1 ||
+        write(client.getfd(), RPL_CREATED(server, client).c_str(), RPL_CREATED(server, client).length()) == -1 ||
+    	write(client.getfd(), RPL_MYINFO(server, client).c_str(), RPL_MYINFO(server, client).length()) == -1)
 		std::perror("send:");
 }
 
 std::string RPL_WELCOME(server &server, user &client){
 	(void)server;
 	(void)client;
-	return "\e[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\n\e[0m";
+	return "\033[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\r\n\033[0m";
 }
 
 std::string RPL_YOURHOST(server &server, user &client){
 	(void)client;
-	return "\e[0;34mNotre serveur hôte IRC est \e[0m\e[0;33m" + server.getID() + "\e[0m\n";
+	return "\033[0;34mNotre serveur hôte IRC est \033[0m\033[0;33m" + server.getID() + "\r\n\033[0m";
 }
 
 std::string RPL_CREATED(server &server, user &client) {
@@ -166,7 +166,7 @@ std::string RPL_CREATED(server &server, user &client) {
     }
 
     char buffer[512];
-    std::strftime(buffer, sizeof(buffer), "\033[0;34mCe serveur a été créé le \033[0m\033[0;36m%d %B %Y à %H:%M:%S.\n\033[0m", localTime);
+    std::strftime(buffer, sizeof(buffer), "\033[0;34mCe serveur a été créé le \033[0m\033[0;36m%d %B %Y à %H:%M:%S.\r\n\033[0m", localTime);
 
     return std::string(buffer);
 }
@@ -175,7 +175,7 @@ std::string RPL_CREATED(server &server, user &client) {
 
 std::string RPL_MYINFO(server &server, user &client){
 	(void)client;
-	return "\e[0;33m" + server.getID() + "\e[0m \e[0;34mServeur IRC v1.0. Modes supportés : \e[0m\e[0;35m[+i +t +k +o +l]. \e[0;34mUtilisez /HELP pour obtenir de l'aide.\n\e[0m";
+	return "\033[0;33m" + server.getID() + "\033[0m \033[0;34mServeur IRC v1.0. Modes supportés : \033[0m\033[0;35m[+i +t +k +o +l]. \033[0;34mUtilisez /HELP pour obtenir de l'aide.\r\n\033[0m";
 }
 
 /*---------------------------------------------------------------------------------------------------*/
@@ -239,7 +239,7 @@ std::string RPL_ENDOFNAMES(server& server, user& client, const std::string& chan
 std::string ERR_NOSUCHNICK(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31m No such nickname\e[0m";
+    return "\033[0;31m No such nickname\033[0m";
 }
 
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& channel) {
@@ -253,27 +253,27 @@ std::string ERR_NOSUCHCHANNEL(server& server, user& client, const std::string& c
 std::string ERR_CANNOTSENDTOCHAN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mCannot send to channel\e[0m";
+    return "\033[0;31mCannot send to channel\033[0m";
 }
 std::string ERR_TOOMANYCHANNELS(server& server, user& client, const std::string& channel) {
     (void)channel;
     (void)server;
     (void)client;
-    return "\e[0;31mYou have joined too many channels\e[0m";
+    return "\033[0;31mYou have joined too many channels\033[0m";
 }
 
 std::string ERR_TOOMANYTARGETS(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mDuplicate recipients. No message delivered\e[0m";
+    return "\033[0;31mDuplicate recipients. No message delivered\033[0m";
 }
 
 std::string ERR_NORECIPIENT(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
     (void)message;
-    return "\e[0;31mNo recipient given\e[0m";
+    return "\033[0;31mNo recipient given\033[0m";
 }
 
 
@@ -281,109 +281,109 @@ std::string ERR_NORECIPIENT(server& server, user& client, const std::string& mes
 std::string ERR_NOTEXTTOSEND(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mNo text to send\e[0m";
+    return "\033[0;31mNo text to send\033[0m";
 }
 
 std::string ERR_NOTOPLEVEL(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
     (void)message;
-    return "\e[0;31mNo toplevel domain specified\e[0m";
+    return "\033[0;31mNo toplevel domain specified\033[0m";
 }
 
 std::string ERR_WILDTOPLEVEL(server& server, user& client, const std::string& message) {
     (void)server;
     (void)client;
     (void)message;
-    return "\e[0;31mWildcard in toplevel domain\e[0m";
+    return "\033[0;31mWildcard in toplevel domain\033[0m";
 }
 
 
 std::string ERR_UNKNOWNCOMMAND(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mUnknown command\e[0m";
+    return "\033[0;31mUnknown command\033[0m";
 }
 
 std::string ERR_NONICKNAMEGIVEN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mNo nickname given\e[0m";
+    return "\033[0;31mNo nickname given\033[0m";
 }
 
 std::string ERR_ERRONEUSNICKNAME(server& server, user& client, const std::string& nickname) {
     (void)server;
     (void)client;
     (void)nickname;
-    return "\e[0;31mErroneus nickname\e[0m";
+    return "\033[0;31mErroneus nickname\033[0m";
 }
 
 std::string ERR_NICKNAMEINUSE(server& server, user& client, const std::string& nickname) {
     (void)server;
     (void)client;
     (void)nickname;
-    return "\e[0;31mNickname is already in use\e[0m";
+    return "\033[0;31mNickname is already in use\033[0m";
 }
 
 std::string ERR_USERNOTINCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31m " + client.getUsername() + " is not on the channel " + channel + "\e[0m";
+    return "\033[0;31m " + client.getUsername() + " is not on the channel " + channel + "\033[0m";
 }
 
 std::string ERR_NOTONCHANNEL(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mYou're not on that channel\e[0m";
+    return "\033[0;31mYou're not on that channel\033[0m";
 }
 
 std::string ERR_NOTREGISTERED(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mYou have not registered\e[0m";
+    return "\033[0;31mYou have not registered\033[0m";
 }
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mNot enough parameters\e[0m";
+    return "\033[0;31mNot enough parameters\033[0m";
 }
 
 
 std::string ERR_ALREADYREGISTRED(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mYou are already registered\e[0m";
+    return "\033[0;31mYou are already registered\033[0m";
 }
 
 std::string ERR_PASSWDMISMATCH(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mPassword incorrect\e[0m";
+    return "\033[0;31mPassword incorrect\033[0m";
 }
 std::string ERR_NOLOGIN(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mYou are not logged in\e[0m";
+    return "\033[0;31mYou are not logged in\033[0m";
 }
 std::string ERR_UNKNOWNMODE(server& server, user& client, const std::string& mode) {
     (void)server;
     (void)client;
-    return "\e[0;31m " + mode + " :is unknown mode char to me\e[0m";
+    return "\033[0;31m " + mode + " :is unknown mode char to me\033[0m";
 }
 std::string ERR_INVITEONLYCHAN(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31m Cannot join " + channel + " (+i)\e[0m";
+    return "\033[0;31m Cannot join " + channel + " (+i)\033[0m";
 }
 
 std::string ERR_BADCHANNELKEY(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mBad Channel Key for " + channel + " \e[0m";
+    return "\033[0;31mBad Channel Key for " + channel + " \033[0m";
 }
 
 
@@ -391,19 +391,19 @@ std::string ERR_BADCHANMASK(server& server, user& client, const std::string& cha
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mBad Channel Mask\e[0m";
+    return "\033[0;31mBad Channel Mask\033[0m";
 }
 
 std::string ERR_CHANOPRIVSNEEDED(server& server, user& client, const std::string& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "\e[0;31mYou're not channel operator\e[0m";
+    return "\033[0;31mYou're not channel operator\033[0m";
 }
 std::string ERR_USERSDONTMATCH(server& server, user& client) {
     (void)server;
     (void)client;
-    return "\e[0;31mCan't change mode for other users\e[0m";
+    return "\033[0;31mCan't change mode for other users\033[0m";
 }
 
 /*--------------------------------------------------------------------------------------*/

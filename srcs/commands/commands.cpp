@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/16 13:52:15 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 10:30:21 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,15 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				getCommand(Server, Client, argument);
 				break;
 			default:
-				Server.sendrawMsg(Client, Server, "\e[0;33m[ You are not connected to the server ]\e[0m");
+				Server.sendrawMsg(Client, Server, "\033[0;33m[ You are not connected to the server ]\033[0m");
 				if (!(Client.getPassword().empty()))
-					Server.sendrawMsg(Client, Server, "\e[0;36m\t[Password] OK\e[0m");
+					Server.sendrawMsg(Client, Server, "\033[0;36m\t[Password] OK\033[0m");
 				else{
-					Server.sendrawMsg(Client, Server, "\e[0;36m\tuse /PASS before doing anything\e[0m");
+					Server.sendrawMsg(Client, Server, "\033[0;36m\tuse /PASS before doing anything\033[0m");
 					break;
 				}
-				!(Client.getUsername().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Username] " + Client.getUsername() + "\e[0m")  : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/USER] username must be set \e[0m");
-				!(Client.getNickname().empty()) ? Server.sendrawMsg(Client, Server, "\e[0;36m \t[Nickname] " + Client.getNickname() + "\e[0m") : Server.sendrawMsg(Client, Server, "\e[0;36m \t[/NICK] nickname must be set \e[0m");
+				!(Client.getUsername().empty()) ? Server.sendrawMsg(Client, Server, "\033[0;36m \t[Username] " + Client.getUsername() + "\033[0m")  : Server.sendrawMsg(Client, Server, "\033[0;36m \t[/USER] username must be set \033[0m");
+				!(Client.getNickname().empty()) ? Server.sendrawMsg(Client, Server, "\033[0;36m \t[Nickname] " + Client.getNickname() + "\033[0m") : Server.sendrawMsg(Client, Server, "\033[0;36m \t[/NICK] nickname must be set \033[0m");
 		}
 	}
 	debug("getAuthentified", END);

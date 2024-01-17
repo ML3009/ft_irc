@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 11:26:41 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 14:48:52 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ public :
 			void				setUsername(std::string username);
 			void				setRealname(std::string realname);
 // Function
-			void				parseClientMessage(server &Server, const std::string &buffer);
+			void				parseClientMessage(server &Server, std::string comd);
 			bool				isAuthentified(void);
-			void				addData(const std::string &buffer);
+			void				appendToBuffer(const char *buffer);
+			void				clearBuffer();
+			void				receive(server &server);
 
 
 protected :

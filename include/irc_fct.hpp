@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 10:38:12 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/16 15:32:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	                debug(std::string msg, int type);
 void 	                display_constructor(std::string msg);
 
 /* UTILS   */
-bool						completeCommand(std::string msg, int opt);
+bool						completeCommand(std::string msg);
 std::vector<std::string>	splitArgs(std::string buffer);
 std::string					displayRPL(server &server, user &client, std::string RPL, std::string message, std::string channel);
 void 						displayWelcome(server &server, user &client);
