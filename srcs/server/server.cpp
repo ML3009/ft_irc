@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 16:42:56 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:19:31 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,12 +263,9 @@ bool server::LastPing(user &client){
 	return TIMEIN;
 }
 
-void server::sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel){
+void server::sendMsg(user &client, server &server, std::string message) {
 	std::string msg;
-	msg =  ":"
-		 + client.getNickname() + "!~"
-		 + client.getUsername() + "@" + getID() + " "
-		 + RPL + " " + displayRPL(server, client, RPL, message, channel) + "\r\n";
+	msg =  ":" + client.getNickname() + " " + message + "\r\n"
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"

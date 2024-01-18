@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 17:24:25 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:06:35 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class server{
 			bool LastPing(user &client);
 			bool channelExist(std::string channelName);
 			bool userExist(std::string name);
-			void sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel);
+			void sendMsg(user &client, server &server,std::string message);
 			void sendrawMsg(user &client, server &server, std::string message);
 
 			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
