@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:01:45 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:05:34 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ std::string ERR_USERNOTINCHANNEL(server& server, user& client, std::string& Chan
     (void)server;
     (void)client;
     (void)channel;
-    return "441 " + client->getNickname +  " " + Channel  + " :You aren't on that channel";
+    return "441 " + client->getNickname +  " " + Channel  + " :They aren't on that channel";
 }
 
 std::string ERR_NOTONCHANNEL(server& server, user& client, std::string& Channel) {
