@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_fct.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:29:33 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:03:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ int                         botcmd(std::string arg);
 
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) ;
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) ;
-
+std::string ERR_NORECIPIENT(void); // 411
+std::string ERR_NOTEXTTOSEND(void); // 412
 /*  RPL    */
 std::string RPL_WELCOME(server &server, user &client);
 std::string RPL_YOURHOST(server &server, user &client);

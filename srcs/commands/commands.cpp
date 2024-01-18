@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 13:32:25 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 14:11:28 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 				if (it->second.getChannelName() == channel_tmp[i]) {
 					if(it->second.isAlreadyinChannel(Client) == true) {
 						Server.sendMsg(Client, Server, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
-						Server.sendMsgToChannel(Client, Server, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+						Server.sendMsgToChannel(Server, Client, Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
 						it->second.unsetChannelUser(Client);
 						if (it->second.getChannelUser().empty()) {
 							channelsToRemove.push_back(it);
@@ -316,9 +316,9 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.isAlreadyinChannel(Client) == true) {
 				if (count > 1)
-					Server.sendMsgToChannel(Client, Server, "QUIT_MSG" ,  msg, it->second.getChannelName());
+					Server.sendMsgToChannel(Server, Client, msg, it->second.getChannelName());
 				else
-					Server.sendMsgToChannel(Client, Server, "QUIT", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+					Server.sendMsgToChannel(Server, Client, Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
 				it->second.unsetChannelUser(Client);
 				Server.sendMsg(Client, Server, "QUIT", "You have left the channel " + it->second.getChannelName(), "");
 				if (it->second.getChannelUser().empty()) {
@@ -357,7 +357,7 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 				it->second.getChannelUser().erase(ita);
 				Server.sendMsg(Server.getClient(argument[2]), Server, "KICK", message, it->second.getChannelName());
 				Server.sendMsg(Client, Server, "KICK", argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
-				Server.sendMsgToChannel(Client, Server, "KICK" , argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				Server.sendMsgToChannel(Server, Client, argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
 				return;
 			}
 			else
@@ -388,7 +388,7 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", message, it->second.getChannelName());
 				it->second.getInviteList().push_back(Server.getClient(argument[1]).getUsername());
-				Server.sendMsgToChannel(Client, Server, "INVITE" , Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
+				Server.sendMsgToChannel(Server, Client, Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", "You are now on the invite list of " + it->second.getChannelName(), it->second.getChannelName());
 				return;
 			}
@@ -425,13 +425,13 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 							if (it->second.isOperator(Client.getUsername()) == true) {
 								it->second.setTopic(msg);
 								Server.sendMsg(Client, Server, "TOPIC", "You have been created a new topic on " + it->second.getChannelName(), "");
-								Server.sendMsgToChannel(Client, Server, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+								Server.sendMsgToChannel(Server, Client, "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
 							} else
 								return Server.sendMsg(Client, Server, "482", "", argument[2]);
 						} else {
 							it->second.setTopic(msg);
 							Server.sendMsg(Client, Server, "332", it->second.getChannelName() + msg , "");
-							Server.sendMsgToChannel(Client, Server, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+							Server.sendMsgToChannel(Server, Client, "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
 						}
 					} else {
 							if (!it->second.getTopic().empty())
@@ -541,13 +541,13 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	if (count < 3)
 	{
 		if (count > 1 && argument[1][0] == '&' && argument[1][0] == '#' && count == 2)
-			return Server.sendMsg(Client, Server, "412", "", "");
+			return Server.sendMsg(Client, Server, ERR_NORECIPIENT());
 		else if (count == 2)
 		{
 			for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it)
 				if (argument[1] == it->second.getNickname())
-					return Server.sendMsg(Client, Server, "412", "", "");
-			return Server.sendMsg(Client, Server, "411", "", "");
+					return Server.sendMsg(Client, Server, ERR_NOTEXTTOSEND());
+			return Server.sendMsg(Client, Server, ERR_NORECIPIENT());
 		}
 		else
 			return Server.sendMsg(Client, Server, ERR_NEEDMOREPARAMS());
@@ -560,7 +560,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			{
 				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 					message += *it + " ";
-				Server.sendMsgToUser(Client, it->second, Server, "PRIVMSG", message);
+				Server.sendMsgToUser(Server, Client, it->second, message);
 				return;
 			}
 		}
@@ -570,7 +570,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	{
 		for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 			message += *it + " ";
-		Server.sendMsgToChannel(Client, Server , "PRIVMSG", message, argument[1]);
+		Server.sendMsgToChannel(Server, Client , message, argument[1]);
 	}
 	return;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:55:33 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:02:23 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,14 @@ std::string ERR_NOSUCHCHANNEL(server& server, user& client, channel& Channel) {
     return "403 " + Channel->getChannelName() + " No such channel";
 }
 
+std::string ERR_NORECIPIENT(void){
+    return "411 :No recipient given"; 
+}
+
+std::string ERR_NOTEXTTOSEND(void){
+    return "412 :No text to send"; 
+}
+
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) {
 
     return "421" + cmd + " :unknown command";
@@ -229,7 +237,7 @@ std::string ERR_INVITEONLYCHAN(server& server, user& client, channel& channel) {
     (void)server;
     (void)client;
     (void)channel;
-    return "473 " + Channel->getChannelName() + "Cannot join channel (+i)";
+    return "473 " + channel->getChannelName() + "Cannot join channel (+i)";
 }
 
 // std::string ERR_NOTREGISTERED(server& server, user& client) {

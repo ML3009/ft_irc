@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:58:24 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 14:05:36 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,7 +289,7 @@ void server::sendrawMsg(user &client, server &server, std::string message){
 				<< "-------------------------" << std::endl;
 }
 
-void server::sendMsgToChannel(user &client, server &server, std::string message, std::string canal) {
+void server::sendMsgToChannel(server &server, user &client, std::string message, std::string canal) {
     std::ostringstream oss;
 	for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
 		if (canal == it->first){
@@ -320,7 +320,7 @@ void server::sendMsgToChannel(user &client, server &server, std::string message,
 	//return sendMsg(client, server, "403", "", canal);
 }
 
-void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
+void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
 	std::string msg =	":" + client.getNickname()
 						+ "!" + client.getNickname()
 						+ "@" + server.getID()
