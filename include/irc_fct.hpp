@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:29:33 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:52:09 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,48 @@ int                         botcmd(std::string arg);
 
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) ;
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) ;
+std::string ERR_NICKNAMEINUSE (server& server, user& client, std::string &name);
+
+std::string RPL_NOTOPIC(server& server, user& client, channel& channel);
+
+
+std::string RPL_TOPIC(server& server, user& client, channel& channel);
+
+std::string ERR_NOSUCHNICK(server& server, user& client);
+
+std::string ERR_NOSUCHCHANNEL(server& server, user& client, std::string& Channel);
+
+std::string ERR_UNKNOWNCOMMAND(std::string cmd);
+
+std::string  ERR_NICKNAMEINUSE (server& server, user& client, std::string &name);
+
+
+std::string ERR_USERNOTINCHANNEL(server& server, user& client, std::string & Channel);
+
+std::string ERR_NOTONCHANNEL(server& server, user& client, std::string & Channel);
+
+
+ std::string ERR_NOTREGISTERED(server& server, user& client);
+
+
+std::string ERR_NEEDMOREPARAMS(server& server, user& client);
+
+
+std::string ERR_ALREADYREGISTRED(server& server, user& client);
+
+std::string ERR_PASSWDMISMATCH(server& server, user& client);
+
+std::string ERR_UNKNOWNMODE(server& server, user& client, std::string& mode);
+std::string ERR_INVITEONLYCHAN(server& server, user& client, std::string & channel);
+
+std::string ERR_BADCHANNELKEY(server& server, user& client, std::string & Channel);
+
+
+std::string ERR_BADCHANMASK(server& server, user& client, std::string& Channel);
+
+std::string ERR_CHANOPRIVSNEEDED(server& server, user& client, std::string & Channel);
+
+
 
 /*  RPL    */
 std::string RPL_WELCOME(server &server, user &client);
