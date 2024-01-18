@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:27:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:11:19 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ server::server(int port, std::string password){
 	_upTime = time(NULL);
 	_maxtimeout = 15;
 	_botToken = "hvsqhzjhbrpojnwdf5454";
+	_botCount = 0;
 
 	display_constructor(SERVER_PC);
 
@@ -173,7 +174,9 @@ void server::getClientMessage(){
 	std::vector<pollfd>::iterator it;
 	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	{
-
+		std::ostringstream oss;
+    	oss << _clientMap[it->fd].getfd();
+		std::cout << "[" + oss.str() + std::string("] ") + _clientMap[it->fd].getUsername() << std::endl;
 		if (it->revents == POLLIN)
 		{
 			char buffer[512];

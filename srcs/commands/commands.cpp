@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 12:51:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:15:50 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -579,38 +579,50 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	int count = 0;
 	(void)Server;
 	(void)Client;
+	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
-	if (count != 2)
-		return;
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
-			if ("rooohbot" == it->second.getUsername()){
-				
+			std::cout << "USER [" + it->second.getUsername() + "]" << std::endl;
+			if (it->second.getUsername() == "rooohbot" ){
+				if (count != 2){
+					msg = Client.getUsername() + " DFT"; 
+					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						std::perror("send:");
+					return;
+				}
 				switch (botcmd(argument[1]))
 				{
 					case HELP:
-						std::cout << "HELP CMD" << std::endl;
-						break;
-						// if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
-						// 	std::perror("send:");
+						msg = Client.getUsername() + " HELP"; 
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					
 					case FACT:
-						std::cout << "FACT CMD" << std::endl;
+						msg = Client.getUsername() + " FACT";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					case HI:
-						std::cout << "HI CMD" << std::endl;
+						msg = Client.getUsername() + " HI"; 
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					case RPS:
-						std::cout << "RPS CMD" << std::endl;
+						msg = Client.getUsername() + " RPS"; 
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					default:
-						std::cout << "UNKNOWN CMD" << std::endl;
-						break;
+						msg = Client.getUsername() + " DFT"; 
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
+						break;;
 				}
+				return;
 			}
-			else
-				std::cout << "NOBOT" << std::endl;
 	}
+	std::cout << "NOBOT" << std::endl;
 }
 
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:28:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:05:59 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,5 +158,6 @@ void user::bot_connection(std::vector<std::string> arg, server &server){
 	_realname	= "rooohbot";
 	_password	= server.getPassword();
 	server.setBotOn();
+	std::cout << "BOT ON" << std::endl;
 }
 /*--------------- Exception ------------- */
