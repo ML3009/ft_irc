@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 15:06:35 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:08:17 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& a
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count != 2) {
-		Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+		Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 		return;
 	}
 	if (argument[1] == Server.getPassword()) {
@@ -550,7 +550,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			return Server.sendMsg(Server, Client, ERR_NORECIPIENT());
 		}
 		else
-			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 	if (argument[1][0] != '&' && argument[1][0] != '#')
 		destination = pvm_USER;
@@ -664,6 +664,6 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 			return Server.sendMsg(Server, Client, "403", "", "");
 
 		default:
-			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 }

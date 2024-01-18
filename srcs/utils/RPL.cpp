@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:05:34 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:08:19 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@
 //         case 451:
 //             return ERR_NOTREGISTERED(server, client);
 //         case 461:
-//             return ERR_NEEDMOREPARAMS(server, client);
+//             return ERR_REPARAMS(server, client);
 //         case 462:
 //             return ERR_ALREADYREGISTRED(server, client);
 //         case 464:
@@ -199,11 +199,11 @@ std::string ERR_NOSUCHCHANNEL(server& server, user& client, std::string &Channel
 }
 
 std::string ERR_NORECIPIENT(void){
-    return "411 :No recipient given"; 
+    return "411 :No recipient given";
 }
 
 std::string ERR_NOTEXTTOSEND(void){
-    return "412 :No text to send"; 
+    return "412 :No text to send";
 }
 
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) {
