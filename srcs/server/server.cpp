@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:00:46 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:02:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,10 +314,10 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 					return;
 				}
 			}
-			//return sendMsg(client, server, "441", "", canal);
+			//return sendMsg(Server, Client, "441", "", canal);
 		}
     }
-	//return sendMsg(client, server, "403", "", canal);
+	//return sendMsg(Server, Client, "403", "", canal);
 }
 
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
