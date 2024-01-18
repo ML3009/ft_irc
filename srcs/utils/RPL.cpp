@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:07:44 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:29:55 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,8 @@ void displayWelcome(server &server, user &client){
 std::string RPL_WELCOME(server &server, user &client){
 	(void)server;
 	(void)client;
-	//return "\033[0;34mBienvenue sur le serveur IRC. Connecté avec succès !\r\n\033[0m";
-    return "001 " + client.getNickname() + " :Bienvenue sur le serveur IRC !";
+	return "001 " + client.getNickname() + std::string("\033[0;34m") + ":Bienvenue " + client.getNickname() + " sur le serveur IRC. Connecté avec succès !\r\n\033[0m";
+    //return "001 " + client.getNickname() + " :Bienvenue sur le serveur IRC !";std::string("\033[0;34m")+ 
 }
 
 std::string RPL_YOURHOST(server &server, user &client){

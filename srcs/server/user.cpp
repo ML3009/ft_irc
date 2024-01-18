@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 14:59:50 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:36:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ void user::clearBuffer() {_buffer.clear();}
 
 void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
-	std::cout << "done" << std::endl;
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
 	isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
@@ -129,15 +128,11 @@ void user::appendToBuffer(const char *buffer){
 }
 
 void user::receive(server &server){
-	std::cout << "TEST" << std::endl;
-
 	if (_buffer.find("\n") == std::string::npos)
 		return;
-	std::cout << "TEST1" << std::endl;
 	size_t pos = _buffer.find("\r\n");
 	if (pos == std::string::npos)
 		pos = _buffer.find("\n");
-	std::cout << "TEST2" << std::endl;
 	while (pos != std::string::npos){
 		std::string	line = _buffer.substr(0, pos);
 		if (line.size())
@@ -147,6 +142,5 @@ void user::receive(server &server){
 		if (pos == std::string::npos)
 			pos = _buffer.find("\n");
 	}
-	
 }
 /*--------------- Exception ------------- */

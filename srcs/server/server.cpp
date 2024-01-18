@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:07:10 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 15:23:38 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,9 +183,7 @@ void server::getClientMessage(){
 			}
 			else{
 				buffer[bytes] = '\0';
-				std::cout << "BUFFER [" << buffer << "]" << std::endl; 
 				_clientMap[it->fd].appendToBuffer(buffer);
-				std::cout << "BUFFER " << _clientMap[it->fd].getBuffer() << std::endl;
 				_clientMap[it->fd].receive(*this);
 				memset(buffer, 0, 512);
 				if (_clientMap[it->fd].getStatus() == DISCONNECTED){
