@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:05:43 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 12:50:15 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void 						displayWelcome(server &server, user &client);
 std::string					printOP(std::string user, channel &channel);
 int 						response(int clientSocket);
 bool						IsClientFD(const pollfd& pfd, int clientFD);
+int                         botcmd(std::string arg);
 
 
 

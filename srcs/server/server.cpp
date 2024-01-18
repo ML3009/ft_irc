@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 10:48:09 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 12:27:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ server::server(int port, std::string password){
 	_userCount = 0;
 	_upTime = time(NULL);
 	_maxtimeout = 15;
+	_botToken = "hvsqhzjhbrpojnwdf5454";
 
 	display_constructor(SERVER_PC);
 
@@ -72,10 +73,12 @@ server::~server(){
 /*---------- Getter / Setter ------------ */
 
 int server::getUserCount() const { return _userCount;}
+int server::getBotCount() const {return _botCount;}
+void server::setBotOn(){_botCount++;}
 std::vector<pollfd> server::getpollfd() { return _pollFD;}
 std::string server::getPassword() const{return _password;}
 std::string server::getID() const{return _ID;}
-bot 		&server::getbot() {return _bot;}
+std::string server::getToken() const{return _botToken;}
 std::map<int, user> &server::getUserMap(){return _clientMap;}
 std::map<std::string, channel>& server::getChannelMap(){return _channelMap;}
 user &server::getClient(std::string name){
@@ -182,6 +185,7 @@ void server::getClientMessage(){
 				return;
 			}
 			else{
+				
 				buffer[bytes] = '\0';
 				_clientMap[it->fd].appendToBuffer(buffer);
 				_clientMap[it->fd].receive(*this);
@@ -322,21 +326,6 @@ void server::sendMsgToUser(user &client, user &dest, server &server, std::string
 						+ client.getNickname() + "!"
 						+ client.getUsername() + "@" + getID() + " "
 						+ displayRPL(server, client, RPL, message, "") + "\r\n";
-    if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
-        std::perror("send:");
-    std::cout   << "---- SERVER RESPONSE ----\n"
-                << msg << "\n"
-                << "-------------------------" << std::endl;
-}
-
-void server::sendMsgFromBot(bot &bot, user &dest, server &server, std::string message) {
-	std::string msg = "\033[0m:\033[0;35m"
-                    + bot.getName() + "\033[0m!\033[0;35m"
-                    + "BOT\033[0m@\033[0;33m"
-                    + server.getID() + "\033[0m \033[0;32m"
-                    + "PRIVMSG \033[0m \033[0;34m"
-                    + dest.getNickname() + "\033[0m :"
-                    + displayRPL(server, dest, "HI_BOT", message, "") + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"

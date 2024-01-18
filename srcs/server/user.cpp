@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:36:27 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 12:28:10 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
-	isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
+	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)
+		bot_connection(argument, Server);
+	else 
+		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 	argument.clear();
 	debug("parseClientMessage", END);
 	return;
@@ -142,5 +145,18 @@ void user::receive(server &server){
 		if (pos == std::string::npos)
 			pos = _buffer.find("\n");
 	}
+}
+
+void user::bot_connection(std::vector<std::string> arg, server &server){
+	if (arg.size() != 2)
+		return;
+	if (arg[1] != server.getToken())
+		return;
+	_hostname 	= "rooohbot";
+	_nickname 	= "rooohbot";
+	_username 	= "rooohbot";
+	_realname	= "rooohbot";
+	_password	= server.getPassword();
+	server.setBotOn();
 }
 /*--------------- Exception ------------- */
