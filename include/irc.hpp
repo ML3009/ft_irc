@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/17 15:05:55 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 17:33:58 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ extern int					CONSTRUCTOR; // Display constructor message
 extern int					DEBUG; // Display debug message
 extern int					LOG;
 extern bool					handleSignal;
+extern bool					handleSignalbot;
+
 // extern std::map<std::string, channel> channelMap;
 
 
