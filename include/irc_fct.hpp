@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 14:58:28 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:58:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ int                         botcmd(std::string arg);
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) ;
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) ;
 std::string ERR_NORECIPIENT(void); // 411
-std::string ERR_NOTEXTTOSEND(void); // 412std::string ERR_NICKNAMEINUSE (server& server, user& client, std::string &name);
+std::string ERR_NOTEXTTOSEND(void); // 412
 
 std::string RPL_NOTOPIC(server& server, user& client, channel& channel);
 
 
 std::string RPL_TOPIC(server& server, user& client, channel& channel);
 
-std::string ERR_NOSUCHNICK(server& server, user& client);
+std::string ERR_NOSUCHNICK(std::string dest); // 401
 
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, std::string& Channel);
 
@@ -57,7 +57,7 @@ std::string  ERR_NICKNAMEINUSE (server& server, user& client, std::string &name)
 
 std::string ERR_USERNOTINCHANNEL(server& server, user& client, std::string & Channel);
 
-std::string ERR_NOTONCHANNEL(server& server, user& client, std::string & Channel);
+std::string ERR_NOTONCHANNEL(user& client, std::string & Channel);
 
 
  std::string ERR_NOTREGISTERED(server& server, user& client);
@@ -78,7 +78,7 @@ std::string ERR_BADCHANNELKEY(server& server, user& client, std::string & Channe
 
 std::string ERR_BADCHANMASK(server& server, user& client, std::string& Channel);
 
-std::string ERR_CHANOPRIVSNEEDED(server& server, user& client, std::string & Channel);
+std::string ERR_CHANOPRIVSNEEDED(std::string & Channel);
 
 
 

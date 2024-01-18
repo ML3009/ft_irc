@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 15:05:15 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:00:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 }
 
 void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument){
-
+	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip JOIN :#htviosfdbsjdfsgdfvsjgvfa
 	std::vector<std::string> key_tmp;
 	int	keyword = parseCmdJoin(Server, Client, argument); // regarde s il y a le bon nombre d argument
 	if (keyword < 0)
@@ -261,7 +261,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 }
 
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
-
+	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip PART #htviosfdbsjdfsgdfvsjgvfa
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count != 2)
@@ -334,9 +334,8 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 	Client.setStatus(DISCONNECTED);
 	return;
 }
-
+// MSG KICK OK
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
-
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count != 3)
@@ -344,24 +343,20 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 		if (it->first == argument[1]){
 			if (!(it->second.isAlreadyinChannel(Client)))
-				return Server.sendMsg(Server, Client, "441", "", argument[2]);
+				return Server.sendMsg(Server, Client, ERR_USERNOTINCHANNEL(Server, Client, argument[1]));
 			if  (!(it->second.isAlreadyinChannel(Server.getClient(argument[2]))))
-				return Server.sendMsg(Server, Client, "441", "", argument[2]);
+				return Server.sendMsg(Server, Client, ERR_USERNOTINCHANNEL(Server, Server.getClient(argument[2]), argument[1]));
 			if  (it->second.isOperator(Client.getUsername()))
 			{
-				std::string message;
-				message += "You have been kicked from "
-				+ it->second.getChannelName() + " by " + Client.getNickname() + ".";
-
 				std::vector<user>::iterator ita = std::find(it->second.getChannelUser().begin(), it->second.getChannelUser().end(), Server.getClient(argument[2]));
 				it->second.getChannelUser().erase(ita);
-				Server.sendMsg(Server.getClient(argument[2]), Server, "KICK", message, it->second.getChannelName());
-				Server.sendMsg(Server, Client, "KICK", argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
-				Server.sendMsgToChannel(Server, Client, argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				Server.sendMsgToUser(Server, Client ,Server.getClient(argument[2]), "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname());
+				Server.sendMsgToUser(Server, Client , Client, "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname());
+				Server.sendMsgToChannel(Server, Client,"KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname(), it->second.getChannelName());
 				return;
 			}
 			else
-				return Server.sendMsg(Server, Client, "482", "", argument[2]);
+				return Server.sendMsg(Server, Client, ERR_CHANOPRIVSNEEDED(argument[1]));
 		}
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
@@ -427,7 +422,7 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 								Server.sendMsg(Server, Client, "TOPIC", "You have been created a new topic on " + it->second.getChannelName(), "");
 								Server.sendMsgToChannel(Server, Client, "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
 							} else
-								return Server.sendMsg(Server, Client, ,ERR_CHANOPRIVSNEEDED(Server, Client, Channel));
+								return Server.sendMsg(Server, Client, ,ERR_CHANOPRIVSNEEDED(it->second.getChannelName()));
 						} else {
 							it->second.setTopic(msg);
 							Server.sendMsg(Server, Client, RPL_NOTOPIC(Server, Client, it->second.getChannelName()));
@@ -450,7 +445,7 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 }
 
 void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& argument){
-
+	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip MODE #htviosfdbsjdfsgdfvsjgvfa +i 
 	std::vector<std::string> arg_mod;
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
@@ -524,9 +519,9 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 				}
 			}
 		} else if (argument[1] == it->second.getChannelName() && it->second.isAlreadyinChannel(Client) == false){
-			return Server.sendMsg(Server, Client, ERR_NOTONCHANNEL(Server, Client, Channel)), void();
+			return Server.sendMsg(Server, Client, ERR_NOTONCHANNEL(Client, argument[1])), void();
 		} else if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == false) {
-			return Server.sendMsg(Server, Client, ERR_CHANOPRIVSNEEDED(Server, Client, Channel)), void();
+			return Server.sendMsg(Server, Client, ERR_CHANOPRIVSNEEDED(argument[1])), void();
 		} else if (Server.channelExist(argument[1]) == false)
 			return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
 	}
@@ -550,7 +545,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			return Server.sendMsg(Server, Client, ERR_NORECIPIENT());
 		}
 		else
-			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 	if (argument[1][0] != '&' && argument[1][0] != '#')
 		destination = pvm_USER;
@@ -564,7 +559,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 				return;
 			}
 		}
-		return Server.sendMsg(Server, Client, "401", "", "");
+		return Server.sendMsg(Server, Client, ERR_NOSUCHNICK(argument[1]));
 	}
 	else
 	{

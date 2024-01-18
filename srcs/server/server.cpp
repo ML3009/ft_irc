@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:02:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:54:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,8 +303,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 						std::string msg =	":" + client.getNickname()
 											+ "!" + client.getNickname()
 											+ "@" + server.getID()
-											+ " PRIVMSG " + canal
-											+ " :" + message + "\r\n";
+											+ message + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
 						std::cout  << "---- SERVER RESPONSE ----\n"
@@ -323,9 +322,8 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
 	std::string msg =	":" + client.getNickname()
 						+ "!" + client.getNickname()
-						+ "@" + server.getID()
-						+ " PRIVMSG " + dest.getNickname()
-						+ " :" + message + "\r\n";
+						+ "@" + server.getID() + " "
+						+ message + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"

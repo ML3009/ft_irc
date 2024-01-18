@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:05:34 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:57:45 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,10 +186,8 @@ std::string RPL_TOPIC(server& server, user& client, std::string& channel, std::s
     return "332 "+ channel + " :" + topic;
 }
 
-std::string ERR_NOSUCHNICK(server& server, user& client) {
-    (void)server;
-    (void)client;
-    return "401 " + client->getNickname() + " " "No such nick/channel";
+std::string ERR_NOSUCHNICK(std::string dest) {
+    return "401 " + dest + " :No such nick/channel";
 }
 
 std::string ERR_NOSUCHCHANNEL(server& server, user& client, std::string &Channel) {
@@ -218,11 +216,8 @@ std::string  ERR_NICKNAMEINUSE (server& server, user& client, std::string &name)
 }
 
 
-std::string ERR_USERNOTINCHANNEL(server& server, user& client, std::string& Channel) {
-    (void)server;
-    (void)client;
-    (void)channel;
-    return "441 " + client->getNickname +  " " + Channel  + " :They aren't on that channel";
+std::string ERR_USERNOTINCHANNEL(user& client, std::string& Channel) {
+    return "441 " + client.getNickname() +  " " + Channel  + " :They aren't on that channel";
 }
 
 std::string ERR_NOTONCHANNEL(server& server, user& client, std::string& Channel) {
@@ -267,14 +262,12 @@ std::string ERR_UNKNOWNMODE(server& server, user& client, const std::string& mod
 std::string ERR_INVITEONLYCHAN(server& server, user& client, std::string& channel) {
     (void)server;
     (void)client;
-    (void)channel;
-    return "473 " + Channel + "Cannot join channel (+i)";
+    return "473 " + channel + "Cannot join channel (+i)";
 }
 
 std::string ERR_BADCHANNELKEY(server& server, user& client, std::string& Channel) {
     (void)server;
     (void)client;
-    (void)channel;
     return "475 " + Channel + " :Cannot join channel (+k)";
 }
 
@@ -282,15 +275,12 @@ std::string ERR_BADCHANNELKEY(server& server, user& client, std::string& Channel
 std::string ERR_BADCHANMASK(server& server, user& client, std::string& Channel) {
     (void)server;
     (void)client;
-    (void)channel;
     return "476 " + Channel  + " :Cannot join channel";
 }
 
-std::string ERR_CHANOPRIVSNEEDED(server& server, user& client, std::string& Channel) {
-    (void)server;
-    (void)client;
-    (void)channel;
-    return "482 " + Channel + " :You're not a channel operator";
+std::string ERR_CHANOPRIVSNEEDED(std::string& channel) {
+
+    return "482 " + channel + " :You're not a channel operator";
 }
 
 
