@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 10:11:23 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:07:53 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ int	parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argumen
 
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
-	if (count != 2 && count != 3)
-		return Server.sendMsg(Client, Server, "461", "", ""), -1;
+	if (count != 2 && count != 3){
+
+		return Server.sendMsg(Client, Server, ERR_NEEDMOREPARAMS()), -1;
+	}
 	if (count == 3)
 		return 1;
 	return 0;
@@ -43,7 +45,7 @@ int	parseChannelKeyword(server &Server, user &Client, std::vector<std::string>& 
 			return Server.sendMsg(Client, Server, "476", "", ""), -1;
 	}
 	if (channel_tmp.size() < key_tmp.size())
-		return Server.sendMsg(Client, Server, "461", "", ""), -1;
+		return Server.sendMsg(Client, Server, ERR_NEEDMOREPARAMS()), -1;
 	return key;
 }
 

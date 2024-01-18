@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:11:19 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:32:31 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void server::getClientMessage(){
 				return;
 			}
 			else{
-				
+
 				buffer[bytes] = '\0';
 				_clientMap[it->fd].appendToBuffer(buffer);
 				_clientMap[it->fd].receive(*this);
@@ -268,12 +268,9 @@ bool server::LastPing(user &client){
 	return TIMEIN;
 }
 
-void server::sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel){
+void server::sendMsg(user &client, server &server, std::string message) {
 	std::string msg;
-	msg =  ":"
-		 + client.getNickname() + "!~"
-		 + client.getUsername() + "@" + getID() + " "
-		 + RPL + " " + displayRPL(server, client, RPL, message, channel) + "\r\n";
+	msg =  ":" + client.getNickname() + " " + message + "\r\n"
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"

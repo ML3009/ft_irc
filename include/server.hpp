@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:41:22 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:29:49 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class server{
 			bool LastPing(user &client);
 			bool channelExist(std::string channelName);
 			bool userExist(std::string name);
-			void sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel);
+			void sendMsg(user &client, server &server,std::string message);
 			void sendrawMsg(user &client, server &server, std::string message);
 
 			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
