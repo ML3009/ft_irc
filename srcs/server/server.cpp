@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:32:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:53:06 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ server::server(){
 	_password = "password";
 	_userCount = 0;
 	_upTime = clock();
-	_ID = "localhost";
+	_ID = "127.0.0.1";
 	_maxtimeout = 2000000;
 
 	display_constructor(SERVER_DC);
@@ -27,7 +27,7 @@ server::server(){
 
 
 server::server(int port, std::string password){
-	_ID = "localhost";
+	_ID = "127.0.0.1";
 	_port = port;
 	_password = password;
 	_userCount = 0;
@@ -270,7 +270,7 @@ bool server::LastPing(user &client){
 
 void server::sendMsg(user &client, server &server, std::string message) {
 	std::string msg;
-	msg =  ":" + client.getNickname() + " " + message + "\r\n"
+	msg =  ":" + client.getNickname() + " " + message + "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
@@ -289,7 +289,7 @@ void server::sendrawMsg(user &client, server &server, std::string message){
 				<< "-------------------------" << std::endl;
 }
 
-void server::sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal) {
+void server::sendMsgToChannel(user &client, server &server, std::string message, std::string canal) {
     std::ostringstream oss;
 	for (std::map<std::string, channel>::iterator it = _channelMap.begin(); it != _channelMap.end(); ++it){
 		if (canal == it->first){
@@ -300,10 +300,11 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 					for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it) {
 						if (it->getfd() == client.getfd())
 							continue;
-						std::string msg =  ":"
-						+ client.getNickname() + "!"
-						+ client.getUsername() + "@" + getID() + " "
-						+ displayRPL(server, client, RPL, message, canal) + "\r\n";
+						std::string msg =	":" + client.getNickname()
+											+ "!" + client.getNickname()
+											+ "@" + server.getID()
+											+ " PRIVMSG " + canal
+											+ " :" + message + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
 						std::cout  << "---- SERVER RESPONSE ----\n"
@@ -313,19 +314,18 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 					return;
 				}
 			}
-			return sendMsg(client, server, "441", "", canal);
+			//return sendMsg(client, server, "441", "", canal);
 		}
     }
-	return sendMsg(client, server, "403", "", canal);
+	//return sendMsg(client, server, "403", "", canal);
 }
 
 void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
-   	std::ostringstream oss;
-    oss << client.getfd();
-    std::string msg =  ":"
-						+ client.getNickname() + "!"
-						+ client.getUsername() + "@" + getID() + " "
-						+ displayRPL(server, client, RPL, message, "") + "\r\n";
+	std::string msg =	":" + client.getNickname()
+						+ "!" + client.getNickname()
+						+ "@" + server.getID()
+						+ " PRIVMSG " + dest.getNickname()
+						+ " :" + message + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:29:49 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:36:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class server{
 			void sendMsg(user &client, server &server,std::string message);
 			void sendrawMsg(user &client, server &server, std::string message);
 
-			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
+			void sendMsgToChannel(user &client, server &server, std::string message, std::string canal);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
 
 // Getter / Setter
