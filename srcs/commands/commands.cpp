@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 16:00:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:02:06 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& a
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count != 2) {
-		Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+		Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 		return;
 	}
 	if (argument[1] == Server.getPassword()) {
@@ -450,7 +450,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count < 3 || (argument[2][0] != '+' && argument[2][0] != '-'))
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS()), void();
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client)), void();
 	char sign = argument[2][0];
 	if (count > 3)
 		std::copy(argument.begin() + 3, argument.end(), std::back_inserter(arg_mod));
@@ -580,7 +580,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 			std::cout << "USER [" + it->second.getUsername() + "]" << std::endl;
 			if (it->second.getUsername() == "rooohbot" ){
 				if (count != 2){
-					msg = Client.getUsername() + " DFT"; 
+					msg = Client.getUsername() + " DFT";
 					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						std::perror("send:");
 					return;
@@ -588,7 +588,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 				switch (botcmd(argument[1]))
 				{
 					case HELP:
-						msg = Client.getUsername() + " HELP"; 
+						msg = Client.getUsername() + " HELP";
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
@@ -599,17 +599,17 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 						 	std::perror("send:");
 						break;
 					case HI:
-						msg = Client.getUsername() + " HI"; 
+						msg = Client.getUsername() + " HI";
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 					case RPS:
-						msg = Client.getUsername() + " RPS"; 
+						msg = Client.getUsername() + " RPS";
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 					default:
-						msg = Client.getUsername() + " DFT"; 
+						msg = Client.getUsername() + " DFT";
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;;
@@ -659,6 +659,6 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 			return Server.sendMsg(Server, Client, "403", "", "");
 
 		default:
-			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 }
