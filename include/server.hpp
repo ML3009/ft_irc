@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/15 15:18:19 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 17:24:25 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ class server{
 			std::vector<pollfd> getpollfd();
 			std::string			getPassword() const;
 			std::string 		getID() const;
-			bot 				&getbot();
 			std::map<int, user> &getUserMap();
 			std::map<std::string, channel> &getChannelMap();
 			user 				&getClient(std::string name);
@@ -69,7 +68,6 @@ class server{
 			std::vector<pollfd>	_pollFD;
 			time_t				_upTime;
 			time_t				_maxtimeout;
-			bot					_bot;
 			std::map<int, user> 	_clientMap;
 			std::map<std::string, channel> _channelMap;
 

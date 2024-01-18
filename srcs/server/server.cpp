@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:23:38 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 10:48:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ server::server(){
 	_password = "password";
 	_userCount = 0;
 	_upTime = clock();
-	_ID = "IRC";
+	_ID = "localhost";
 	_maxtimeout = 2000000;
 
 	display_constructor(SERVER_DC);
@@ -27,7 +27,7 @@ server::server(){
 
 
 server::server(int port, std::string password){
-	_ID = "IRC";
+	_ID = "localhost";
 	_port = port;
 	_password = password;
 	_userCount = 0;
@@ -263,10 +263,10 @@ bool server::LastPing(user &client){
 
 void server::sendMsg(user &client, server &server, std::string RPL,std::string message, std::string channel){
 	std::string msg;
-	msg = "\033[0m:\033[0;33m" + getID()
-		+ "\033[0m \033[0;32m" + RPL
-		+ "\033[0m \033[0;34m" + client.getNickname()
-		+ "\033[0m :" + displayRPL(server, client, RPL, message, channel) + "\r\n";
+	msg =  ":"
+		 + client.getNickname() + "!~"
+		 + client.getUsername() + "@" + getID() + " "
+		 + RPL + " " + displayRPL(server, client, RPL, message, channel) + "\r\n";
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
@@ -296,17 +296,10 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 					for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it) {
 						if (it->getfd() == client.getfd())
 							continue;
-						oss.str("");
-						oss.clear();
-						oss << client.getfd();
-						std::string msg = "\033[0m:\033[0;35m"
-										+ client.getNickname() + "\033[0m!\033[0;35m"
-										+ oss.str() + "\033[0m@\033[0;33m"
-										+ server.getID() + "\033[0m \033[0;32m"
-										+ RPL + "\033[0m \033[0;34m"
-										+ canal + "\033[0m | \033[0;34m"
-										+ it->getNickname() + "\033[0m :"
-										+ displayRPL(server, client, RPL, message, canal) + "\r\n";
+						std::string msg =  ":"
+						+ client.getNickname() + "!"
+						+ client.getUsername() + "@" + getID() + " "
+						+ displayRPL(server, client, RPL, message, canal) + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
 						std::cout  << "---- SERVER RESPONSE ----\n"
@@ -325,13 +318,10 @@ void server::sendMsgToChannel(user &client, server &server, std::string RPL, std
 void server::sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message) {
    	std::ostringstream oss;
     oss << client.getfd();
-    std::string msg = "\033[0m:\033[0;35m"
-                    + client.getNickname() + "\033[0m!\033[0;35m"
-                    + oss.str() + "\033[0m@\033[0;33m"
-                    + server.getID() + "\033[0m \033[0;32m"
-                    + RPL + "\033[0m \033[0;34m"
-                    + dest.getNickname() + "\033[0m :"
-                    + displayRPL(server, client, RPL, message, "") + "\r\n";
+    std::string msg =  ":"
+						+ client.getNickname() + "!"
+						+ client.getUsername() + "@" + getID() + " "
+						+ displayRPL(server, client, RPL, message, "") + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"

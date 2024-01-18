@@ -3,17 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/08 16:38:03 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/17 17:37:27 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
+bool handleSignalbot	= false;
 
+int main(void){
+    const char* serverIP = "localhost";
+    const int serverPort = 6667;
+    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket == -1) {
+        std::cerr << "Erreur lors de la création du socket" << std::endl;
+        return 1;
+    }
+    sockaddr_in serverAddress{};
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(serverPort);
+    inet_pton(AF_INET, serverIP, &serverAddress.sin_addr);
+    if (connect(clientSocket, reinterpret_cast<struct sockaddr*>(&serverAddress), sizeof(serverAddress)) == -1) {
+        std::cerr << "Erreur lors de la connexion au serveur" << std::endl;
+        close(clientSocket);
+        return 1;
+    }
+    const char* joinMessage = "@bot initialised\r\n";
+    send(clientSocket, joinMessage, joinMessage.size(), 0);
+    char buffer[1024];
+    while (!(handleSignalbot))
+        ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+        if (bytesRead == -1) {
+            std::cerr << "Erreur lors de la réception des données du serveur" << std::endl;
+        } else {
+            buffer[bytesRead] = '\0';
+            std::vector<std::string> argument = splitArgs(buffer);
+            memset(buffer, 0, 512);
+        }
 
+    // Fermeture du socket
+    close(clientSocket);
+    return 0;
+}
 
 /*----------------- Coplien ------------- */
 

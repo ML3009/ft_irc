@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 15:14:55 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/17 16:38:27 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 				Channel.setMode("k");
 			}
 			Server.getChannelMap()[channel_tmp[i]] = Channel;
-			Server.sendMsg(Client, Server, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone", "");
+			Server.sendMsg(Client, Server, "JOIN", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone", "");
 
 		}
 	}
