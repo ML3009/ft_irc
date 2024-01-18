@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:53:06 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:58:24 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ bool server::LastPing(user &client){
 
 void server::sendMsg(user &client, server &server, std::string message) {
 	std::string msg;
-	msg =  ":" + client.getNickname() + " " + message + "\r\n";
+	msg =  ":" + client.getNickname() + " " + message + "\r\n";;
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
 		std::perror("send:");
 	std::cout 	<< "---- SERVER RESPONSE ----\n"
