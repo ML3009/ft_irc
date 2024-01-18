@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:26:41 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:29:33 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void 						displayWelcome(server &server, user &client);
 std::string					printOP(std::string user, channel &channel);
 int 						response(int clientSocket);
 bool						IsClientFD(const pollfd& pfd, int clientFD);
+int                         botcmd(std::string arg);
 
 
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) ;

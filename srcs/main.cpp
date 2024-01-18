@@ -6,16 +6,16 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/16 13:36:03 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 11:00:49 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 bool handleSignal	= false;
-int DEBUG			= NO;
+int DEBUG			= YES;
 int CONSTRUCTOR		= NO;
-int	LOG				= LOGFILE;
+int	LOG				= STDOUT;
 
 int main(int ac, char **av){
 	std::remove("logs.txt");

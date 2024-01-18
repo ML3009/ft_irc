@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:07:01 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 15:07:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 12:51:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,13 @@ std::vector<std::string> splitArgs(std::string buffer){
     }
     debug("splitArgs", END);
     return args;
+}
+
+int botcmd(std::string arg){
+    std::string cmd[4] = {"HELP", "FACT", "HI", "RPS"};
+    for (int i = 0; i < 4; i++){
+        if (cmd[i] == arg)
+            return i;
+    }
+    return -1;
 }

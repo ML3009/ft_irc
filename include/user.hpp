@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/17 14:48:52 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 12:07:34 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ public :
 			void				appendToBuffer(const char *buffer);
 			void				clearBuffer();
 			void				receive(server &server);
+			void				bot_connection(std::vector<std::string> arg, server &server);
 
 
 protected :

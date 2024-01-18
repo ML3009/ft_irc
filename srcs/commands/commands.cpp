@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 13:18:38 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:29:54 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -577,17 +577,40 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 
 void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
+	(void)Server;
+	(void)Client;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
-	if (count == 2 && argument[1] == "HELP")
-		Server.getbot().help(Server, Client);
-	else if (count == 2 && argument[1] == "FACT")
-	{
-		std::srand(std::time(0));
-		Server.getbot().getfact(Server, Client, std::rand() % 10);
-	}
-	else
-		Server.getbot().sayhello(Server, Client);
+	if (count != 2)
+		return;
+	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
+			if ("rooohbot" == it->second.getUsername()){
 
+				switch (botcmd(argument[1]))
+				{
+					case HELP:
+						std::cout << "HELP CMD" << std::endl;
+						break;
+						// if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						// 	std::perror("send:");
+						break;
+
+					case FACT:
+						std::cout << "FACT CMD" << std::endl;
+						break;
+					case HI:
+						std::cout << "HI CMD" << std::endl;
+						break;
+					case RPS:
+						std::cout << "RPS CMD" << std::endl;
+						break;
+					default:
+						std::cout << "UNKNOWN CMD" << std::endl;
+						break;
+				}
+			}
+			else
+				std::cout << "NOBOT" << std::endl;
+	}
 }
 
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/17 17:33:58 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 12:47:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@
 #include "user.hpp"
 #include "commands.hpp"
 #include "channel.hpp"
-#include "bot.hpp"
 
 /* ---- DEBUG AND LOGS ---- */
 extern int					CONSTRUCTOR; // Display constructor message
@@ -117,6 +116,11 @@ extern bool					handleSignalbot;
 
 #define pvm_CHANNEL 1
 #define pvm_USER    2
+
+#define HELP 0
+#define FACT 1
+#define HI 2
+#define RPS 3
 
 #define BLK "\033[0;30m"
 #define RED "\033[0;31m"

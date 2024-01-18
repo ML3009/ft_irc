@@ -6,14 +6,13 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:06:35 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:29:49 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "irc.hpp"
 #include "user.hpp"
-#include "bot.hpp"
 #include "channel.hpp"
 class commands;
 
@@ -42,17 +41,20 @@ class server{
 
 			void sendMsgToChannel(user &client, server &server, std::string RPL, std::string message, std::string canal);
 			void sendMsgToUser(user &client, user &dest, server &server, std::string RPL, std::string message);
-			void sendMsgFromBot(bot &bot, user &dest, server &server, std::string message);
 
 // Getter / Setter
 			//std::map<int, user> getClientMap();
 			int					getUserCount() const;
+			int					getBotCount() const;
 			std::vector<pollfd> getpollfd();
 			std::string			getPassword() const;
 			std::string 		getID() const;
+			std::string			getToken() const;
 			std::map<int, user> &getUserMap();
 			std::map<std::string, channel> &getChannelMap();
 			user 				&getClient(std::string name);
+
+			void				setBotOn();
 
 			//user& 				getUser(int fd);
 
@@ -70,6 +72,8 @@ class server{
 			time_t				_maxtimeout;
 			std::map<int, user> 	_clientMap;
 			std::map<std::string, channel> _channelMap;
+			std::string			_botToken;
+			int 				_botCount;
 
 };
 
