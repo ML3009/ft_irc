@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 15:02:59 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:05:18 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -455,7 +455,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count < 3 || (argument[2][0] != '+' && argument[2][0] != '-'))
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS()), void();
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client)), void();
 	char sign = argument[2][0];
 	if (count > 3)
 		std::copy(argument.begin() + 3, argument.end(), std::back_inserter(arg_mod));
