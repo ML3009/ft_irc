@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 14:57:23 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:02:59 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count != 2)
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
 			return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it) {
@@ -173,10 +173,10 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 	int	count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count < 5) {
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 	else if (count > 5 && argument[4][0] != ':') {
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client));
 	}
 	if (!Client.getUsername().empty()) {
 		return Server.sendMsg(Server, Client, ERR_ALREADYREGISTRED(Server, Client));
@@ -282,7 +282,7 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 						}
 
 					} else if (channel_tmp[i] == it->second.getChannelName() && it->second.isAlreadyinChannel(Client) == false) {
-						Server.sendMsg(Server, Client, "442", "", it->second.getChannelName()), void();
+						Server.sendMsg(Server, Client, ERR_NOTONCHANNEL(Server, Client, it->second.getChannelName())), void();
 					}
 				}
 			}
