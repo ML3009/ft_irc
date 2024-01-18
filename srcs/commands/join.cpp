@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:06:57 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 14:53:48 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:21:29 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	parseCmdJoin(server &Server, user &Client, std::vector<std::string>& argumen
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count != 2 && count != 3){
 
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS()), -1;
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client)), -1;
 	}
 	if (count == 3)
 		return 1;
@@ -45,7 +45,7 @@ int	parseChannelKeyword(server &Server, user &Client, std::vector<std::string>& 
 			return Server.sendMsg(Server, Client, ERR_BADCHANMASK(Server, Client, key_tmp[i])), -1; //
 	}
 	if (channel_tmp.size() < key_tmp.size())
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Server, Client)), -1;
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client)), -1;
 	return key;
 }
 
@@ -64,12 +64,12 @@ int	isValidUser(server &Server, user &Client, channel &Channel, std::vector<std:
 void	UserJoinChannel(server &Server, user &Client, channel &Channel) {
 
 		Channel.setChannelUser(Client);
-		Server.sendMsgToChannel(Server, Client, "WELCOME" , Client.getNickname() + " join the channel. Be nice to him",    Channel.getChannelName());
+		Server.sendMsgToChannel(Server, Client, "JOIN :" + Channel.getChannelName(), Channel.getChannelName());
 		if (Channel.isInvited(Client.getUsername())){
 			std::vector<std::string>::iterator it = std::find(Channel.getInviteList().begin(), Channel.getInviteList().end(), Client.getUsername());
 			Channel.getInviteList().erase(it);
 		}
-		Server.sendMsg(Server, Client, "WELCOME", "You are now connected on the channel " + Channel.getChannelName() + ". Say hi to everyone", "");
+		Server.sendMsgToUser(Server, Client, Client, "JOIN :" + Channel.getChannelName());
 }
 
 std::vector<std::string> splitCmdJoin(std::string buffer){

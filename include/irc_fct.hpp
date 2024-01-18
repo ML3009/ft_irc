@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:58:27 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:31:40 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ int 						response(int clientSocket);
 bool						IsClientFD(const pollfd& pfd, int clientFD);
 int                         botcmd(std::string arg);
 
-
-std::string ERR_NEEDMOREPARAMS(server& server, user& client) ;
+std::string RPL_INVITING(user &Client, std::string channel);
+std::string ERR_NEEDMOREPARAMS(user& client) ;
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) ;
 std::string ERR_NORECIPIENT(void); // 411
 std::string ERR_NOTEXTTOSEND(void); // 412
-
+std::string ERR_CHANNELISFULL(std::string &channel);
 std::string RPL_NOTOPIC(server& server, user& client, channel& channel);
 
 
@@ -62,16 +62,12 @@ std::string ERR_NOTONCHANNEL(user& client, std::string & Channel);
 
  std::string ERR_NOTREGISTERED(server& server, user& client);
 
-
-std::string ERR_NEEDMOREPARAMS(server& server, user& client);
-
-
 std::string ERR_ALREADYREGISTRED(server& server, user& client);
 
 std::string ERR_PASSWDMISMATCH(server& server, user& client);
 
 std::string ERR_UNKNOWNMODE(server& server, user& client, std::string& mode);
-std::string ERR_INVITEONLYCHAN(server& server, user& client, std::string & channel);
+std::string ERR_INVITEONLYCHAN(std::string & channel);
 
 std::string ERR_BADCHANNELKEY(server& server, user& client, std::string & Channel);
 

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 16:02:14 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:33:07 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ std::string RPL_WELCOME(server &server, user &client){
 }
 
 std::string RPL_YOURHOST(server &server, user &client){
-    return "002 " + client->getNickname() + " :Your host is " + server.getId();
+    return "002 " + client.getNickname() + " :Your host is " + server.getID();
 }
 
 std::string RPL_CREATED(server &server, user &client) {
@@ -162,14 +162,14 @@ std::string RPL_CREATED(server &server, user &client) {
         return "Error.";
     }
     char buffer[512];
-    std::strftime(buffer, sizeof(buffer), "003 " + client->getNickname() + " :This server was created on \033[0;36m%d %B %Y à %H:%M:%S.\r\n\033[0m", localTime);
+    std::strftime(buffer, sizeof(buffer), "003 " + client.getNickname() + " :This server was created on \033[0;36m%d %B %Y à %H:%M:%S.\r\n\033[0m", localTime);
 
     return std::string(buffer);
 }
 
 std::string RPL_MYINFO(server &server, user &client){
 
-	return "004 " + client->getNickname() + " :" + server->getId() + "\033[0;34mIRC Server v1.0. Modes supportés : \033[0m\033[0;35m[+i +t +k +o +l].\r\n\033[0m";
+	return "004 " + client.getNickname() + " :" + server.getID() + "\033[0;34mIRC Server v1.0. Modes supportés : \033[0m\033[0;35m[+i +t +k +o +l].\r\n\033[0m";
 }
 
 /*---------------------------------------------------------------------------------------------------*/
@@ -184,6 +184,10 @@ std::string RPL_TOPIC(server& server, user& client, std::string& channel, std::s
     (void)server;
     (void)client;
     return "332 "+ channel + " :" + topic;
+}
+
+std::string RPL_INVITING(user &Client, std::string channel){
+    return "341 " + Client.getNickname() + " " + channel;
 }
 
 std::string ERR_NOSUCHNICK(std::string dest) {
@@ -236,8 +240,6 @@ std::string ERR_NOTONCHANNEL(server& server, user& client, std::string& Channel)
 
 
 std::string ERR_NEEDMOREPARAMS(server& server, user& client) {
-    (void)server;
-
     return "461 " + client->getNickname + " :Not enough parameters";
 }
 
@@ -254,15 +256,17 @@ std::string ERR_PASSWDMISMATCH(server& server, user& client) {
     return "464 :You may not reregister";
 }
 
+std::string ERR_CHANNELISFULL(std::string &channel){
+    return "471 " + channel + " :is full"
+}
+
 std::string ERR_UNKNOWNMODE(server& server, user& client, const std::string& mode) {
     (void)server;
     (void)client;
     return "472 " + mode + " :is unknown mode char to me";
 }
-std::string ERR_INVITEONLYCHAN(server& server, user& client, std::string& channel) {
-    (void)server;
-    (void)client;
-    return "473 " + channel + "Cannot join channel (+i)";
+std::string ERR_INVITEONLYCHAN(std::string& channel) {
+    return "473 " + channel + " :Cannot join channel (+i)";
 }
 
 std::string ERR_BADCHANNELKEY(server& server, user& client, std::string& Channel) {
