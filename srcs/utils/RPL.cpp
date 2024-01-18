@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:02:18 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:05:34 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,14 @@ std::string ERR_NOSUCHCHANNEL(server& server, user& client, std::string &Channel
     (void)server;
     (void)client;
     return "403 " + Channel + " No such channel";
+}
+
+std::string ERR_NORECIPIENT(void){
+    return "411 :No recipient given"; 
+}
+
+std::string ERR_NOTEXTTOSEND(void){
+    return "412 :No text to send"; 
 }
 
 std::string ERR_UNKNOWNCOMMAND(std::string cmd) {

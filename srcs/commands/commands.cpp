@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 15:05:18 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:06:35 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 				if (it->second.getChannelName() == channel_tmp[i]) {
 					if(it->second.isAlreadyinChannel(Client) == true) {
 						Server.sendMsg(Server, Client, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
-						Server.sendMsgToChannel(Server, Client, "LEAVE", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+						Server.sendMsgToChannel(Server, Client, Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
 						it->second.unsetChannelUser(Client);
 						if (it->second.getChannelUser().empty()) {
 							channelsToRemove.push_back(it);
@@ -316,9 +316,9 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.isAlreadyinChannel(Client) == true) {
 				if (count > 1)
-					Server.sendMsgToChannel(Server, Client, "QUIT_MSG" ,  msg, it->second.getChannelName());
+					Server.sendMsgToChannel(Server, Client, msg, it->second.getChannelName());
 				else
-					Server.sendMsgToChannel(Server, Client, "QUIT", Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+					Server.sendMsgToChannel(Server, Client, Client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
 				it->second.unsetChannelUser(Client);
 				Server.sendMsg(Server, Client, "QUIT", "You have left the channel " + it->second.getChannelName(), "");
 				if (it->second.getChannelUser().empty()) {
@@ -357,7 +357,7 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 				it->second.getChannelUser().erase(ita);
 				Server.sendMsg(Server.getClient(argument[2]), Server, "KICK", message, it->second.getChannelName());
 				Server.sendMsg(Server, Client, "KICK", argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
-				Server.sendMsgToChannel(Server, Client, "KICK" , argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
+				Server.sendMsgToChannel(Server, Client, argument[2] + " has been kicked from the channel. Bye bye ", it->second.getChannelName());
 				return;
 			}
 			else
@@ -388,7 +388,7 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", message, it->second.getChannelName());
 				it->second.getInviteList().push_back(Server.getClient(argument[1]).getUsername());
-				Server.sendMsgToChannel(Server, Client, "INVITE" , Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
+				Server.sendMsgToChannel(Server, Client, Client.getNickname() + " his now on the invite list. He can now join at any moment", it->second.getChannelName());
 				Server.sendMsg(Server.getClient(argument[1]), Server, "INVITE", "You are now on the invite list of " + it->second.getChannelName(), it->second.getChannelName());
 				return;
 			}
@@ -425,7 +425,7 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 							if (it->second.isOperator(Client.getUsername()) == true) {
 								it->second.setTopic(msg);
 								Server.sendMsg(Server, Client, "TOPIC", "You have been created a new topic on " + it->second.getChannelName(), "");
-								Server.sendMsgToChannel(Server, Client, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+								Server.sendMsgToChannel(Server, Client, "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
 							} else
 								return Server.sendMsg(Server, Client, ,ERR_CHANOPRIVSNEEDED(Server, Client, Channel));
 						} else {
@@ -541,13 +541,13 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	if (count < 3)
 	{
 		if (count > 1 && argument[1][0] == '&' && argument[1][0] == '#' && count == 2)
-			return Server.sendMsg(Server, Client, "412", "", "");
+			return Server.sendMsg(Server, Client, ERR_NORECIPIENT());
 		else if (count == 2)
 		{
 			for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it)
 				if (argument[1] == it->second.getNickname())
-					return Server.sendMsg(Server, Client, "412", "", "");
-			return Server.sendMsg(Server, Client, "411", "", "");
+					return Server.sendMsg(Server, Client, ERR_NOTEXTTOSEND());
+			return Server.sendMsg(Server, Client, ERR_NORECIPIENT());
 		}
 		else
 			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS());
@@ -560,7 +560,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 			{
 				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 					message += *it + " ";
-				Server.sendMsgToUser(Client, it->second, Server, "PRIVMSG", message);
+				Server.sendMsgToUser(Server, Client, it->second, message);
 				return;
 			}
 		}
@@ -570,7 +570,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	{
 		for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
 			message += *it + " ";
-		Server.sendMsgToChannel(Server, Client , "PRIVMSG", message, argument[1]);
+		Server.sendMsgToChannel(Server, Client , message, argument[1]);
 	}
 	return;
 }
@@ -579,38 +579,50 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	int count = 0;
 	(void)Server;
 	(void)Client;
+	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
-	if (count != 2)
-		return;
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
-			if ("rooohbot" == it->second.getUsername()){
-
+			std::cout << "USER [" + it->second.getUsername() + "]" << std::endl;
+			if (it->second.getUsername() == "rooohbot" ){
+				if (count != 2){
+					msg = Client.getUsername() + " DFT";
+					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						std::perror("send:");
+					return;
+				}
 				switch (botcmd(argument[1]))
 				{
 					case HELP:
-						std::cout << "HELP CMD" << std::endl;
-						break;
-						// if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
-						// 	std::perror("send:");
+						msg = Client.getUsername() + " HELP";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 
 					case FACT:
-						std::cout << "FACT CMD" << std::endl;
+						msg = Client.getUsername() + " FACT";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					case HI:
-						std::cout << "HI CMD" << std::endl;
+						msg = Client.getUsername() + " HI";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					case RPS:
-						std::cout << "RPS CMD" << std::endl;
+						msg = Client.getUsername() + " RPS";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
 						break;
 					default:
-						std::cout << "UNKNOWN CMD" << std::endl;
-						break;
+						msg = Client.getUsername() + " DFT";
+						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+						 	std::perror("send:");
+						break;;
 				}
+				return;
 			}
-			else
-				std::cout << "NOBOT" << std::endl;
 	}
+	std::cout << "NOBOT" << std::endl;
 }
 
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){

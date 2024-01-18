@@ -6,14 +6,14 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 11:00:49 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:28:56 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc.hpp"
 
 bool handleSignal	= false;
-int DEBUG			= YES;
+int DEBUG			= NO;
 int CONSTRUCTOR		= NO;
 int	LOG				= STDOUT;
 

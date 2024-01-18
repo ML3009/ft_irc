@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 10:12:10 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:02:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool	channel::isValidMode(server &Server, user &Client, std::vector<std::string>
 	int i = 0;
 	(void)argument;
 	if (mode.find_first_not_of("itkol") != std::string::npos)
-		return Server.sendMsg(Client, Server, "472", "", ""), false;
+		return Server.sendMsg(Server, Client, "472", "", ""), false;
 	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++, ++i)
 		if (*it == mode[i])
 			return std::cout << "Error : Is already set" << std::endl, false;

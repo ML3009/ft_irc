@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:41:00 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/18 13:19:11 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,10 @@ int main(int ac, char **av){
         else {
             buffer[bytesRead] = '\0';
             std::vector<std::string> argument = splitArgs(buffer);
+            std::cout << "RECEPTION" << std::endl;
+            for (int i = 0; i < argument.size(); i++)
+                std::cout << "[" + std::string(argument[i]) + "]" << std::endl;
+            std::cout << "----------------" << std::endl;   
             memset(buffer, 0, 512);
         }
     }
