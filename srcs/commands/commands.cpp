@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/19 17:19:02 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 17:32:03 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,8 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
 			return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
+	if (argument[1] == "rooohbot")
+		return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it) {
 		if (argument[1] == it->second.getNickname())
 			return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
@@ -181,6 +183,8 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 	if (!Client.getUsername().empty()) {
 		return Server.sendMsg(Server, Client, ERR_ALREADYREGISTRED(Server, Client));
 	}
+	if (argument[1] == "rooohbot")
+		return Server.sendMsg(Server, Client, ERR_ALREADYREGISTRED(Server, Client));
 	if (argument[4][0] == ':')
 	{
 		std::string tmp;
@@ -627,7 +631,7 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 				return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, ""));
 			for (std::map<std::string, channel>::iterator ita = Server.getChannelMap().begin(); ita != Server.getChannelMap().end(); ++ita)
 			{
-					std::string msg = "= " + ita->second.getChannelName() + " : ";			
+					std::string msg = "= " + ita->second.getChannelName() + " : ";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
 						msg += printOP(itb->getUsername(), ita->second) + itb->getNickname() + " ";
 					}
@@ -641,7 +645,7 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 			{
 				if (ita->first == argument[1])
 				{
-					std::string msg = "= " + argument[1] + " : ";			
+					std::string msg = "= " + argument[1] + " : ";
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
 						msg += printOP(itb->getUsername(), ita->second) + itb->getNickname() + " ";
 					}
