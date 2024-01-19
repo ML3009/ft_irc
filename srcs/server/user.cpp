@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:05:59 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 17:14:34 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ user::user(int fd){
 	_hostname = "127.0.0.1";
 	_last_ping = time(NULL);
 	_status = CONNECTED;
+	_messagebot = 0;
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
@@ -48,6 +49,7 @@ user&	user::operator=(const user& rhs){
 		_hostname = rhs._hostname;
 		_last_ping = rhs._last_ping;
 		_status = rhs._status;
+		_messagebot = rhs._messagebot;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -105,10 +107,16 @@ void user::clearBuffer() {_buffer.clear();}
 
 void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
+	
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
 	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)
 		bot_connection(argument, Server);
+	else if (argument[0] == "@@@" && getUsername() == "rooohbot"){
+		if (_messagebot == 0){_bottouser = argument[1];_messagebot++;}
+		else {_messagebot--;_bottouser.clear();}}	
+	else if (_messagebot == 1)
+		bot_message(argument, Server);
 	else 
 		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 	argument.clear();
@@ -156,8 +164,19 @@ void user::bot_connection(std::vector<std::string> arg, server &server){
 	_nickname 	= "rooohbot";
 	_username 	= "rooohbot";
 	_realname	= "rooohbot";
+	_messagebot = 0;
 	_password	= server.getPassword();
 	server.setBotOn();
 	std::cout << "BOT ON" << std::endl;
+}
+
+void user::bot_message(std::vector<std::string> arg, server &server){
+	int fd = server.getClient(_bottouser).getfd();
+	std::string msg;
+	for (std::vector<std::string>::iterator it = arg.begin(); it != arg.end(); ++it)
+		msg += *it + " ";
+	msg += "\n";
+	if (send(fd, msg.c_str(), msg.length(), 0) == -1)
+		std::perror("send:");
 }
 /*--------------- Exception ------------- */

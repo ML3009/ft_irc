@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/19 12:31:27 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 17:19:02 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,6 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 }
 // MSG OK
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
-	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip PART #htviosfdbsjdfsgdfvsjgvfa
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count != 2)
@@ -568,12 +567,14 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	(void)Server;
 	(void)Client;
 	std::string msg;
+	std::ostringstream oss;
+	oss << Server.getpollfd()[0].fd;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
 			std::cout << "USER [" + it->second.getUsername() + "]" << std::endl;
 			if (it->second.getUsername() == "rooohbot" ){
 				if (count != 2){
-					msg = Client.getUsername() + " DFT";
+					msg = Client.getUsername() + " DFT " + oss.str();
 					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						std::perror("send:");
 					return;
@@ -581,28 +582,28 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 				switch (botcmd(argument[1]))
 				{
 					case HELP:
-						msg = Client.getUsername() + " HELP";
+						msg = Client.getUsername() + " HELP " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 
 					case FACT:
-						msg = Client.getUsername() + " FACT";
+						msg = Client.getUsername() + " FACT " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 					case HI:
-						msg = Client.getUsername() + " HI";
+						msg = Client.getUsername() + " HI " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 					case RPS:
-						msg = Client.getUsername() + " RPS";
+						msg = Client.getUsername() + " RPS " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
 					default:
-						msg = Client.getUsername() + " DFT";
+						msg = Client.getUsername() + " DFT " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;;

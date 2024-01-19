@@ -1,0 +1,51 @@
+#pragma once
+
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <csignal>
+#include <ctime>
+#include <cerrno>
+
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <limits>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <poll.h>
+
+
+std::vector<std::string> splitArgs(std::string buffer);
+void execute(std::vector<std::string> argument);
+int botcmd(std::string arg);
+std::string helpBot(std::string dest);
+std::string sayhello(std::string dest);
+
+
+#define BLK "\033[0;30m"
+#define RED "\033[0;31m"
+#define GRN "\033[0;32m"
+#define YEL "\033[0;33m"
+#define BLU "\033[0;34m"
+#define MAG "\033[0;35m"
+#define CYN "\033[0;36m"
+#define WHT "\033[0;37m"
+#define COLOR_RESET "\033[0m"
+
+
+#define HELP 0
+#define FACT 1
+#define HI 2
+#define RPS 3
+#define DFT 4

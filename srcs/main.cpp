@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:31:58 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 13:28:56 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 13:02:17 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int main(int ac, char **av){
 		while (!handleSignal){
 			Server.run_server();
 		}
-		Server.closeServerSocket();
 	}
 	catch (const std::exception &e){
 		std::cout << e.what() << std::endl;

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:07:34 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 16:47:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ public :
 			void				clearBuffer();
 			void				receive(server &server);
 			void				bot_connection(std::vector<std::string> arg, server &server);
+			void				bot_message(std::vector<std::string> arg, server &server);
 
 
 protected :
@@ -68,6 +69,8 @@ private :
 			std::string			_realname;
 			std::string         _buffer;
 			std::string         _password;
+			std::string			_bottouser;
+			int 				_messagebot;
 			int                 _fd;
 			time_t				_last_ping;
 			bool				_status;
