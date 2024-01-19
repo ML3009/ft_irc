@@ -16,11 +16,11 @@ nick="$1"
 
 # Connexion au serveur IRC
 {
-  echo -e "/PASS $password"
+  echo -e "PASS $password"
   sleep 1
-  echo -e "/NICK $nick"
+  echo -e "NICK $nick"
   sleep 1
-  echo -e "/USER $nick $nick $nick $nick"
+  echo -e "USER $nick $nick $nick $nick"
   sleep 1
   # Lire les commandes depuis l'entrée standard
   while IFS= read -r command; do

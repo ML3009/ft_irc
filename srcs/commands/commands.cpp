@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 16:38:15 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 12:31:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 					channelValidExist = isValidUser(Server, Client, it->second, key_tmp, i);
 					switch (channelValidExist) {
 						case USR_IN_CHANNEL:
-							Server.sendMsg(Server, Client, "ERROR" + Client.getUsername() + " is already in " + it->second.getChannelName()); // A TESTER AVEC IRSSI LOGS
+							Server.sendMsg(Server, Client, "ERROR " + Client.getUsername() + " is already in " + it->second.getChannelName()); // A TESTER AVEC IRSSI LOGS
 							break;
 						case CHANNELISFULL:
 							Server.sendMsg(Server, Client, ERR_CHANNELISFULL(channel_tmp[i]));
@@ -301,7 +301,7 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	std::string msg;
-	if (count > 1 && argument[1][0] != ':')
+	if (count > 2 && argument[1][0] != ':')
 		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	if (count > 1){
 		if (argument[1][0] == ':') {
@@ -388,14 +388,14 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[2]));
 }
-
+// MSG OK
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
 	std::string msg;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count < 2 || (count > 3 && argument[2][0] != ':'))
-		return Server.sendMsg(Server, Client, "", "", "");
+		return Server.sendMsg(Server, Client,ERR_NEEDMOREPARAMS(Client));
 	if (count > 3) {
 		if (argument[2][0] == ':') {
 			for (unsigned long i = 2; i < argument.size(); i++) {
@@ -414,20 +414,20 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 						if (it->second.search_mode('t') == true) {
 							if (it->second.isOperator(Client.getUsername()) == true) {
 								it->second.setTopic(msg);
-								Server.sendMsg(Server, Client, "TOPIC", "You have been created a new topic on " + it->second.getChannelName(), "");
-								Server.sendMsgToChannel(Server, Client, "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+								Server.sendMsgToUser(Server, Client, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()));
+								Server.sendMsgToChannel(Server, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()), it->second.getChannelName());
 							} else
-								return Server.sendMsg(Server, Client, ,ERR_CHANOPRIVSNEEDED(it->second.getChannelName()));
+								return Server.sendMsg(Server, Client, ERR_CHANOPRIVSNEEDED(it->second.getChannelName()));
 						} else {
 							it->second.setTopic(msg);
-							Server.sendMsg(Server, Client, RPL_NOTOPIC(Server, Client, it->second.getChannelName()));
-							Server.sendMsgToChannel(Server, Client, "TOPIC" , "A new topic " + msg + " has been created on " + it->second.getChannelName() + " by " + Client.getNickname() + ".", it->second.getChannelName());
+							Server.sendMsgToUser(Server, Client, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()));
+							Server.sendMsgToChannel(Server, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()), it->second.getChannelName());
 						}
 					} else {
 							if (!it->second.getTopic().empty())
-								Server.sendMsg(Server, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()));
+								Server.sendMsgToUser(Server, Client, Client, RPL_TOPIC(Server, Client, it->second.getChannelName(), it->second.getTopic()));
 							else
-								Server.sendMsg(Server, Client, RPL_NOTOPIC(Server, Client, it->second.getChannelName()));
+								Server.sendMsgToUser(Server, Client, Client, RPL_NOTOPIC(Server, Client, it->second.getChannelName()));
 					}
 				} else
 					return Server.sendMsg(Server,Client, ERR_USERNOTINCHANNEL(Server, Client, it->second.getChannelName()));
@@ -438,14 +438,13 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 	}
 	return;
 }
-
+//MSG OK
 void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& argument){
-	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip MODE #htviosfdbsjdfsgdfvsjgvfa +i 
 	std::vector<std::string> arg_mod;
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, ++count);
 	if (count < 3 || (argument[2][0] != '+' && argument[2][0] != '-'))
-		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client)), void();
+		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	char sign = argument[2][0];
 	if (count > 3)
 		std::copy(argument.begin() + 3, argument.end(), std::back_inserter(arg_mod));
@@ -453,7 +452,6 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 		if (argument[1] == it->second.getChannelName() && it->second.isOperator(Client.getUsername()) == true) {
 			for (int i = 1; argument[2][i]; ++i){
 				int ValidMod = isValidArgMod(argument[2][i]);
-				std::cout << sign << std::endl;
 				switch(ValidMod) {
 					case MODE_I:
 						if (sign == '+')
@@ -508,7 +506,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 						}
 						break;
 					default:
-						Server.sendMsg(Server, Client, "472", "", "");
+						Server.sendMsg(Server, Client, ERR_UNKNOWNMODE(Server, Client, std::string(1, argument[2][i])));
 						break;
 
 				}
@@ -522,7 +520,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	}
 	return;
 }
-
+// MSG OK
 void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
 	int destination = 0; // 0 FOR USER | 1 FOR CHANNEL
 	int count = 0;
@@ -564,7 +562,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	}
 	return;
 }
-
+// MSG OK
 void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
 	(void)Server;
@@ -614,7 +612,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	}
 	std::cout << "NOBOT" << std::endl;
 }
-
+//MSG OK
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -625,17 +623,16 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 	{
 		case 1:
 			if (Server.getChannelMap().empty())
-				return Server.sendMsg(Server, Client, "403", "", "");
+				return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, ""));
 			for (std::map<std::string, channel>::iterator ita = Server.getChannelMap().begin(); ita != Server.getChannelMap().end(); ++ita)
 			{
-					oss << ita->second.getChannelUser().size();
-					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
+					std::string msg = "= " + ita->second.getChannelName() + " : ";			
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername() + "\n";
+						msg += printOP(itb->getUsername(), ita->second) + itb->getNickname() + " ";
 					}
-					Server.sendMsg(Server, Client,"NAMES",msg ,"");
-					oss.str("");
-					oss.clear();
+					Server.sendMsg(Server, Client, RPL_NAMREPLY(msg));
+					msg = "";
+					msg.clear();
 			}
 			return;
 		case 2:
@@ -643,15 +640,14 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 			{
 				if (ita->first == argument[1])
 				{
-					oss << ita->second.getChannelUser().size();
-					std::string msg = ita->second.display_mode() + ita->second.getChannelName() + " has " + oss.str() + " user connected :\n";
+					std::string msg = "= " + argument[1] + " : ";			
 					for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); itb++){
-						msg += "\t"+ printOP(itb->getUsername(), ita->second) +" - Nickname : " + itb->getNickname() + " | Username : " + itb->getUsername()+ "\n";
+						msg += printOP(itb->getUsername(), ita->second) + itb->getNickname() + " ";
 					}
-					return Server.sendMsg(Server, Client,"NAMES",msg ,"");
+					return Server.sendMsg(Server, Client, RPL_NAMREPLY(msg));
 				}
 			}
-			return Server.sendMsg(Server, Client, "403", "", "");
+			return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
 
 		default:
 			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));

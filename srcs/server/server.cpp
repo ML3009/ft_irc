@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 15:54:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 12:13:08 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,9 +174,9 @@ void server::getClientMessage(){
 	std::vector<pollfd>::iterator it;
 	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	{
-		std::ostringstream oss;
-    	oss << _clientMap[it->fd].getfd();
-		std::cout << "[" + oss.str() + std::string("] ") + _clientMap[it->fd].getUsername() << std::endl;
+		//std::ostringstream oss;
+    	//oss << _clientMap[it->fd].getfd();
+		//std::cout << "[" + oss.str() + std::string("] ") + _clientMap[it->fd].getUsername() << std::endl;
 		if (it->revents == POLLIN)
 		{
 			char buffer[512];
@@ -239,14 +239,14 @@ bool server::channelExist(std::string channelName){
 void server::closeServerSocket() {close(_pollFD[0].fd);}
 
 void server::timeout_client(user &client){
-	sendMsg(client, *this, "QUIT", "You have been disconnected by the server for being AFK", "");
+	sendMsg(*this, client, " QUIT :leaving");
 	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
 	if (!getChannelMap().empty()) {
 		for (std::map<std::string, channel>::iterator it = getChannelMap().begin(); it != getChannelMap().end(); ++it){
 			if (it->second.isAlreadyinChannel(client) == true) {
 				it->second.unsetChannelUser(client);
-				sendMsg(client, *this, "LEAVE", "You have left the channel " + it->second.getChannelName(), "");
-				sendMsgToChannel(client, *this, "LEAVE", client.getNickname() + " has left the channel. Goodbye!", it->second.getChannelName());
+				sendMsg(*this, client, " QUIT :leaving");
+				sendMsgToChannel(*this, client, " QUIT :Quit: " , it->second.getChannelName());
 
 				if (it->second.getChannelUser().empty()) {
 						channelsToRemove.push_back(it);
@@ -257,7 +257,6 @@ void server::timeout_client(user &client){
 	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it) {
     	getChannelMap().erase(*it);
 	}
-	sendMsg(client, *this, "QUIT", "Leaving the server. Goodbye!", "");
 	disconnect_client(client);
 }
 
@@ -269,6 +268,7 @@ bool server::LastPing(user &client){
 }
 
 void server::sendMsg(server &server, user &client, std::string message) {
+	(void)server;
 	std::string msg;
 	msg =  ":" + client.getNickname() + " " + message + "\r\n";;
 	if (send(client.getfd(), msg.c_str(), msg.length(), 0) == -1)
@@ -302,7 +302,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 							continue;
 						std::string msg =	":" + client.getNickname()
 											+ "!" + client.getNickname()
-											+ "@" + server.getID()
+											+ "@" + server.getID() + " "
 											+ message + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
@@ -313,10 +313,10 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 					return;
 				}
 			}
-			//return sendMsg(Server, Client, "441", "", canal);
+			return sendMsg(server, client, ERR_USERNOTINCHANNEL(server, client, canal));
 		}
     }
-	//return sendMsg(Server, Client, "403", "", canal);
+	return sendMsg(server, client, ERR_NOSUCHCHANNEL(server, client, canal));
 }
 
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {

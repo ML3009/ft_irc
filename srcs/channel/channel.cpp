@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/18 15:02:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/19 11:45:19 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool	channel::isValidMode(server &Server, user &Client, std::vector<std::string>
 	int i = 0;
 	(void)argument;
 	if (mode.find_first_not_of("itkol") != std::string::npos)
-		return Server.sendMsg(Server, Client, "472", "", ""), false;
+		return Server.sendMsg(Server, Client,ERR_UNKNOWNMODE(Server, Client, mode)), false;
 	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++, ++i)
 		if (*it == mode[i])
 			return std::cout << "Error : Is already set" << std::endl, false;
@@ -189,7 +189,7 @@ std::string printOP(std::string user, channel &channel){
 	std::vector<std::string> userlist = channel.getChannelOperators();
 	for (std::vector<std::string>::iterator it = userlist.begin(); it != userlist.end(); ++it){
 		if (*it == user)
-			return "[*]";
+			return "@";
 	}
 	return "";
 }
