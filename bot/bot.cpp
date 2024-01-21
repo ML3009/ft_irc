@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/19 17:31:26 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/21 22:04:58 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 
 bool handleSignalbot	= false;
-
+bool quizz_on           = false;
+int  quizzUser          = 0;
+int  serverfd           = 0;
+std::vector<std::string> quizzAnswer;
+std::string quizzdest;
+int  question = 0;
 int main(int ac, char **av){
     if (ac != 2)
         return 1;
@@ -68,7 +73,7 @@ std::vector<std::string> splitArgs(std::string buffer){
 }
 
 int botcmd(std::string arg){
-    std::string cmd[5] = {"HELP", "FACT", "HI", "RPS", "DFT"};
+    std::string cmd[5] = {"HELP", "FACT", "HI", "QUIZZ", "DFT"};
     for (int i = 0; i < 5; i++){
         if (cmd[i] == arg)
             return i;
@@ -77,7 +82,25 @@ int botcmd(std::string arg){
 }
 
 void execute(std::vector<std::string> argument){
-    if (argument.size() != 3)
+    std::cout << "QUIZZ MOD " << quizz_on << std::endl;
+    if (quizz_on && argument.size() > 0)
+    {
+        std::ostringstream oss;
+        oss << quizzUser;
+        std::cout << "1" << std::endl;
+        std::cout << "USER : " << oss.str() << std::endl;
+        quizzAnswer.push_back(argument[0]);
+        quizzUser--;
+        if (quizzUser == 0){
+            std::cout << "2" << std::endl;
+            quizz_on = false;
+            if (send(serverfd, reponsetoQuizz().c_str(),  reponsetoQuizz().length(), 0) == -1)
+                std::perror("send:");
+            question = 0;
+        }
+        return;
+    }
+    if (argument.size() != 3 && (argument.size() != 4 && argument[1] == "QUIZZ"))
         return;
     switch (botcmd(argument[1]))
 	{
@@ -87,62 +110,50 @@ void execute(std::vector<std::string> argument){
 			break;
 		
         case FACT:
-			// if (send(atoi(argument[2].c_str()), msg.c_str(), msg.length(), 0) == -1){
-			//  	std::perror("send:");}
+			if (send(atoi(argument[2].c_str()), sendFact(argument[0]).c_str(), sendFact(argument[0]).length(), 0) == -1){
+			 	std::perror("send:");}
 			break;
 		
         case HI:
-		    // if (send(atoi(argument[2].c_str()), msg.c_str(), msg.length(), 0) == -1){
-		 	//     std::perror("send:");}
+		    if (send(atoi(argument[2].c_str()), sayhello(argument[0]).c_str(), sayhello(argument[0]).length(), 0) == -1){
+		 	     std::perror("send:");}
 			break;
 		
-        case RPS:
-			// if (send(atoi(argument[2].c_str()), msg.c_str(), msg.length(), 0) == -1){
-			//  	std::perror("send:");}
+        case QUIZZ:
+            quizzUser = atoi(argument[3].c_str());
+            quizzdest = argument[0];
+            quizz_on = true;
+            serverfd = atoi(argument[2].c_str());
+			if (send(atoi(argument[2].c_str()), startquizz(argument[0]).c_str(), startquizz(argument[0]).length(), 0) == -1){
+		     	std::perror("send:");}
 			break;
         
         default:
-			// if (send(atoi(argument[2].c_str()), msg.c_str(), msg.length(), 0) == -1){
-			//  	std::perror("send:");}
+	    	if (send(atoi(argument[2].c_str()), saynothing(argument[0]).c_str(), saynothing(argument[0]).length(), 0) == -1){
+		    	std::perror("send:");}    
 			break;;
 	}
 }
-/*----------------- Coplien ------------- */
 
-// bot::bot(){
 
-//     _factmap[0] = "IRC a été inventé par Jarkko Oikarinen en 1988. À l'origine, il s'agissait d'un moyen pour les étudiants de l'Université d'Oulu en Finlande de communiquer.";
-//     _factmap[1] = "Le terme 'canal' dans IRC fait référence à un canal de discussion, où plusieurs utilisateurs peuvent discuter en temps réel. Les canaux sont précédés du symbole '#' (par exemple, #chat).";
-//     _factmap[2] = "Les utilisateurs qui ont des droits spéciaux sur un canal sont appelés opérateurs de canal. Ils peuvent modérer la discussion et gérer les utilisateurs.";
-//     _factmap[3] = "Les commandes IRC commencent généralement par un '/' (par exemple, /join pour rejoindre un canal, /nick pour changer de pseudonyme).";
-//     _factmap[4] = "IRC fonctionne sur un réseau de serveurs interconnectés. Chaque serveur peut héberger plusieurs canaux de discussion.";
-//     _factmap[5] = "IRC est basé sur un protocole ouvert, ce qui signifie que n'importe qui peut mettre en place son propre serveur IRC ou implémenter un client IRC.";
-//     _factmap[6] = "Les canaux IRC peuvent avoir différents modes, tels que le mode secret (où le canal n'apparaît pas dans la liste des canaux) ou le mode modéré (limitant qui peut envoyer des messages).";
-//     _factmap[7] = "Les bots IRC sont des programmes automatisés qui peuvent effectuer diverses tâches sur les canaux, comme la modération, la diffusion d'informations ou la gestion de jeux.";
-//     _factmap[8] = "Il existe de nombreux clients IRC disponibles, des clients en ligne de commande classiques tels que Irssi aux clients graphiques modernes tels que HexChat.";
-//     _factmap[9] = " IRC a survécu à l'épreuve du temps malgré l'émergence de nouvelles technologies de messagerie. Il reste populaire pour les communautés de discussion en ligne.";
-//     _name = "ROOOOHBot";
-// }
-
-// bot::bot(const bot& rhs){
-//     *this = rhs;
-// }
-
-// bot &bot::operator=(const bot& rhs){
-//     if (this != &rhs)
-//         *this = rhs;
-//     return *this;
-// }
-
-// bot::~bot(){
-
-// }
-
-// /*---------- Getter / Setter ------------ */
-
-// std::string bot::getName() const {return _name;}
 // /*--------------- Function -------------- */
+std::string startquizz(std::string dest){
+    std::srand(std::time(0));
+    question = std::rand() % 5;
+    std::string _quizzmap[5]; 
+    _quizzmap[0] = "Capitale du Japon ?";
+    _quizzmap[1] = "Nombre de continents sur Terre ?";
+    _quizzmap[2] = "Langue parlée en Espagne ?";
+    _quizzmap[3] = "Métal liquide à température ambiante ?";
+    _quizzmap[4] = "Nombre de côtés dans un hexagone ?";
+
+    return  std::string("### ") + dest + "\r\n"
+            + _quizzmap[question] + "\r\n"
+            + "###\r\n";
+}
+
 std::string sendFact(std::string dest){
+    std::srand(std::time(0));
     std::string _factmap[10]; 
     _factmap[0] =  "IRC was invented by Jarkko Oikarinen in 1988. Originally, it was a means for students at the University of Oulu in Finland to communicate.\r\n";
     _factmap[1] =  "The term 'channel' in IRC refers to a discussion channel where multiple users can chat in real-time. Channels are prefixed with the '#' symbol (e.g., #chat).\r\n";
@@ -154,19 +165,25 @@ std::string sendFact(std::string dest){
     _factmap[7] =  "IRC bots are automated programs that can perform various tasks on channels, such as moderation, information broadcasting, or game management.\r\n";
     _factmap[8] =  "There are numerous IRC clients available, from classic command-line clients like Irssi to modern graphical clients like HexChat.\r\n";
     _factmap[9] =  "IRC has stood the test of time despite the emergence of new messaging technologies. It remains popular for online discussion communities.\r\n";
-    
+
     return  std::string("@@@ ") + dest + "\r\n"
+            + _factmap[std::rand() % 10] + "\r\n"
             + "@@@\r\n";
 }
-std::string sayhello(std::string dest){
+std::string saynothing(std::string dest){
     return  std::string("@@@ ") + dest + "\r\n" 
             + "Hi ! you call me without anything :(\r\n" +
             + "You can ask me for help with"
             + std::string(BLU) +" @bot HELP" + COLOR_RESET + "\r\n"
-            +"\tor\r\n"
-            +"ask for a fact with "+ std::string(BLU) +"@bot FACT"+ COLOR_RESET + "\r\n"
             + "@@@\r\n";
 }
+
+std::string sayhello(std::string dest){
+    return  std::string("@@@ ") + dest + "\r\n" 
+            + "Hi ! How are you today ?\r\n"
+            + "@@@\r\n";
+}
+
 
 std::string helpBot(std::string dest){
     return  std::string("@@@ ") + dest + "\r\n"
@@ -199,5 +216,26 @@ std::string helpBot(std::string dest){
             + MAG + "RPS " + COLOR_RESET + ": Show a random fact about irc server" + "\r\n"
             + MAG + "HI " + COLOR_RESET + ": Show a random fact about irc server" + "\r\n" 
             + "@@@\r\n";
+}
+
+std::string reponsetoQuizz(){
+    int correct = 0;
+    std::ostringstream ossok;
+    std::string _answermap[5]; 
+    _answermap[0] = "tokyo";
+    _answermap[1] = "7";
+    _answermap[2] = "espagnol";
+    _answermap[3] = "mercure";
+    _answermap[4] = "6";
+
+    for (int i = 0; i < quizzAnswer.size(); i++)
+        if (quizzAnswer[i] == _answermap[question])
+            correct++;
+    ossok << correct;
+    return  std::string("!!! ") + quizzdest + "\r\n"
+            + "The correct answer was : " + _answermap[question] + "\r\n"
+            + ossok.str() + " people find the good answer ! good job everyone ;)" + "\r\n"
+            + "!!!\r\n";
+    
 }
 /*--------------- Exception ------------- */

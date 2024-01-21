@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/19 17:32:03 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/20 23:13:25 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -568,16 +568,15 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 // MSG OK
 void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
-	(void)Server;
-	(void)Client;
+	int arg = 0;
 	std::string msg;
 	std::ostringstream oss;
+	std::ostringstream ossa;
 	oss << Server.getpollfd()[0].fd;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
-			std::cout << "USER [" + it->second.getUsername() + "]" << std::endl;
 			if (it->second.getUsername() == "rooohbot" ){
-				if (count != 2){
+				if (count != 2 && (count != 3 && argument[1] != "QUIZZ")){
 					msg = Client.getUsername() + " DFT " + oss.str();
 					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						std::perror("send:");
@@ -601,8 +600,14 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;
-					case RPS:
-						msg = Client.getUsername() + " RPS " + oss.str();
+					case QUIZZ:
+						if (count != 3 && argument[2][0] != '#')
+							return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
+						for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) 
+							if (it->first == argument[2])
+								 for (std::vector<user>::iterator ita = it->second.getChannelUser().begin(); ita != it->second.getChannelUser().end(); ++ita, arg++);
+						ossa << arg;					
+						msg = argument[2] + " QUIZZ " + oss.str() + " " + ossa.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
 						break;

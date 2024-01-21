@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:07:01 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 12:51:57 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/20 23:14:33 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ std::vector<std::string> splitArgs(std::string buffer){
 }
 
 int botcmd(std::string arg){
-    std::string cmd[4] = {"HELP", "FACT", "HI", "RPS"};
+    std::string cmd[4] = {"HELP", "FACT", "HI", "QUIZZ"};
     for (int i = 0; i < 4; i++){
         if (cmd[i] == arg)
             return i;

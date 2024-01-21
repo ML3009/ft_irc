@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/19 15:39:47 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/21 22:08:11 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,9 +180,6 @@ void server::getClientMessage(){
 	std::vector<pollfd>::iterator it;
 	for (it = _pollFD.begin(); it != _pollFD.end(); it++)
 	{
-		//std::ostringstream oss;
-    	//oss << _clientMap[it->fd].getfd();
-		//std::cout << "[" + oss.str() + std::string("] ") + _clientMap[it->fd].getUsername() << std::endl;
 		if (it->revents == POLLIN)
 		{
 			char buffer[512];
@@ -327,7 +324,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
 	std::string msg =	":" + client.getNickname()
-						+ "!" + client.getNickname()
+						+ "!~" + client.getNickname()
 						+ "@" + server.getID() + " "
 						+ message + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)

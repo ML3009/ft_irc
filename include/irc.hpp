@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/01/18 12:47:07 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/20 21:16:18 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ extern bool					handleSignalbot;
 #define HELP 0
 #define FACT 1
 #define HI 2
-#define RPS 3
+#define QUIZZ 3
 
 #define BLK "\033[0;30m"
 #define RED "\033[0;31m"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/19 16:47:09 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/20 22:55:14 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ public :
 			std::string			getPassword() const;
 			time_t		 		getLastPing() const;
 			bool                getStatus() const;
-
+			void 				setQuizzmod(int mod);
 			void				setStatus(bool status);
 			void				setPassword(std::string password);
 			void				setNickname(std::string nickname);
@@ -58,7 +58,9 @@ public :
 			void				receive(server &server);
 			void				bot_connection(std::vector<std::string> arg, server &server);
 			void				bot_message(std::vector<std::string> arg, server &server);
-
+			void				bot_quizz(std::vector<std::string> arg, server &server);
+			void				bot_quizzanswer(std::vector<std::string> arg, server &server);
+			void 				answertoBot(std::vector<std::string> arg, server &server);
 
 protected :
 
@@ -70,10 +72,14 @@ private :
 			std::string         _buffer;
 			std::string         _password;
 			std::string			_bottouser;
+			std::string			_bottochannel;
 			int 				_messagebot;
+			int					_quizzbot;
+			int					_quizzanswer;
 			int                 _fd;
 			time_t				_last_ping;
 			bool				_status;
+			bool				_quizzmod;
 
 
 

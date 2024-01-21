@@ -29,9 +29,13 @@
 std::vector<std::string> splitArgs(std::string buffer);
 void execute(std::vector<std::string> argument);
 int botcmd(std::string arg);
+
+std::string sendFact(std::string dest);
+std::string startquizz(std::string dest);
+std::string saynothing(std::string dest);
 std::string helpBot(std::string dest);
 std::string sayhello(std::string dest);
-
+std::string reponsetoQuizz();
 
 #define BLK "\033[0;30m"
 #define RED "\033[0;31m"
@@ -47,5 +51,5 @@ std::string sayhello(std::string dest);
 #define HELP 0
 #define FACT 1
 #define HI 2
-#define RPS 3
+#define QUIZZ 3
 #define DFT 4
