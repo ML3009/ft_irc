@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/17 15:15:28 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/22 13:53:09 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ class commands {
 	void	cmdBOT(server& Server, user& Client, std::vector<std::string>& argument);
 	void	cmdJOIN(server& Server, user& Client, std::vector<std::string>& channel_tmp);
 	void	cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument);
+	void 	cmdPING(server& Server, user& Client, std::vector<std::string>& argument);
+
 
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);

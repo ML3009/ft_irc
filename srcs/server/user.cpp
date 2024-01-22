@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/22 11:07:49 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 14:28:16 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void user::clearBuffer() {_buffer.clear();}
 void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
 	
+	std::cout << "RECEIVE : " << comd  << std::endl;
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
 		

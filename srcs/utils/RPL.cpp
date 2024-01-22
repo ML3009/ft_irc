@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/19 17:18:39 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 13:45:23 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ std::string RPL_NOTOPIC(server& server, user& client, std::string channel) {
 std::string RPL_TOPIC(server& server, user& client, std::string channel, std::string topic) {
     (void)server;
     (void)client;
-    return "332 "+ channel + " :" + topic;
+    return "TOPIC " + channel + " :" + topic;
 }
 
 std::string RPL_INVITING(user &Client, std::string channel){

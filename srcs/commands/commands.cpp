@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/22 11:03:41 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 15:16:22 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ commands::commands(){
 	cmdMap["NICK"] = &commands::cmdNICK; // ok
 	cmdMap["PART"] = &commands::cmdPART; // ok
 	cmdMap["PASS"] = &commands::cmdPASS; // ok
+	cmdMap["PING"] = &commands::cmdPING; // ok
 	cmdMap["NAMES"] = &commands::cmdNAMES; // ok
 	cmdMap["PRIVMSG"] = &commands::cmdPRIVMSG; // ok
 	cmdMap["QUIT"] = &commands::cmdQUIT; // a faire
@@ -399,16 +400,16 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count < 2 || (count > 3 && argument[2][0] != ':'))
 		return Server.sendMsg(Server, Client,ERR_NEEDMOREPARAMS(Client));
-	if (count > 3) {
+	if (count >= 3) {
 		if (argument[2][0] == ':') {
 			for (unsigned long i = 2; i < argument.size(); i++) {
 				msg += argument[i];
 				msg += " ";
 			}
 		}
-		else
+		else 
 			msg += argument[2];
-	}
+	}//:petabobn!~petabobu@d084-cfe0-a0fe-4661-94cd.210.62.ip TOPIC #uhijkohygy :coucou
 	if (!Server.getChannelMap().empty()) {
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.getChannelName() == argument[1]) {
@@ -663,4 +664,15 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 		default:
 			return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	}
+}
+
+void	commands::cmdPING(server& Server, user& Client, std::vector<std::string>& argument){
+	(void)Server;//:punch.wa.us.dal.net PONG punch.wa.us.dal.net :nicka
+	(void)argument;
+	std::string message = "PONG " + Client.getNickname();
+	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
+		std::perror("send:");
+	for (int i = 0; (unsigned long)i < argument.size(); ++i)
+		std::cout << "argument[" << i << "]" << argument[i] << std::endl;
+	return;
 }
