@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:16 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/20 22:18:56 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 15:52:41 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ void	channel::setMode(std::string mode) {
 		return;
 	for (int i = 0; mode[i]; ++i)
 		_mode.insert(mode[i]);
-	for (std::set<char>::iterator it = _mode.begin(); it != _mode.end(); it++)
-		std::cout << *it << std::endl;
 	return;
 }
 
@@ -162,7 +160,6 @@ void	channel::setLimit(std::string limit) {
 
 	const char* limit_tmp = limit.c_str();
 	_limit = strtol(limit_tmp, NULL, 10);
-	std::cout << _limit << std::endl;
 }
 
 void	channel::unsetLimit() {
@@ -200,7 +197,6 @@ int		channel::getTopicStatus(channel &canal, user &client, server &server){
 	std::vector<user> userlist = canal.getChannelUser();
 	for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it){
 		if (it->getfd() == client.getfd()){
-			// if need op
 			if (canal.isOperator(client.getUsername()))
 				return TOPIC_NEED_OP;
 			else

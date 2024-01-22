@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/22 15:16:22 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 15:53:23 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,20 @@
 
 commands::commands(){
 
-	cmdMap["INVITE"] = &commands::cmdINVITE; // ok
-	cmdMap["JOIN"] = &commands::cmdJOIN; // ok
-	cmdMap["KICK"] = &commands::cmdKICK; // ok
-	cmdMap["MODE"] = &commands::cmdMODE; // ok
-	cmdMap["NICK"] = &commands::cmdNICK; // ok
-	cmdMap["PART"] = &commands::cmdPART; // ok
-	cmdMap["PASS"] = &commands::cmdPASS; // ok
-	cmdMap["PING"] = &commands::cmdPING; // ok
-	cmdMap["NAMES"] = &commands::cmdNAMES; // ok
-	cmdMap["PRIVMSG"] = &commands::cmdPRIVMSG; // ok
-	cmdMap["QUIT"] = &commands::cmdQUIT; // a faire
-	cmdMap["TOPIC"] = &commands::cmdTOPIC; // en cours
-	cmdMap["USER"] = &commands::cmdUSER;//ok
-	cmdMap["@bot"] = &commands::cmdBOT; // ok mais modif ideal
+	cmdMap["INVITE"] = &commands::cmdINVITE;
+	cmdMap["JOIN"] = &commands::cmdJOIN;
+	cmdMap["KICK"] = &commands::cmdKICK;
+	cmdMap["MODE"] = &commands::cmdMODE;
+	cmdMap["NICK"] = &commands::cmdNICK;
+	cmdMap["PART"] = &commands::cmdPART;
+	cmdMap["PASS"] = &commands::cmdPASS;
+	cmdMap["PING"] = &commands::cmdPING;
+	cmdMap["NAMES"] = &commands::cmdNAMES;
+	cmdMap["PRIVMSG"] = &commands::cmdPRIVMSG;
+	cmdMap["QUIT"] = &commands::cmdQUIT;
+	cmdMap["TOPIC"] = &commands::cmdTOPIC;
+	cmdMap["USER"] = &commands::cmdUSER;
+	cmdMap["@bot"] = &commands::cmdBOT;
 }
 
 commands::commands(const commands& rhs){
@@ -48,8 +48,6 @@ commands::~commands(){
 
 }
 
-/*---------- Getter / Setter ------------ */
-// MSG OK
 void	commands::getCommand(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getCommand", BEGIN);
@@ -70,14 +68,14 @@ void	commands::getCommand(server& Server, user& Client, std::vector<std::string>
 
 	return;
 }
-// MSG OK
+
 void	commands::getAuthentified(server& Server, user& Client, std::vector<std::string>& argument) {
 
 	debug("getAuthentified", BEGIN);
 	if ((!argument.empty() && argument.size() > 1)) {
 		if (argument[0] == "CAP" && argument[1] == "LS") {
 			argument[0] = "CAP LS";
-			argument.erase(argument.begin() + 1); // cas erreur a regarder qd cap ls deja ecrit
+			argument.erase(argument.begin() + 1);
 		}
 	}
     if (!argument.empty()) {
@@ -110,7 +108,7 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 	debug("getAuthentified", END);
 	return;
 }
-// MSG OK
+
 int	commands::isCmdAuthentified(user& Client, std::string argument){
 	if (!argument.empty()) {
 		if (argument == "CAP LS")
@@ -127,11 +125,6 @@ int	commands::isCmdAuthentified(user& Client, std::string argument){
    return -1;
 }
 
-
-/*--------------- Function -------------- */
-
-
-//MSG OK
 void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int	count = 0;
@@ -151,7 +144,7 @@ void	commands::cmdPASS(server& Server, user& Client, std::vector<std::string>& a
 
 	return;
 }
-//MSG OK
+
 void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& argument){
 
 	(void)Server;
@@ -170,7 +163,7 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 	Client.setNickname(argument[1]);
 	return;
 }
-//MSG OK
+
 void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int	count = 0;
@@ -201,22 +194,21 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 	displayWelcome(Server, Client);
 	return;
 }
-//MSG 80% OK
+
 void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& argument){
-	//:nickbb!~unbb@494f-a0a0-544-a020-fae1.210.62.ip JOIN :#htviosfdbsjdfsgdfvsjgvfa
 	std::vector<std::string> key_tmp;
-	int	keyword = parseCmdJoin(Server, Client, argument); // regarde s il y a le bon nombre d argument
+	int	keyword = parseCmdJoin(Server, Client, argument);
 	if (keyword < 0)
 		return;
 
-	std::vector<std::string> channel_tmp = splitCmdJoin(argument[1]); // split les #channel;
+	std::vector<std::string> channel_tmp = splitCmdJoin(argument[1]);
 
-	if (parseChannelName(Server, Client, channel_tmp) < 0) // parse les #channel;
+	if (parseChannelName(Server, Client, channel_tmp) < 0)
 		return;
 
 	if (keyword == 1){
-		key_tmp = splitCmdJoin(argument[2]); // split les mots cles
-		if (parseChannelKeyword(Server, Client, key_tmp, channel_tmp) < 0) // parse les mots cles et me permet de savoir cb il y a de cles
+		key_tmp = splitCmdJoin(argument[2]);
+		if (parseChannelKeyword(Server, Client, key_tmp, channel_tmp) < 0)
 			return;
 	}
 
@@ -264,7 +256,7 @@ void	commands::cmdJOIN(server& Server, user& Client, std::vector<std::string>& a
 
 	return;
 }
-// MSG OK
+
 void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
@@ -299,7 +291,7 @@ void	commands::cmdPART(server& Server, user& Client, std::vector<std::string>& a
 	}
 	return;
 }
-// MSG OK
+
 void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -338,7 +330,7 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 	Client.setStatus(DISCONNECTED);
 	return;
 }
-// MSG OK
+
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
@@ -364,9 +356,8 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 		}
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
-	return;
 }
-// MSG 80% OK
+
 void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -392,7 +383,7 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[2]));
 }
-// MSG OK
+
 void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -407,9 +398,9 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 				msg += " ";
 			}
 		}
-		else 
+		else
 			msg += argument[2];
-	}//:petabobn!~petabobu@d084-cfe0-a0fe-4661-94cd.210.62.ip TOPIC #uhijkohygy :coucou
+	}
 	if (!Server.getChannelMap().empty()) {
 		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
 			if (it->second.getChannelName() == argument[1]) {
@@ -442,7 +433,7 @@ void	commands::cmdTOPIC(server& Server, user& Client, std::vector<std::string>& 
 	}
 	return;
 }
-//MSG OK
+
 void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& argument){
 	std::vector<std::string> arg_mod;
 	int count = 0;
@@ -524,9 +515,9 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 	}
 	return;
 }
-// MSG OK
+
 void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
-	int destination = 0; // 0 FOR USER | 1 FOR CHANNEL
+	int destination = 0;
 	int count = 0;
 	std::string message;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
@@ -567,7 +558,7 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	}
 	return;
 }
-// MSG OK
+
 void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
 	int arg = 0;
@@ -605,10 +596,10 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 					case QUIZZ:
 						if (count != 3 && argument[2][0] != '#')
 							return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
-						for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) 
+						for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it)
 							if (it->first == argument[2])
 								 for (std::vector<user>::iterator ita = it->second.getChannelUser().begin(); ita != it->second.getChannelUser().end(); ++ita, arg++);
-						ossa << arg;					
+						ossa << arg;
 						msg = argument[2] + " QUIZZ " + oss.str() + " " + ossa.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						 	std::perror("send:");
@@ -624,7 +615,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	}
 	std::cout << "NOBOT" << std::endl;
 }
-//MSG OK
+
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -667,12 +658,10 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 }
 
 void	commands::cmdPING(server& Server, user& Client, std::vector<std::string>& argument){
-	(void)Server;//:punch.wa.us.dal.net PONG punch.wa.us.dal.net :nicka
+	(void)Server;
 	(void)argument;
-	std::string message = "PONG " + Client.getNickname();
+	std::string message = "PONG " + Client.getNickname() + " :" + argument[1];
 	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
 		std::perror("send:");
-	for (int i = 0; (unsigned long)i < argument.size(); ++i)
-		std::cout << "argument[" << i << "]" << argument[i] << std::endl;
 	return;
 }
