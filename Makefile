@@ -85,7 +85,7 @@ clean:
 	
 fclean: clean
 	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) executable ... $(RESET)"
-	@rm -f $(DEFAULT_TARGET) $(BOT_DIR)/ircbot
+	@rm -f $(DEFAULT_TARGET) ircbot
 	@printf "$(CURSIVE)$(GREEN)\t done\n$(RESET)\n"
 
 re : fclean all
