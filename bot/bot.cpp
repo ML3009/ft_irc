@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/21 22:04:58 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 10:27:35 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ std::string reponsetoQuizz(){
     _answermap[3] = "mercure";
     _answermap[4] = "6";
 
-    for (int i = 0; i < quizzAnswer.size(); i++)
+    for (size_t i = 0; i < quizzAnswer.size(); i++)
         if (quizzAnswer[i] == _answermap[question])
             correct++;
     ossok << correct;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/21 21:36:31 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 11:07:49 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ user::user(int fd){
 	_messagebot = 0;
 	_quizzmod = 0;
 	_quizzanswer = 0;
+	_quizzbot = 0;
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
@@ -54,6 +55,7 @@ user&	user::operator=(const user& rhs){
 		_messagebot = rhs._messagebot;
 		_quizzmod = rhs._quizzmod;
 		_quizzanswer = rhs._quizzanswer;
+		_quizzbot = rhs._quizzbot;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -114,10 +116,7 @@ void user::parseClientMessage(server &Server, std::string comd){
 	
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
-	std::ostringstream oss;
-	oss << _quizzmod;
-	std::cout << getUsername() << " QUIZZ MODE " << oss.str() << std::endl;
-	
+		
 	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)
 		bot_connection(argument, Server);
 

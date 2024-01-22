@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/21 22:08:11 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/22 11:05:08 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 						if (it->getfd() == client.getfd())
 							continue;
 						std::string msg =	":" + client.getNickname()
-											+ "!" + client.getNickname()
+											+ "!" + client.getUsername()
 											+ "@" + server.getID() + " "
 											+ message + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
@@ -324,7 +324,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
 	std::string msg =	":" + client.getNickname()
-						+ "!~" + client.getNickname()
+						+ "!" + client.getUsername()
 						+ "@" + server.getID() + " "
 						+ message + "\r\n";
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
