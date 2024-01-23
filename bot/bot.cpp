@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:00:35 by purple            #+#    #+#             */
-/*   Updated: 2024/01/22 10:27:35 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/23 10:52:24 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ int main(int ac, char **av){
     char buffer[1024];
     while (!(handleSignalbot)){
         ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-        if (bytesRead == -1)
-            std::cerr << "Erreur lors de la réception des données du serveur" << std::endl;
+        if (bytesRead < 1){
+            handleSignalbot = true;
+            break;
+        }
         else {
             buffer[bytesRead] = '\0';
             std::vector<std::string> argument = splitArgs(buffer);
