@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/22 15:53:23 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:07:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,8 +542,14 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 		for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
 			if (argument[1] == it->second.getNickname())
 			{
-				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
-					message += *it + " ";
+				int i = 2;
+				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it, i++)
+				{
+					if (argument[i][0] == ':' && i == 2)
+						message += argument[2].substr(1) + " ";
+					else
+						message += *it + " ";
+				}
 				Server.sendMsgToUser(Server, Client, it->second, message);
 				return;
 			}
@@ -660,7 +666,7 @@ void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>&
 void	commands::cmdPING(server& Server, user& Client, std::vector<std::string>& argument){
 	(void)Server;
 	(void)argument;
-	std::string message = "PONG " + Client.getNickname() + " :" + argument[1];
+	std::string message = "PONG " + Client.getNickname() + " :" + argument[1] + "\r\n";
 	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
 		std::perror("send:");
 	return;

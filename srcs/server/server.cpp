@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/22 11:05:08 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/23 16:09:20 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,15 @@ void server::init_server(){
 	int opt = 1;
 	int	serverSocket;
 	_userCount = 0;
-	struct	sockaddr_in serverAdress;
+	
 
 	// Set up server address
-    serverAdress.sin_family = AF_INET;
-    serverAdress.sin_addr.s_addr = INADDR_ANY;
-    serverAdress.sin_port = htons(_port);
-
+    _serverAdress.sin_family = AF_INET;
+    _serverAdress.sin_addr.s_addr = inet_addr("127.0.0.1");
+    _serverAdress.sin_port = htons(_port);
+	char ipStr[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &(_serverAdress.sin_addr), ipStr, INET_ADDRSTRLEN);
+	
 	//Create socket
 	!((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) ? void() : (std::perror("socket"), throw socketException());
 
@@ -125,10 +127,10 @@ void server::init_server(){
 	!(fcntl(serverSocket, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 
 	//Bind the socket
-	!(bind(serverSocket, (struct sockaddr *)&serverAdress, sizeof(serverAdress)) == -1) ? void() : (std::perror("bind"), throw bindException());
+	!(bind(serverSocket, (struct sockaddr *)&_serverAdress, sizeof(_serverAdress)) == -1) ? void() : (std::perror("bind"), throw bindException());
 
 	//Listen for incoming connections
-	!(listen(serverSocket, serverAdress.sin_port) == -1) ? void() : (std::perror("listen"), throw listenException());
+	!(listen(serverSocket, _serverAdress.sin_port) == -1) ? void() : (std::perror("listen"), throw listenException());
 
 	_pollFD.push_back(pollfd());
 	_pollFD.back().fd = serverSocket;
@@ -158,10 +160,9 @@ void server::getNewClient(){
 	debug("getNewClient", BEGIN);
 
 	int fd;
-	struct sockaddr_in	address = {};
-	socklen_t			size 	= sizeof(sockaddr_in);
+	socklen_t			size 	= sizeof(_serverAdress);
 
-	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&address, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
+	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&_serverAdress, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
 	!(fcntl(fd, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 
 	user User(fd);

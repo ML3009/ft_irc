@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/18 14:58:41 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/23 15:49:29 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class server{
 	protected:
 
 	private:
+			struct	sockaddr_in _serverAdress;
 			int					_port;
 			int					_userCount;
 			std::string			_password;

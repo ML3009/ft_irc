@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/22 13:45:23 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/23 15:29:27 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ std::string RPL_CREATED(server &server, user &client) {
         return "Error.";
     }
     char buffer[512];
-    std::strftime(buffer, sizeof(buffer), " :This server was created on \033[0;36m%d %B %Y à %H:%M:%S.\r\n\033[0m", localTime);
+    std::strftime(buffer, sizeof(buffer), " :This server was created on \033[0;36m %B %d %Y %H:%M:%S.\033[0m\r\n", localTime);
 
     return std::string("003 " + client.getNickname() + buffer);
 }
 
 std::string RPL_MYINFO(server &server, user &client){
 
-	return "004 " + client.getNickname() + " :" + server.getID() + "\033[0;34mIRC Server v1.0. Modes supportés : \033[0m\033[0;35m[+i +t +k +o +l].\r\n\033[0m";
+	return "004 " + client.getNickname() + " :" + server.getID() + " 1.0 -none- itkol\r\n";
 }
 
 /*---------------------------------------------------------------------------------------------------*/
