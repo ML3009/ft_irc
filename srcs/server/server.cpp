@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/23 16:09:20 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 09:54:39 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ server&	server::operator=(const server& rhs){
 
 server::~server(){
 	for (size_t i = 0; i < _clientMap.size(); i++){
-		std::cout << "a" << std::endl;
 		disconnect_client(_clientMap.begin()->second);
 	}
 	for (std::vector<pollfd>::iterator it = _pollFD.begin(); it != _pollFD.end(); it++)
