@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/23 14:40:44 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 15:51:40 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ user::user(int fd){
 	_quizzmod = 0;
 	_quizzanswer = 0;
 	_quizzbot = 0;
+	_fileStatus = NONE;
 	display_constructor(USER_DC);
 }
 user::user(const user& rhs){
@@ -56,6 +57,7 @@ user&	user::operator=(const user& rhs){
 		_quizzmod = rhs._quizzmod;
 		_quizzanswer = rhs._quizzanswer;
 		_quizzbot = rhs._quizzbot;
+		_fileStatus = rhs._fileStatus;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -79,6 +81,7 @@ std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
 time_t		user::getLastPing() const{return _last_ping;}
 bool		user::getStatus() const{return _status;}
+bool		user::getFileStatus() const{return _fileStatus;}
 void 		user::setQuizzmod(int mod){_quizzmod = mod;}
 
 void	user::setStatus(bool status) {
@@ -116,7 +119,7 @@ void user::parseClientMessage(server &Server, std::string comd){
 
 	std::vector<std::string> argument = splitArgs(comd);
 	commands cmd;
-		
+
 	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)
 		bot_connection(argument, Server);
 
@@ -141,7 +144,7 @@ void user::parseClientMessage(server &Server, std::string comd){
 		answertoBot(argument, Server);
 		_quizzmod = 0;
 	}
-	else 
+	else
 		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 	argument.clear();
 	debug("parseClientMessage", END);

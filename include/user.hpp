@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/20 22:55:14 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 15:51:57 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ public :
 			std::string			getPassword() const;
 			time_t		 		getLastPing() const;
 			bool                getStatus() const;
+			bool				getFileStatus() const;
 			void 				setQuizzmod(int mod);
 			void				setStatus(bool status);
 			void				setPassword(std::string password);
@@ -80,6 +81,7 @@ private :
 			time_t				_last_ping;
 			bool				_status;
 			bool				_quizzmod;
+			bool				_fileStatus;
 
 
 
@@ -87,6 +89,8 @@ private :
 
 #define CONNECTED true
 #define DISCONNECTED false
+#define NONE false
+#define FILE yes
 
 
 #define USER_DC "[+] [Default] Constructor called for USER CLASS"

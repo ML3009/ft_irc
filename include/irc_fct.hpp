@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_fct.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/19 12:00:43 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 16:29:35 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ std::string					printOP(std::string user, channel &channel);
 int 						response(int clientSocket);
 bool						IsClientFD(const pollfd& pfd, int clientFD);
 int                         botcmd(std::string arg);
+bool                        wait_receiver(user &client);
 
 std::string RPL_INVITING(user &Client, std::string channel);
 std::string RPL_NAMREPLY(std::string message); // 355

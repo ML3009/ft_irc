@@ -6,7 +6,7 @@
 /*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/24 10:44:17 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:25:39 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ commands::commands(){
 	cmdMap["QUIT"] = &commands::cmdQUIT;
 	cmdMap["TOPIC"] = &commands::cmdTOPIC;
 	cmdMap["USER"] = &commands::cmdUSER;
+	cmdMap["TRANSFERT"] = &commands::cmdTRANSFERT;
 	cmdMap["@bot"] = &commands::cmdBOT;
 }
 
@@ -368,9 +369,11 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 		return Server.sendMsg(Server, Client, ERR_NOSUCHNICK(argument[1]));
 	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 		if (it->first == argument[2]){
-			if (it->second.isAlreadyinChannel(Client) \
-			&& !(it->second.isAlreadyinChannel(Server.getClient(argument[1]))) \
-			&& !(it->second.isInvited(argument[1])))
+			if (!(it->second.isAlreadyinChannel(Client)))
+				return Server.sendMsg(Server, Client, ERR_NOTONCHANNEL(Client, argument[2]));
+			if (it->second.isAlreadyinChannel(Server.getClient(argument[1])))
+				Server.sendMsg(Server, Client, "ERROR " + argument[1] + " is already in " + it->second.getChannelName());
+			if (!(it->second.isInvited(argument[1])))
 			{
 				it->second.getInviteList().push_back(Server.getClient(argument[1]).getUsername());
 				Server.sendMsg(Server, Client, RPL_INVITING(Client, it->second.getChannelName()));
@@ -378,7 +381,7 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 				return;
 			}
 			else
-				return ;// MSG D ERREUR A FAIRE
+				Server.sendMsg(Server, Client, "ERROR " + argument[1] + " is already invited in " + it->second.getChannelName());
 		}
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[2]));
@@ -602,14 +605,20 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 					case QUIZZ:
 						if (count != 3 && argument[2][0] != '#')
 							return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
-						for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it)
-							if (it->first == argument[2])
-								 for (std::vector<user>::iterator ita = it->second.getChannelUser().begin(); ita != it->second.getChannelUser().end(); ++ita, arg++);
-						ossa << arg;
-						msg = argument[2] + " QUIZZ " + oss.str() + " " + ossa.str();
-						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
-						 	std::perror("send:");
-						break;
+						for (std::map<std::string, channel>::iterator ita = Server.getChannelMap().begin(); ita != Server.getChannelMap().end(); ++ita)
+							if (ita->first == argument[2])
+							{
+								if (ita->second.isOperator(Client.getUsername()))
+									for (std::vector<user>::iterator itb = ita->second.getChannelUser().begin(); itb != ita->second.getChannelUser().end(); ++itb, arg++);
+								else
+									return Server.sendMsg(Server, Client, ERR_CHANOPRIVSNEEDED(argument[2])), void();
+								ossa << arg;
+								msg = argument[2] + " QUIZZ " + oss.str() + " " + ossa.str();
+								if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
+									std::perror("send:");
+								break;
+							}
+						return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[2]));
 					default:
 						msg = Client.getUsername() + " DFT " + oss.str();
 						if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
@@ -619,7 +628,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 				return;
 			}
 	}
-	std::cout << "NOBOT" << std::endl;
+	Server.sendMsg(Server, Client, "ERROR BOT IS NOT CONNECTED");
 }
 
 void 	commands::cmdNAMES(server& Server, user& Client, std::vector<std::string>& argument){
@@ -670,4 +679,44 @@ void	commands::cmdPING(server& Server, user& Client, std::vector<std::string>& a
 	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
 		std::perror("send:");
 	return;
+}
+
+
+void commands::cmdTRANSFERT(server &server, user &client, std::vector<std::string>&arg){
+	int count = 0;
+	// 0 TRANSFERT | 1 SEND/RECEIVE | 2 USER | 3 FILE
+	for (std::vector<std::string>::iterator it = arg.begin(); it != arg.end(); ++it, count++);
+	if (count != 4)
+		return server.sendMsg(server, client, ERR_NEEDMOREPARAMS(client));
+	if (arg[1] == "receive"){
+		// if ()
+		server.sendMsg(server, client, "ERROR " + client.getUsername() + " have no file in queue");
+	}	else if (arg[1] == "send"){
+
+		if (server.userExist(arg[2])){
+			std::ifstream infile(arg[3].c_str());
+			if (!infile.is_open())
+				server.sendMsg(server, client, "ERROR " + arg[3] + " open fail");
+
+			std::string msg = client.getNickname() + " is trying to send this file : " + arg[3] + "\r\n";
+			if (send(server.getClient(arg[2]).getfd(), msg.c_str(), msg.size(), 0) == -1)
+        		std::perror("send:");
+			msg = "use [TRANSFERT receive yes] to accept it or [TRANSFERT receive no] to cancel\r\n";
+			if (send(server.getClient(arg[2]).getfd(), msg.c_str(), msg.size(), 0) == -1)
+        		std::perror("send:");
+
+    		std::cout << "Waiting for response from the other client..." << std::endl;
+			bool sending = wait_receiver(client);
+    		if (sending) {
+        		std::cout << "SEND OK" << std::endl;
+			}
+			else {
+				std::cout << "SEND NOK" << std::endl;
+			}
+			return;
+		}
+		return server.sendMsg(server, client, ERR_NOSUCHNICK(arg[2]));
+
+	} else
+		return server.sendMsg(server, client, ERR_UNKNOWNCOMMAND(arg[1]));
 }
