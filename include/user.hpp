@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <medpurple@student.42.fr>           +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/20 22:55:14 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 13:05:26 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ public :
 			std::string         getBuffer() const;
 			std::string			getPassword() const;
 			time_t		 		getLastPing() const;
+			char 				*getIP() const;
 			bool                getStatus() const;
 			void 				setQuizzmod(int mod);
 			void				setStatus(bool status);
@@ -50,6 +51,7 @@ public :
 			void				setNickname(std::string nickname);
 			void				setUsername(std::string username);
 			void				setRealname(std::string realname);
+			void				setip(char *ip);
 // Function
 			void				parseClientMessage(server &Server, std::string comd);
 			bool				isAuthentified(void);
@@ -80,6 +82,7 @@ private :
 			time_t				_last_ping;
 			bool				_status;
 			bool				_quizzmod;
+			char *				_client_ip;
 
 
 

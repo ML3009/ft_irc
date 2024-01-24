@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:01:10 by purple            #+#    #+#             */
-/*   Updated: 2024/01/23 15:49:29 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 17:20:17 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class server{
 			std::map<int, user> &getUserMap();
 			std::map<std::string, channel> &getChannelMap();
 			user 				&getClient(std::string name);
+			bool 				getIrssi() const;
+			void				setIrssi(bool irssi);
 
 			void				setBotOn();
 
@@ -75,6 +77,7 @@ class server{
 			std::map<std::string, channel> _channelMap;
 			std::string			_botToken;
 			int 				_botCount;
+			bool 				_irssi;
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/23 15:07:27 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 17:20:30 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ commands::commands(){
 	cmdMap["QUIT"] = &commands::cmdQUIT;
 	cmdMap["TOPIC"] = &commands::cmdTOPIC;
 	cmdMap["USER"] = &commands::cmdUSER;
+	cmdMap["CAP LS"] = &commands::cmdCAPLS;
 	cmdMap["@bot"] = &commands::cmdBOT;
 }
 
@@ -52,6 +53,12 @@ void	commands::getCommand(server& Server, user& Client, std::vector<std::string>
 
 	debug("getCommand", BEGIN);
 	bool command = false;
+	if ((!argument.empty() && argument.size() > 1)) {
+		if (argument[0] == "CAP" && argument[1] == "END") {
+			displayWelcome(Server, Client);
+			return;
+		}
+	}
 	if (!argument.empty()) {
 		for (std::map<std::string, cmdFunctionPointer>::iterator it = cmdMap.begin(); it != cmdMap.end(); ++it) {
 			if (it->first == argument[0]){
@@ -76,6 +83,7 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 		if (argument[0] == "CAP" && argument[1] == "LS") {
 			argument[0] = "CAP LS";
 			argument.erase(argument.begin() + 1);
+			Server.setIrssi(true);
 		}
 	}
     if (!argument.empty()) {
@@ -91,7 +99,7 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				getCommand(Server, Client, argument);
 				break;
 			case CAP_LS:
-				return;
+				getCommand(Server, Client, argument);
 				break;
 			default:
 				Server.sendMsg(Server, Client, "\033[0;33m[ You are not connected to the server ]\033[0m");
@@ -191,7 +199,8 @@ void	commands::cmdUSER(server& Server, user& Client, std::vector<std::string>& a
 		Client.setRealname(argument[4]);
 	}
 	Client.setUsername(argument[1]);
-	displayWelcome(Server, Client);
+	if (Server.getIrssi() == false)
+		 displayWelcome(Server, Client);
 	return;
 }
 
@@ -334,7 +343,7 @@ void	commands::cmdQUIT(server& Server, user& Client, std::vector<std::string>& a
 void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& argument){
 	int count = 0;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
-	if (count != 3)
+	if (count < 3)
 		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it) {
 		if (it->first == argument[1]){
@@ -344,11 +353,23 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 				return Server.sendMsg(Server, Client, ERR_USERNOTINCHANNEL(Server, Server.getClient(argument[2]), argument[1]));
 			if  (it->second.isOperator(Client.getUsername()))
 			{
+				std::string msg = " ";
+				int i = 3;
+				if (count > 3 && argument[3][0] == ':')
+				{
+					for (std::vector<std::string>::iterator it = argument.begin() + 3; it != argument.end(); ++it, i++)
+					{
+						if (argument[i][0] == ':' && i == 3)
+							msg += argument[i].substr(1) + " ";
+						else
+							msg += *it + " ";
+					}
+				}
 				std::vector<user>::iterator ita = std::find(it->second.getChannelUser().begin(), it->second.getChannelUser().end(), Server.getClient(argument[2]));
 				it->second.getChannelUser().erase(ita);
-				Server.sendMsgToUser(Server, Client ,Server.getClient(argument[2]), "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname());
-				Server.sendMsgToUser(Server, Client , Client, "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname());
-				Server.sendMsgToChannel(Server, Client,"KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname(), it->second.getChannelName());
+				Server.sendMsgToUser(Server, Client ,Server.getClient(argument[2]), "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname() + msg);
+				Server.sendMsgToUser(Server, Client , Client, "KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname() + msg);
+				Server.sendMsgToChannel(Server, Client,"KICK " + it->second.getChannelName() + " " + Server.getClient(argument[2]).getNickname() + " :" + Client.getNickname() + msg, it->second.getChannelName());
 				return;
 			}
 			else
@@ -667,6 +688,17 @@ void	commands::cmdPING(server& Server, user& Client, std::vector<std::string>& a
 	(void)Server;
 	(void)argument;
 	std::string message = "PONG " + Client.getNickname() + " :" + argument[1] + "\r\n";
+	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
+		std::perror("send:");
+	return;
+}
+
+
+void	commands::cmdCAPLS(server& Server, user& Client, std::vector<std::string>& argument){
+
+	(void)Server;
+	(void)argument;
+	std::string message = "CAP * LS :none\r\n";
 	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
 		std::perror("send:");
 	return;

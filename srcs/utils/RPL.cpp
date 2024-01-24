@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/23 15:29:27 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 16:48:59 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,31 @@ void displayWelcome(server &server, user &client){
 		std::perror("send:");
 }
 
+// response = ":" + this->getHostname() + " " + RPL_WELCOME + " " + client.getNickname() + " :" + WELCOME + " " + client.getNickname() + "!" + client.getUsername() + "@" + client.getIpAddress() + "\r\n";
+// 	response += ":" + this->getHostname() + " " + RPL_YOURHOST + " " + client.getNickname() + " :Your host is " + this->getHostname() + ", running version 0.6\r\n";
+// 	response += ":" + this->getHostname() + " " + RPL_CREATED + " " + client.getNickname() + " :This server was created sometime in the near future\r\n";
+
 std::string RPL_WELCOME(server &server, user &client){
 	(void)server;
-    return "001 " + client.getNickname() + " :Welcome to our IRC server !\r\n";
+    return ":" + server.getID() + " 001 " + client.getNickname() + /*" Welcome" + */" :Welcome to the Internet Relay Network " + client.getNickname() + "!" + client.getUsername() + "@" + client.getIP() + "\r\n";
 }
 
 std::string RPL_YOURHOST(server &server, user &client){
-    return "002 " + client.getNickname() + " :Your host is " + server.getID() + "\r\n";
+    return ":" + server.getID() + " 002 " + client.getNickname() + " :Your host is " + server.getID() + ", running version 0.6\r\n";
 }
 
 std::string RPL_CREATED(server &server, user &client) {
     (void)server;
-    std::time_t now = std::time(NULL);
-    std::tm* localTime = std::localtime(&now);
+    // std::time_t now = std::time(NULL);
+    // std::tm* localTime = std::localtime(&now);
 
-    if (!localTime) {
-        return "Error.";
-    }
-    char buffer[512];
-    std::strftime(buffer, sizeof(buffer), " :This server was created on \033[0;36m %B %d %Y %H:%M:%S.\033[0m\r\n", localTime);
+    // if (!localTime) {
+        // return "Error.";
+    // }
+    // char buffer[512];
+    // std::strftime(buffer, sizeof(buffer), " :This server was created on \033[0;36m %B %d %Y %H:%M:%S.\033[0m\r\n", localTime);
 
-    return std::string("003 " + client.getNickname() + buffer);
+    return std::string(":" + server.getID() + " 003 " + client.getNickname() + " :This server was created on 2024/01/24\r\n");
 }
 
 std::string RPL_MYINFO(server &server, user &client){

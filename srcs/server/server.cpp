@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 09:54:39 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 17:20:13 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,16 @@ server::server(){
 	_password = "password";
 	_userCount = 0;
 	_upTime = clock();
-	_ID = "127.0.0.1";
+	_ID = "irc";
 	_maxtimeout = 2000000;
+	_irssi = false;
 
 	display_constructor(SERVER_DC);
 }
 
 
 server::server(int port, std::string password){
-	_ID = "127.0.0.1";
+	_ID = "irc";
 	_port = port;
 	_password = password;
 	_userCount = 0;
@@ -35,6 +36,7 @@ server::server(int port, std::string password){
 	_maxtimeout = 15;
 	_botToken = "hvsqhzjhbrpojnwdf5454";
 	_botCount = 0;
+	_irssi = false;
 
 	display_constructor(SERVER_PC);
 
@@ -55,7 +57,10 @@ server&	server::operator=(const server& rhs){
 		_userCount = rhs._userCount;
 		_upTime = rhs._upTime;
 		_maxtimeout = rhs._maxtimeout;
+		_botToken = rhs._botToken;
+		_botCount = rhs._botCount;
 		_ID = rhs._ID;
+		_irssi = rhs._irssi;
 	}
 	display_constructor(SERVER_AO);
 	return *this;
@@ -107,11 +112,7 @@ void server::init_server(){
 	
 
 	// Set up server address
-    _serverAdress.sin_family = AF_INET;
-    _serverAdress.sin_addr.s_addr = inet_addr("127.0.0.1");
-    _serverAdress.sin_port = htons(_port);
-	char ipStr[INET_ADDRSTRLEN];
-	inet_ntop(AF_INET, &(_serverAdress.sin_addr), ipStr, INET_ADDRSTRLEN);
+
 	
 	//Create socket
 	!((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) ? void() : (std::perror("socket"), throw socketException());
@@ -125,16 +126,25 @@ void server::init_server(){
 	//Option socket to be non bloquant
 	!(fcntl(serverSocket, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 
+	_serverAdress.sin_family = AF_INET;
+    _serverAdress.sin_addr.s_addr = INADDR_ANY;
+    _serverAdress.sin_port = htons(_port);
+	
+	char ipStr[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &(_serverAdress.sin_addr), ipStr, INET_ADDRSTRLEN);
 	//Bind the socket
 	!(bind(serverSocket, (struct sockaddr *)&_serverAdress, sizeof(_serverAdress)) == -1) ? void() : (std::perror("bind"), throw bindException());
 
 	//Listen for incoming connections
-	!(listen(serverSocket, _serverAdress.sin_port) == -1) ? void() : (std::perror("listen"), throw listenException());
+	!(listen(serverSocket, 500) == -1) ? void() : (std::perror("listen"), throw listenException());
 
 	_pollFD.push_back(pollfd());
 	_pollFD.back().fd = serverSocket;
 	_pollFD.back().events = POLLIN;
 	std::cout << "\x1b[32m \x1b[3m" << "Initialisation ended sucessfully" << "\x1b[0m" << std::endl;
+	std::cout << "SERVER PARAM, socket fd is " << serverSocket << \
+				", ip is: " << inet_ntoa(_serverAdress.sin_addr) << \
+				", port: " << ntohs(_serverAdress.sin_port) << std::endl;
 	debug("init_server", END);
 	return;
 }
@@ -159,12 +169,17 @@ void server::getNewClient(){
 	debug("getNewClient", BEGIN);
 
 	int fd;
-	socklen_t			size 	= sizeof(_serverAdress);
+	struct	sockaddr_in userAdress;
+	socklen_t			size 	= sizeof(userAdress);
 
-	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&_serverAdress, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
+	!((fd = accept(_pollFD[0].fd, (struct sockaddr *)&userAdress, &size)) == -1) ? void() : (std::perror("accept"), throw acceptException());
 	!(fcntl(fd, F_SETFL, O_NONBLOCK) == -1) ? void() : (std::perror("fcntl"), throw fcntlException());
 
+		std::cout << "New connection, socket fd is " << fd << \
+		", ip is: " << inet_ntoa(userAdress.sin_addr) << \
+		", port: " << ntohs(userAdress.sin_port) << std::endl;
 	user User(fd);
+	User.setip(inet_ntoa(userAdress.sin_addr));
 	_clientMap[fd] = User;
 	_pollFD.push_back(pollfd());
 	_pollFD.back().fd = fd;
@@ -305,7 +320,7 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 							continue;
 						std::string msg =	":" + client.getNickname()
 											+ "!" + client.getUsername()
-											+ "@" + server.getID() + " "
+											+ "@" + client.getIP() + " "
 											+ message + "\r\n";
 						if (send(it->getfd(), msg.c_str(), msg.length(), 0) == -1)
 							std::perror("send:");
@@ -323,13 +338,42 @@ void server::sendMsgToChannel(server &server, user &client, std::string message,
 }
 
 void server::sendMsgToUser(server &server, user &client, user &dest, std::string message) {
+	(void)server;
 	std::string msg =	":" + client.getNickname()
 						+ "!" + client.getUsername()
-						+ "@" + server.getID() + " "
+						+ "@" + client.getIP() + " "
 						+ message + "\r\n";
+	std::cout << "msg user " << msg << std::endl;
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"
                 << msg << "\n"
                 << "-------------------------" << std::endl;
 }
+
+
+bool server::getIrssi() const{
+	return _irssi;
+}
+
+void	server::setIrssi(bool irssi){
+	_irssi = irssi;
+	return;
+}
+
+//DCC SEND from bo [127.0.0.1 port 43235]: test.txt [5B]
+//:bo!bob@127.0.0.1 PRIVMSG bi :DCC SEND test.txt 2130706433 43235 5 pasnous
+
+// DCC SEND from bo [0.0.143.5 port 5]: test.txt 2130706433 [0B]
+//:bo!bob@127.0.0.1 PRIVMSG bi :DCC SEND test.txt 2130706433 36613 5  nous
+
+
+// cmd [PRIVMSG ccN :DCC SEND test.txt 2130706433 37425 5]
+// splitarg [PRIVMSG]
+// splitarg [ccN]
+// splitarg [:DCC]
+// splitarg [SEND]
+// splitarg [test.txt]
+// splitarg [2130706433]
+// splitarg [37425]
+// splitarg [5]
