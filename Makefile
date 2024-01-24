@@ -14,6 +14,7 @@ SRC_FILES = $(SRC_DIR)/main.cpp \
 			$(SRC_DIR)/commands/commands.cpp \
 			$(SRC_DIR)/commands/join.cpp \
 			$(SRC_DIR)/commands/mode.cpp \
+			$(SRC_DIR)/commands/file_transfert.cpp \
 			$(SRC_DIR)/server/server.cpp \
 			$(SRC_DIR)/server/user.cpp \
 			$(SRC_DIR)/utils/debug.cpp \
@@ -57,7 +58,7 @@ $(DEFAULT_TARGET): $(OBJ_FILES)
 	@printf "\n\tCompilation of $(DEFAULT_TARGET)$(CURSIVE)$(GREEN) DONE\n$(RESET)"
 	@echo "Compiler flags used: $(CXXFLAGS)"
 	$(USAGE)
-	
+
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HDR_FILES)
 	@mkdir -p $(@D)
@@ -73,7 +74,7 @@ $(OBJ_DIR)/%.o: $(BOT_DIR)/%.cpp $(HDR_BOT_FILES)
 	@echo "$(CURSIVE)$(GRAY)[Compiling]$(RESET)$(GRAY) $< $(CURSIVE)[$(CUR_FILE)/$(NUM_FILES) files, $(PERCENT)%]$ \t$(RESET)✔\r"
 	@$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
-bot : $(OBJ_BOT_FILES) 
+bot : $(OBJ_BOT_FILES)
 	@$(CXX) $(CXXFLAGS) -o ircbot $(BOT_FILES)
 	@printf "\n\tCompilation of bot$(CURSIVE)$(GREEN) DONE\n$(RESET)"
 	@echo "Compiler flags used: $(CXXFLAGS)"
@@ -82,7 +83,7 @@ clean:
 	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) object ... $(RESET)"
 	@rm -rf $(OBJ_DIR)
 	@printf "$(CURSIVE)$(GREEN)\t   done\n$(RESET)"
-	
+
 fclean: clean
 	@printf "$(CURSIVE)$(GRAY)- [Removing] $(DEFAULT_TARGET) executable ... $(RESET)"
 	@rm -f $(DEFAULT_TARGET) ircbot

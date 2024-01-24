@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:15:35 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/24 14:29:46 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 17:29:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class commands {
 	void 	cmdPING(server& Server, user& Client, std::vector<std::string>& argument);
 	void 	cmdCAPLS(server& Server, user& Client, std::vector<std::string>& argument);
 
+	void 	cmdTRANSFERT(server &server, user &client, std::vector<std::string>&arg);
 
 	private:
 		typedef void (commands::*cmdFunctionPointer)(server& Server, user& Client, std::vector<std::string>& argument);

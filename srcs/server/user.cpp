@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 17:21:03 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/24 17:29:49 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ user::user(int fd){
 	_quizzmod = 0;
 	_quizzanswer = 0;
 	_quizzbot = 0;
+	_fileStatus = NONE;
 	_client_ip = NULL;
 	display_constructor(USER_DC);
 }
@@ -58,6 +59,7 @@ user&	user::operator=(const user& rhs){
 		_quizzanswer = rhs._quizzanswer;
 		_quizzbot = rhs._quizzbot;
 		_client_ip = rhs._client_ip;
+		_fileStatus = rhs._fileStatus;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -82,6 +84,7 @@ std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
 time_t		user::getLastPing() const{return _last_ping;}
 bool		user::getStatus() const{return _status;}
+bool		user::getFileStatus() const{return _fileStatus;}
 void 		user::setQuizzmod(int mod){_quizzmod = mod;}
 
 void	user::setip(char *ip){
@@ -126,7 +129,7 @@ void user::parseClientMessage(server &Server, std::string comd){
 	// 	std::cout << "splitarg [" << argument[i] << "]" << std::endl;
 	// }
 	commands cmd;
-		
+
 	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)
 		bot_connection(argument, Server);
 
@@ -151,7 +154,7 @@ void user::parseClientMessage(server &Server, std::string comd){
 		answertoBot(argument, Server);
 		_quizzmod = 0;
 	}
-	else {
+	else{
 		isAuthentified() == true ? cmd.getCommand(Server, *this, argument) : cmd.getAuthentified(Server, *this, argument);
 	}
 	argument.clear();
