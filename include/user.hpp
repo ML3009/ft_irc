@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:33:39 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 17:29:17 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/25 14:48:26 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ public :
 			time_t		 		getLastPing() const;
 			char 				*getIP() const;
 			bool                getStatus() const;
-			bool				getFileStatus() const;
 			void 				setQuizzmod(int mod);
 			void				setStatus(bool status);
 			void				setPassword(std::string password);
@@ -83,7 +82,6 @@ private :
 			time_t				_last_ping;
 			bool				_status;
 			bool				_quizzmod;
-			bool				_fileStatus;
 			char *				_client_ip;
 
 

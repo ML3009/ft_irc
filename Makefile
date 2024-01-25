@@ -14,7 +14,6 @@ SRC_FILES = $(SRC_DIR)/main.cpp \
 			$(SRC_DIR)/commands/commands.cpp \
 			$(SRC_DIR)/commands/join.cpp \
 			$(SRC_DIR)/commands/mode.cpp \
-			$(SRC_DIR)/commands/file_transfert.cpp \
 			$(SRC_DIR)/server/server.cpp \
 			$(SRC_DIR)/server/user.cpp \
 			$(SRC_DIR)/utils/debug.cpp \
@@ -89,6 +88,6 @@ fclean: clean
 	@rm -f $(DEFAULT_TARGET) ircbot
 	@printf "$(CURSIVE)$(GREEN)\t done\n$(RESET)\n"
 
-re : fclean all
+re : fclean all bot
 
 .PHONY: all clean fclean re bot

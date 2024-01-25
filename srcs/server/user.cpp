@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 17:32:31 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 17:29:49 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/25 14:48:13 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ user::user(int fd){
 	_quizzmod = 0;
 	_quizzanswer = 0;
 	_quizzbot = 0;
-	_fileStatus = NONE;
 	_client_ip = NULL;
 	display_constructor(USER_DC);
 }
@@ -59,7 +58,6 @@ user&	user::operator=(const user& rhs){
 		_quizzanswer = rhs._quizzanswer;
 		_quizzbot = rhs._quizzbot;
 		_client_ip = rhs._client_ip;
-		_fileStatus = rhs._fileStatus;
 	}
 	display_constructor(USER_AO);
 	return *this;
@@ -84,7 +82,6 @@ std::string user::getPassword() const{return _password;}
 std::string user::getNickname() const{return _nickname;}
 time_t		user::getLastPing() const{return _last_ping;}
 bool		user::getStatus() const{return _status;}
-bool		user::getFileStatus() const{return _fileStatus;}
 void 		user::setQuizzmod(int mod){_quizzmod = mod;}
 
 void	user::setip(char *ip){
@@ -123,11 +120,7 @@ void user::clearBuffer() {_buffer.clear();}
 void user::parseClientMessage(server &Server, std::string comd){
 	debug("parseClientMessage", BEGIN);
 
-	// std::cout << "cmd [" << comd << "]" << std::endl;
 	std::vector<std::string> argument = splitArgs(comd);
-	// for (int i = 0; (unsigned long)i < argument.size(); ++i){
-	// 	std::cout << "splitarg [" << argument[i] << "]" << std::endl;
-	// }
 	commands cmd;
 
 	if (argument[0] ==  "@initialisation" && Server.getBotCount() == 0)

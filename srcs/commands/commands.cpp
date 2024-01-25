@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/24 17:28:45 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/25 14:41:35 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ commands::commands(){
 	cmdMap["TOPIC"] = &commands::cmdTOPIC;
 	cmdMap["USER"] = &commands::cmdUSER;
 	cmdMap["CAP LS"] = &commands::cmdCAPLS;
-	cmdMap["TRANSFERT"] = &commands::cmdTRANSFERT;
 	cmdMap["@bot"] = &commands::cmdBOT;
 }
 
@@ -57,6 +56,7 @@ void	commands::getCommand(server& Server, user& Client, std::vector<std::string>
 	if ((!argument.empty() && argument.size() > 1)) {
 		if (argument[0] == "CAP" && argument[1] == "END") {
 			displayWelcome(Server, Client);
+			Server.setIrssi(false);
 			return;
 		}
 	}
@@ -379,7 +379,7 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
 }
-
+// MESSAGE D INVITE A REGLER
 void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -543,6 +543,7 @@ void	commands::cmdMODE(server& Server, user& Client, std::vector<std::string>& a
 void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>& argument){
 	int destination = 0;
 	int count = 0;
+	int i = 2;
 	std::string message;
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	if (count < 3)
@@ -561,20 +562,19 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	}
 	if (argument[1][0] != '&' && argument[1][0] != '#')
 		destination = pvm_USER;
-	message = "PRIVMSG " + argument[1] + " :";
+	for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it, i++)
+	{
+		if (argument[i][0] == ':' && i == 2)
+			message += argument[2].substr(1);
+		else
+			message += " " + *it;
+	}
 	if (destination == pvm_USER){
 		for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
 			if (argument[1] == it->second.getNickname())
 			{
-				int i = 2;
-				for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it, i++)
-				{
-					if (argument[i][0] == ':' && i == 2)
-						message += argument[2].substr(1) + " ";
-					else
-						message += *it + " ";
-				}
-				Server.sendMsgToUser(Server, Client, it->second, message);
+				std::string msgdef = "PRIVMSG " + it->second.getNickname() + " :" + message;
+				Server.sendMsgToUser(Server, Client, it->second, msgdef);
 				return;
 			}
 		}
@@ -582,9 +582,25 @@ void	commands::cmdPRIVMSG(server& Server, user& Client, std::vector<std::string>
 	}
 	else
 	{
-		for (std::vector<std::string>::iterator it = argument.begin() + 2; it != argument.end(); ++it)
-			message += *it + " ";
-		Server.sendMsgToChannel(Server, Client , message, argument[1]);
+		for (std::map<std::string, channel>::iterator it = Server.getChannelMap().begin(); it != Server.getChannelMap().end(); ++it){
+			if (argument[1] == it->first){
+				std::vector<user> userlist = it->second.getChannelUser();
+				for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it){
+					if (it->getfd() == Client.getfd())
+					{
+						for (std::vector<user>::iterator it = userlist.begin(); it != userlist.end(); ++it) {
+							if (it->getfd() == Client.getfd())
+								continue;
+							std::string msgdef = "PRIVMSG " + argument[1] + " :" + message;
+							Server.sendMsgToUser(Server, Client, *it, msgdef);
+						}
+						return;
+					}
+				}
+				return Server.sendMsg(Server, Client, ERR_USERNOTINCHANNEL(Server, Client, argument[1]));
+			}
+    	}
+		return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
 	}
 	return;
 }
@@ -599,7 +615,7 @@ void	commands::cmdBOT(server& Server, user& Client, std::vector<std::string>& ar
 	for (std::vector<std::string>::iterator it = argument.begin(); it != argument.end(); ++it, count++);
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it){
 			if (it->second.getUsername() == "rooohbot" ){
-				if (count != 2 && (count != 3 && argument[1] != "QUIZZ")){
+				if (count < 2 || (count > 3 && argument[1] != "QUIZZ")){
 					msg = Client.getUsername() + " DFT " + oss.str();
 					if (send(it->second.getfd(), msg.c_str(), msg.length(), 0) == -1)
 						std::perror("send:");
@@ -711,44 +727,4 @@ void	commands::cmdCAPLS(server& Server, user& Client, std::vector<std::string>& 
 	if (send(Client.getfd(), message.c_str(), message.length(), 0) == -1)
 		std::perror("send:");
 	return;
-}
-
-
-void commands::cmdTRANSFERT(server &server, user &client, std::vector<std::string>&arg){
-	int count = 0;
-	// 0 TRANSFERT | 1 SEND/RECEIVE | 2 USER | 3 FILE
-	for (std::vector<std::string>::iterator it = arg.begin(); it != arg.end(); ++it, count++);
-	if (count != 4)
-		return server.sendMsg(server, client, ERR_NEEDMOREPARAMS(client));
-	if (arg[1] == "receive"){
-		// if ()
-		server.sendMsg(server, client, "ERROR " + client.getUsername() + " have no file in queue");
-	}	else if (arg[1] == "send"){
-
-		if (server.userExist(arg[2])){
-			std::ifstream infile(arg[3].c_str());
-			if (!infile.is_open())
-				server.sendMsg(server, client, "ERROR " + arg[3] + " open fail");
-
-			std::string msg = client.getNickname() + " is trying to send this file : " + arg[3] + "\r\n";
-			if (send(server.getClient(arg[2]).getfd(), msg.c_str(), msg.size(), 0) == -1)
-        		std::perror("send:");
-			msg = "use [TRANSFERT receive yes] to accept it or [TRANSFERT receive no] to cancel\r\n";
-			if (send(server.getClient(arg[2]).getfd(), msg.c_str(), msg.size(), 0) == -1)
-        		std::perror("send:");
-
-    		std::cout << "Waiting for response from the other client..." << std::endl;
-			bool sending = wait_receiver(client);
-    		if (sending) {
-        		std::cout << "SEND OK" << std::endl;
-			}
-			else {
-				std::cout << "SEND NOK" << std::endl;
-			}
-			return;
-		}
-		return server.sendMsg(server, client, ERR_NOSUCHNICK(arg[2]));
-
-	} else
-		return server.sendMsg(server, client, ERR_UNKNOWNCOMMAND(arg[1]));
 }

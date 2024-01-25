@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 17:20:13 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/25 14:47:42 by mvautrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,11 @@ void server::init_server(){
 	int opt = 1;
 	int	serverSocket;
 	_userCount = 0;
-	
+
 
 	// Set up server address
 
-	
+
 	//Create socket
 	!((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) ? void() : (std::perror("socket"), throw socketException());
 
@@ -129,7 +129,7 @@ void server::init_server(){
 	_serverAdress.sin_family = AF_INET;
     _serverAdress.sin_addr.s_addr = INADDR_ANY;
     _serverAdress.sin_port = htons(_port);
-	
+
 	char ipStr[INET_ADDRSTRLEN];
 	inet_ntop(AF_INET, &(_serverAdress.sin_addr), ipStr, INET_ADDRSTRLEN);
 	//Bind the socket
@@ -343,7 +343,6 @@ void server::sendMsgToUser(server &server, user &client, user &dest, std::string
 						+ "!" + client.getUsername()
 						+ "@" + client.getIP() + " "
 						+ message + "\r\n";
-	std::cout << "msg user " << msg << std::endl;
     if (send(dest.getfd(), msg.c_str(), msg.length(), 0) == -1)
         std::perror("send:");
     std::cout   << "---- SERVER RESPONSE ----\n"
