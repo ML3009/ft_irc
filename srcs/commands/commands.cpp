@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:47 by mvautrot          #+#    #+#             */
-/*   Updated: 2024/01/25 14:41:35 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/26 12:18:03 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ void	commands::getAuthentified(server& Server, user& Client, std::vector<std::st
 				if (!(Client.getPassword().empty()))
 					Server.sendMsg(Server, Client, "\033[0;36m\t[Password] OK\033[0m");
 				else{
-					Server.sendMsg(Server, Client, "\033[0;36m\tuse /PASS before doing anything\033[0m");
+					Server.sendMsg(Server, Client, "\033[0;36m\tuse PASS before doing anything\033[0m");
 					break;
 				}
-				!(Client.getUsername().empty()) ? Server.sendMsg(Server, Client, "\033[0;36m \t[Username] " + Client.getUsername() + "\033[0m")  : Server.sendMsg(Server, Client, "\033[0;36m \t[/USER] username must be set \033[0m");
-				!(Client.getNickname().empty()) ? Server.sendMsg(Server, Client, "\033[0;36m \t[Nickname] " + Client.getNickname() + "\033[0m") : Server.sendMsg(Server, Client, "\033[0;36m \t[/NICK] nickname must be set \033[0m");
+				!(Client.getNickname().empty()) ? Server.sendMsg(Server, Client, "\033[0;36m \t[Nickname] " + Client.getNickname() + "\033[0m") : Server.sendMsg(Server, Client, "\033[0;36m \t[NICK] nickname must be set first\033[0m");
+				!(Client.getUsername().empty()) ? Server.sendMsg(Server, Client, "\033[0;36m \t[Username] " + Client.getUsername() + "\033[0m")  : Server.sendMsg(Server, Client, "\033[0;36m \t[USER] username must be set last\033[0m");
 		}
 	}
 	debug("getAuthentified", END);
@@ -162,7 +162,7 @@ void	commands::cmdNICK(server& Server, user& Client, std::vector<std::string>& a
 	if (count != 2)
 		return Server.sendMsg(Server, Client, ERR_NEEDMOREPARAMS(Client));
 	if (argument[1].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
-			return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
+			return Server.sendMsg(Server, Client, ERR_ERRONEUSNICKNAME(argument[1]));
 	if (argument[1] == "rooohbot")
 		return Server.sendMsg(Server, Client, ERR_NICKNAMEINUSE (Server, Client, argument[1]));
 	for(std::map<int, user>::iterator it = Server.getUserMap().begin(); it != Server.getUserMap().end(); ++it) {
@@ -379,7 +379,7 @@ void	commands::cmdKICK(server& Server, user& Client, std::vector<std::string>& a
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[1]));
 }
-// MESSAGE D INVITE A REGLER
+
 void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>& argument){
 
 	int count = 0;
@@ -397,12 +397,10 @@ void	commands::cmdINVITE(server& Server, user& Client, std::vector<std::string>&
 			if (!(it->second.isInvited(argument[1])))
 			{
 				it->second.getInviteList().push_back(Server.getClient(argument[1]).getUsername());
-				Server.sendMsg(Server, Client, RPL_INVITING(Client, it->second.getChannelName()));
-				Server.sendMsgToChannel(Server, Client, RPL_INVITING(Client, it->second.getChannelName()), it->second.getChannelName());
-				return;
+				return Server.sendMsgToUser(Server, Client, Server.getClient(argument[1]), RPL_INVITING(Server.getClient(argument[1]), it->second.getChannelName()));
 			}
 			else
-				Server.sendMsg(Server, Client, "ERROR " + argument[1] + " is already invited in " + it->second.getChannelName());
+				return Server.sendMsg(Server, Client, "ERROR " + argument[1] + " is already invited in " + it->second.getChannelName());
 		}
 	}
 	return Server.sendMsg(Server, Client, ERR_NOSUCHCHANNEL(Server, Client, argument[2]));

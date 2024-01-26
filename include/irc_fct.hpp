@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_fct.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 11:28:38 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 16:29:35 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/26 12:16:46 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ std::string ERR_NORECIPIENT(void); // 411
 std::string ERR_NOTEXTTOSEND(void); // 412
 std::string ERR_CHANNELISFULL(std::string &channel);
 std::string RPL_NOTOPIC(server& server, user& client, std::string channel);
-
+std::string ERR_ERRONEUSNICKNAME (std::string name);
 std::string RPL_TOPIC(server& server, user& client, std::string channel, std::string topic);
 
 std::string ERR_NOSUCHNICK(std::string dest); // 401

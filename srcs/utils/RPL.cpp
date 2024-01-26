@@ -6,7 +6,7 @@
 /*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 14:50:00 by purple            #+#    #+#             */
-/*   Updated: 2024/01/24 16:48:59 by purple           ###   ########.fr       */
+/*   Updated: 2024/01/26 12:16:57 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ std::string RPL_TOPIC(server& server, user& client, std::string channel, std::st
 }
 
 std::string RPL_INVITING(user &Client, std::string channel){
-    return "341 " + Client.getNickname() + " " + channel;
+    return "INVITE " + Client.getNickname() + " :" + channel;
 }
-
+// :baaba!~baabau@1e6-21f8-9df-c53e-e030.210.62.ip INVITE boobo :##jhbfsufhb
 std::string RPL_NAMREPLY(std::string message){
     return "355 " + message;
 }
@@ -98,7 +98,10 @@ std::string ERR_UNKNOWNCOMMAND(std::string cmd) {
     return "421 " + cmd + " :unknown command";
 }
 
-std::string  ERR_NICKNAMEINUSE (server& server, user& client, std::string name) {
+std::string ERR_ERRONEUSNICKNAME (std::string name){
+    return "432 " + name + " :Erroneus nickname";
+}
+std::string ERR_NICKNAMEINUSE (server& server, user& client, std::string name) {
     (void)server;
     (void)client;
     return "433 " + name + " :Nickname already use";

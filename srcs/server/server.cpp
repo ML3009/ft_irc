@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvautrot <mvautrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: purple <purple@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:21:50 by purple            #+#    #+#             */
-/*   Updated: 2024/01/25 14:47:42 by mvautrot         ###   ########.fr       */
+/*   Updated: 2024/01/26 12:20:42 by purple           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,18 @@ void server::getClientMessage(){
 
 
 void server::disconnect_client(user &client){
+	std::vector<std::map<std::string, channel>::iterator> channelsToRemove;
+	if (!getChannelMap().empty()) {
+		for (std::map<std::string, channel>::iterator it = getChannelMap().begin(); it != getChannelMap().end(); ++it){
+			if (it->second.isAlreadyinChannel(client) == true) {
+				it->second.unsetChannelUser(client);
+				if (it->second.getChannelUser().empty())
+						channelsToRemove.push_back(it);
+			}
+		}
+	}
+	for (std::vector<std::map<std::string, channel>::iterator>::iterator it = channelsToRemove.begin(); it != channelsToRemove.end(); ++it)
+    	getChannelMap().erase(*it);
 	std::vector<pollfd>::iterator it = std::find_if(_pollFD.begin(), _pollFD.end(), IsClientFDPredicate(client.getfd()));
 	if (it != _pollFD.end()) {_pollFD.erase(it);}
 	close(client.getfd());
@@ -359,20 +371,3 @@ void	server::setIrssi(bool irssi){
 	_irssi = irssi;
 	return;
 }
-
-//DCC SEND from bo [127.0.0.1 port 43235]: test.txt [5B]
-//:bo!bob@127.0.0.1 PRIVMSG bi :DCC SEND test.txt 2130706433 43235 5 pasnous
-
-// DCC SEND from bo [0.0.143.5 port 5]: test.txt 2130706433 [0B]
-//:bo!bob@127.0.0.1 PRIVMSG bi :DCC SEND test.txt 2130706433 36613 5  nous
-
-
-// cmd [PRIVMSG ccN :DCC SEND test.txt 2130706433 37425 5]
-// splitarg [PRIVMSG]
-// splitarg [ccN]
-// splitarg [:DCC]
-// splitarg [SEND]
-// splitarg [test.txt]
-// splitarg [2130706433]
-// splitarg [37425]
-// splitarg [5]
